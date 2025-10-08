@@ -1,0 +1,96 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: campershare_db
+    environment:
+      POSTGRES_DB: campershare
+      POSTGRES_USER: campershare_user
+      POSTGRES_PASSWORD: campershare_pass
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init:/docker-entrypoint-initdb.d
+    networks:
+      - campershare_network
+    restart: unless-stopped
+
+  # Redis for Sessions and Caching
+  redis:
+    image: redis:7-alpine
+    container_name: campershare_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - campershare_network
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+
+  # Next.js Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: campershare_app
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+      - DATABASE_URL=postgresql://campershare_user:campershare_pass@postgres:5432/campershare
+      - REDIS_URL=redis://redis:6379
+      - NEXTAUTH_SECRET=your-secret-key-here
+      - NEXTAUTH_URL=http://localhost:3000
+      - STRIPE_SECRET_KEY=sk_test_51S9jgXRL6g2XYpMqaJY9ygWeeEWcKIYLEPkR6xgPuFJs2NP5L8NPFOJqjBmnw8rWXvtiLnH0HIIbRhE1vD4uQnQi00SQshFZJJ
+      - STRIPE_PUBLISHABLE_KEY=pk_test_51S9jgXRL6g2XYpMqJYyippFlafFqr8ytd0al1ySee8DRKd4lSQBX8O5MlHiPC8epenmM4IEmoviBmlzp6HmZUywW00szq7YOgb
+      - NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_51S9jgXRL6g2XYpMqJYyippFlafFqr8ytd0al1ySee8DRKd4lSQBX8O5MlHiPC8epenmM4IEmoviBmlzp6HmZUywW00szq7YOgb
+      - GOOGLE_MAPS_API_KEY=AIzaSyDVjqRDGGfpgEWC_Svn5S8reCOpS_6asqo
+      - NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=AIzaSyDVjqRDGGfpgEWC_Svn5S8reCOpS_6asqo
+      - SMTP_HOST=smtp.eu.mailgun.org
+      - SMTP_PORT=587
+      - SMTP_USER=postmaster@mg.campershare.com
+      - SMTP_PASSWORD=b59176dfd42802b136b0fcb7b0e136aa-8b22cbee-464c0106
+      - NEXT_PUBLIC_SITE_URL=http://localhost:3000
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    networks:
+      - campershare_network
+    depends_on:
+      - postgres
+      - redis
+    restart: unless-stopped
+    command: npm run dev
+
+  # PgAdmin for Database Management (Optional)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: campershare_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@campershare.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "8080:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - campershare_network
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
+  pgadmin_data:
+
+networks:
+  campershare_network:
+    driver: bridge
