@@ -298,31 +298,16 @@ export default function Checkout() {
               beds: result.data.beds
             })
           } else {
-            // Fallback for testing
-            setCamperVan({
-              id: camper,
-              name: "Test Camper",
-              category: "Wohnmobil",
-              price: 75,
-              rating: 4.0,
-              reviewCount: 0,
-              image: "/images/campers/default.jpg",
-              host: "CamperShare"
-            })
+            console.error('Camper nicht gefunden in API:', result)
+            // Redirect back to campers page if camper not found
+            router.push('/campers')
+            return
           }
         } catch (error) {
           console.error('Error loading camper data:', error)
-          // Fallback for testing
-          setCamperVan({
-            id: camper,
-            name: "Test Camper",
-            category: "Wohnmobil", 
-            price: 75,
-            rating: 4.0,
-            reviewCount: 0,
-            image: "/images/campers/default.jpg",
-            host: "CamperShare"
-          })
+          // Redirect back to campers page on error
+          router.push('/campers')
+          return
         }
       }
       
@@ -379,13 +364,30 @@ export default function Checkout() {
 
       console.log('Booking response:', result); // Debug log
 
-      if (result.success) {
+      if (response.ok && result.success) {
         router.push(`/booking-confirmation?bookingId=${result.bookingId}`);
       } else {
-        throw new Error(result.error || 'Buchung fehlgeschlagen');
+        // Show more detailed error information
+        let errorMessage = result.error || 'Buchung fehlgeschlagen';
+        if (result.code) {
+          errorMessage += ` (Code: ${result.code})`;
+        }
+        console.error('Booking failed:', result);
+        throw new Error(errorMessage);
       }
     } catch (error) {
       console.error('Buchungsfehler:', error);
+      
+      // More detailed error logging
+      console.log('Camper ID being sent:', camperVan.id);
+      console.log('Booking details:', {
+        camperId: camperVan.id,
+        startDate: bookingDetails.checkIn,
+        endDate: bookingDetails.checkOut,
+        totalDays: nights,
+        totalPrice: totalPrice
+      });
+      
       alert(`Es gab einen Fehler bei der Buchung: ${error.message}`);
     } finally {
       setIsLoading(false);
