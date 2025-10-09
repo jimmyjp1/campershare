@@ -1,31 +1,68 @@
--- CamperShare Database Schema
--- PostgreSQL Database Initialization
+-- ===================================================================
+-- CamperShare Database Schema (01-schema.sql)
+-- ===================================================================
+-- 
+-- PostgreSQL Datenbankstruktur für die CamperShare-Anwendung
+-- Dieses Schema wird automatisch beim ersten Docker-Start geladen
+--
+-- Haupttabellen:
+-- • users: Benutzerkonten (Kunden, Provider, Admins)
+-- • camper_vans: Wohnmobil-Katalog mit Spezifikationen
+-- • bookings: Buchungshistorie und aktive Reservierungen
+-- • payments: Zahlungsabwicklung mit Stripe
+-- • email_verifications: E-Mail-Bestätigungen
+-- • analytics_events: Tracking für Business Intelligence
+--
+-- Features:
+-- • UUID-basierte Primary Keys für bessere Sicherheit
+-- • Zeitstempel für Audit-Trails
+-- • Check Constraints für Datenintegrität
+-- • Indexe für Performance-Optimierung
+-- ===================================================================
 
--- Enable UUID extension
+-- UUID-Extension aktivieren für sichere Primary Keys
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
--- Users table
+-- ===================================================================
+-- BENUTZER-MANAGEMENT
+-- ===================================================================
+
+-- Benutzer-Tabelle: Alle registrierten Nutzer der Plattform
 CREATE TABLE users (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    
+    -- Authentifizierung
     email VARCHAR(255) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
+    email_verified BOOLEAN DEFAULT FALSE,
+    
+    -- Persönliche Daten
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
     phone VARCHAR(20),
     date_of_birth DATE,
+    
+    -- Adressdaten
     address TEXT,
     city VARCHAR(100),
     postal_code VARCHAR(10),
     country VARCHAR(50) DEFAULT 'Germany',
+    
+    -- System-Einstellungen
     role VARCHAR(20) DEFAULT 'customer' CHECK (role IN ('customer', 'provider', 'admin')),
-    email_verified BOOLEAN DEFAULT FALSE,
     profile_image VARCHAR(500),
     language VARCHAR(10) DEFAULT 'de',
+    
+    -- Audit-Felder
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- Camper vans table
+-- ===================================================================
+-- FAHRZEUG-KATALOG
+-- ===================================================================
+
+-- Wohnmobil-Tabelle: Alle verfügbaren Mietfahrzeuge
 CREATE TABLE camper_vans (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     slug VARCHAR(255) UNIQUE NOT NULL,

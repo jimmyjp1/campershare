@@ -1,3 +1,18 @@
+/**
+ * CamperShare - Header-Komponente (Header.jsx)
+ * 
+ * Die Hauptnavigation der Anwendung mit responsivem Design.
+ * Enthält Logo, Navigation, Sprachschalter und Benutzermenü.
+ * 
+ * Features:
+ * - Responsive Design (Desktop/Mobile)
+ * - Mehrsprachige Navigation
+ * - Authentifizierungsstatusanzeige
+ * - Dark Mode Unterstützung
+ * - Glassmorphism-Design
+ * - Admin-Zugang für berechtigte Benutzer
+ */
+
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useState, useEffect, useRef } from 'react'
@@ -7,6 +22,10 @@ import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import { authService } from '@/services/userAuthenticationService'
 import { CamperShareIcon } from '@/components/CamperShareIcon'
 
+/**
+ * Einzelner Navigations-Punkt
+ * Zeigt aktiven Zustand und Hover-Effekte
+ */
 function NavItem({ href, children }) {
   let router = useRouter()
   let isActive = router.pathname === href
@@ -22,6 +41,7 @@ function NavItem({ href, children }) {
         }`}
       >
         {children}
+        {/* Aktiver Indikator - Leuchtlinie unter dem aktiven Tab */}
         {isActive && (
           <span className="absolute inset-x-1 top-full mt-2 h-px bg-gradient-to-r from-teal-500/0 via-teal-500/40 to-teal-500/0 dark:from-teal-400/0 dark:via-teal-400/40 dark:to-teal-400/0" />
         )}
@@ -30,6 +50,10 @@ function NavItem({ href, children }) {
   )
 }
 
+/**
+ * Desktop Navigation
+ * Glassmorphism-Design mit Backdrop-Blur
+ */
 function DesktopNavigation(props) {
   const { t } = useLanguage()
 
@@ -45,6 +69,10 @@ function DesktopNavigation(props) {
   )
 }
 
+/**
+ * Mobile Navigation
+ * Slide-out Menu für kleinere Bildschirme
+ */
 function MobileNavigation() {
   const { t } = useLanguage()
   const [isOpen, setIsOpen] = useState(false)

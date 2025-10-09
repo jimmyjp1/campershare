@@ -1,12 +1,39 @@
+/**
+ * CamperShare - Buchungsservice (bookingService.js)
+ * 
+ * Zentrale Business Logic für alle buchungsbezogenen Operationen.
+ * Verwaltet den kompletten Buchungslebenszyklus von der Erstellung
+ * bis zur Stornierung.
+ * 
+ * Kernfunktionen:
+ * - Buchungserstellung und -validierung
+ * - Status-Management (pending, confirmed, completed, cancelled)
+ * - Verfügbarkeitsprüfung
+ * - Preisberechnung
+ * - Integration mit Zahlungssystem
+ * - E-Mail-Benachrichtigungen
+ * 
+ * Design Pattern: Service Class mit Singleton-ähnlichem Verhalten
+ * Datenpersistierung: LocalStorage (Development) + Database API (Production)
+ */
+
 import { authService } from './userAuthenticationService';
 
-// Booking data model and service
+/**
+ * Hauptklasse für Buchungsoperationen
+ * Verwaltet Buchungslogik und Datenmanagement
+ */
 export class BookingService {
   constructor() {
+    // Initialisierung der Buchungsdaten
     this.bookings = this.loadBookings();
     this.isBrowser = typeof window !== 'undefined' && window.localStorage;
   }
 
+  /**
+   * Lädt gespeicherte Buchungen aus LocalStorage
+   * Fallback für Development-Umgebung ohne Database
+   */
   loadBookings() {
     try {
       if (this.isBrowser) {
@@ -20,16 +47,25 @@ export class BookingService {
     }
   }
 
+  /**
+   * Gibt alle Buchungen zurück
+   * In Production: Würde Datenbankabfrage verwenden
+   */
   getAllBookings() {
     return this.bookings;
   }
 
+  /**
+   * Aktualisiert den Status einer Buchung
+   * Status-Übergang: pending → confirmed → completed/cancelled
+   */
   async updateBookingStatus(bookingId, newStatus) {
     const bookingIndex = this.bookings.findIndex(b => b.id === bookingId);
     if (bookingIndex === -1) {
       throw new Error('Booking not found');
     }
 
+    // Status-Update mit Timestamp
     this.bookings[bookingIndex].status = newStatus;
     this.bookings[bookingIndex].updatedAt = new Date().toISOString();
     this.saveBookings();
@@ -37,6 +73,10 @@ export class BookingService {
     return this.bookings[bookingIndex];
   }
 
+  /**
+   * Allgemeine Buchungs-Update-Funktion
+   * Ermöglicht partielle Updates an Buchungsdaten
+   */
   async updateBooking(bookingId, updatedData) {
     const bookingIndex = this.bookings.findIndex(b => b.id === bookingId);
     if (bookingIndex === -1) {

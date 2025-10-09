@@ -1,6 +1,27 @@
+/**
+ * CamperShare - Mehrsprachigkeitsservice (multilanguageService.js)
+ * 
+ * Dieser Service ermöglicht die Internationalisierung der gesamten Anwendung.
+ * Er unterstützt derzeit Deutsch und Englisch mit automatischem Fallback.
+ * 
+ * Kernfunktionen:
+ * - Sprachenwechsel (DE ↔ EN)
+ * - Übersetzungsschlüssel-System (t('key.subkey'))
+ * - Automatisches Speichern der Sprachpräferenz
+ * - Währungsformatierung nach Sprachregion
+ * - React Context für globale Verfügbarkeit
+ * 
+ * Verwendung:
+ * const { t, currentLanguage, changeLanguage } = useLanguage()
+ * const text = t('home.heroTitle')
+ */
+
 import { createContext, useContext, useState, useEffect } from 'react'
 
-// Supported languages
+/**
+ * Unterstützte Sprachen der Anwendung
+ * Jede Sprache hat Code, Namen, Flagge und Währungseinstellungen
+ */
 export const SUPPORTED_LANGUAGES = {
   'de': {
     code: 'de',
@@ -18,7 +39,11 @@ export const SUPPORTED_LANGUAGES = {
   }
 }
 
-// Translation data
+/**
+ * Haupt-Übersetzungsdaten
+ * Strukturiert nach Sprachen (de/en) und dann nach Sektionen
+ * Verwendung: t('nav.home') → 'Startseite' (DE) oder 'Home' (EN)
+ */
 const translations = {
   de: {
     // Navigation

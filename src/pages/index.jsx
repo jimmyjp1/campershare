@@ -1,3 +1,25 @@
+/**
+ * CamperShare - Startseite (index.jsx)
+ * 
+ * Die Hauptlandingpage der CamperShare-Anwendung.
+ * Kombiniert Marketing-Content mit funktionaler Fahrzeugsuche.
+ * 
+ * Hauptsektionen:
+ * - Hero Section: Video-Hintergrund mit Call-to-Action
+ * - Search Form: Interaktive Camper-Suche mit Filtern
+ * - Featured Campers: Ausgewählte Fahrzeuge
+ * - Features: Warum CamperShare wählen
+ * - Statistics: Vertrauen durch Zahlen
+ * - CTA Section: Abschluss mit Handlungsaufforderung
+ * 
+ * Technische Features:
+ * - Scroll-Animationen (Intersection Observer)
+ * - Analytics-Tracking
+ * - Responsive Design
+ * - Dark Mode Support
+ * - Mehrsprachigkeit
+ */
+
 import Head from 'next/head'
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/router'
@@ -9,7 +31,10 @@ import { CamperShareIcon } from '@/components/CamperShareIcon'
 import { RecentlyViewedVehicles, TravelPlanningHub } from '@/components/CookieBanner'
 import { usePageViewTracking, useScrollTracking, useTimeTracking, useAnalytics } from '@/hooks/useAnalytics'
 
-// Hook for bidirectional scroll animations
+/**
+ * Custom Hook: Bidirektionale Scroll-Animationen
+ * Elemente erscheinen/verschwinden basierend auf Viewport-Sichtbarkeit
+ */
 function useScrollAnimation() {
   const ref = useRef(null)
 
@@ -27,7 +52,7 @@ function useScrollAnimation() {
         }
       },
       {
-        threshold: 0.2,
+        threshold: 0.2, // Trigger wenn 20% sichtbar
         rootMargin: '0px 0px -100px 0px'
       }
     )

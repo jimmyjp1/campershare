@@ -1,3 +1,17 @@
+/**
+ * CamperShare - Hauptanwendung (_app.jsx)
+ * 
+ * Diese Datei ist der Einstiegspunkt für alle Seiten der Next.js Anwendung.
+ * Sie stellt globale Provider, Services und Layout-Komponenten zur Verfügung.
+ * 
+ * Kernfunktionen:
+ * - Mehrsprachigkeit (Deutsch/Englisch)
+ * - Cookie-Management (DSGVO-konform)
+ * - Benutzerauthentifizierung
+ * - Globale Benachrichtigungen
+ * - Responsive Layout mit Header/Footer
+ */
+
 import { useEffect, useRef } from 'react'
 import Head from 'next/head'
 import { Header } from '@/components/Header'
@@ -8,9 +22,14 @@ import { authService } from '@/services/userAuthenticationService'
 import { CookieProvider } from '@/services/browserCookieManager'
 import { CookieBanner, CookieSettings } from '@/components/CookieComponents'
 
+// Globale Styles importieren
 import '@/styles/tailwind.css'
 import 'focus-visible'
 
+/**
+ * Custom Hook: Speichert den vorherigen Wert einer Variable
+ * Wird für Router-Tracking und Animationen verwendet
+ */
 function usePrevious(value) {
   let ref = useRef()
 
@@ -21,13 +40,20 @@ function usePrevious(value) {
   return ref.current
 }
 
+/**
+ * Hauptkomponente der Anwendung
+ * Umschließt alle Seiten mit den notwendigen Providern und Services
+ */
 export default function App({ Component, pageProps, router }) {
   let previousPathname = usePrevious(router.pathname)
 
-  // Initialize notification service
+  /**
+   * Initialisierung der Benachrichtigungsservices
+   * Läuft einmalig beim App-Start
+   */
   useEffect(() => {
     const initializeNotifications = async () => {
-      // Check if user is authenticated
+      // Prüfen ob Benutzer authentifiziert ist
       const user = authService.getCurrentUser();
       if (user) {
         // Initialize notification service with user ID

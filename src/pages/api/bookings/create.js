@@ -1,10 +1,33 @@
+/**
+ * CamperShare - Buchungs-API (create.js)
+ * 
+ * Diese API-Route erstellt neue Buchungen mit vollständiger Validierung.
+ * Sie prüft Verfügbarkeit, erstellt Datenbankeinträge, sendet E-Mails
+ * und gewährleistet Datenkonsistenz.
+ * 
+ * POST /api/bookings/create
+ * 
+ * Body:
+ * - camperId: ID des zu buchenden Wohnmobils
+ * - startDate/endDate: Buchungszeitraum
+ * - totalDays/totalPrice: Berechnete Werte
+ * - customerData: Kundendaten (Name, E-Mail, etc.)
+ * - paymentData: Zahlungsinformationen
+ * - cancellationPolicy: Stornobedingungen
+ * 
+ * Response: 
+ * - Buchungsnummer und Bestätigungs-E-Mail
+ */
+
 const { query } = require('../../../lib/databaseConnection');
 const { sendBookingConfirmationEmail } = require('../../../lib/automaticEmailSender');
 const { availabilityService } = require('../../../services/camperAvailabilityService');
 
 export default async function handler(req, res) {
+  // Nur POST-Requests erlaubt
   if (req.method === 'POST') {
     try {
+      // Request-Body destructuring für bessere Lesbarkeit
       const {
         camperId,
         startDate,
@@ -16,6 +39,7 @@ export default async function handler(req, res) {
         cancellationPolicy
       } = req.body;
 
+      // Debug-Logging für Troubleshooting
       console.log('📋 Booking API Request:', {
         camperId,
         startDate,
@@ -25,7 +49,10 @@ export default async function handler(req, res) {
         customerEmail: customerData?.email
       });
 
-      // Validierung der Eingabedaten
+      /**
+       * 1. VALIDIERUNG
+       * Prüfung aller erforderlichen Buchungsdaten
+       */
       if (!camperId || !startDate || !endDate || !totalPrice || !customerData) {
         console.error('❌ Unvollständige Buchungsdaten:', {
           camperId: !!camperId,
@@ -37,6 +64,10 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Unvollständige Buchungsdaten' });
       }
 
+      /**
+       * 2. VERFÜGBARKEITSPRÜFUNG
+       * Doppelte Buchungen verhindern
+       */
       console.log(`🛡️ Prüfe Verfügbarkeit für Camper ${camperId} von ${startDate} bis ${endDate}`);
       
       // 🎯 VERFÜGBARKEITSPRÜFUNG - KRITISCHER PUNKT!

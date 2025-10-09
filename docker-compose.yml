@@ -1,30 +1,44 @@
+# CamperShare - Docker Compose Konfiguration
+#
+# Diese Datei definiert alle Services der CamperShare-Anwendung:
+# - PostgreSQL Datenbank (Hauptdaten)
+# - Redis Cache (Sessions, Caching)
+# - pgAdmin (Datenbankadministration)
+# - Next.js App (Webserver)
+#
+# Start: docker-compose up -d
+# Stop: docker-compose down
+# Logs: docker-compose logs app
+
 services:
-  # PostgreSQL Database
+  # PostgreSQL Datenbank
+  # Speichert alle Anwendungsdaten (Benutzer, Buchungen, Camper, etc.)
   postgres:
     image: postgres:15-alpine
     container_name: campershare_db
     environment:
-      POSTGRES_DB: campershare
-      POSTGRES_USER: campershare_user
-      POSTGRES_PASSWORD: campershare_pass
-      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_DB: campershare              # Datenbankname
+      POSTGRES_USER: campershare_user       # Datenbankbenutzer
+      POSTGRES_PASSWORD: campershare_pass   # Passwort (Produktion: .env verwenden!)
+      POSTGRES_HOST_AUTH_METHOD: trust      # Vereinfachte Authentifizierung für Development
     ports:
-      - "5432:5432"
+      - "5432:5432"                         # Port-Mapping (Host:Container)
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./database/init:/docker-entrypoint-initdb.d
+      - postgres_data:/var/lib/postgresql/data     # Persistente Datenspeicherung
+      - ./database/init:/docker-entrypoint-initdb.d # Auto-Import von SQL-Schemas
     networks:
       - campershare_network
-    restart: unless-stopped
+    restart: unless-stopped                 # Automatischer Neustart bei Fehlern
 
-  # Redis for Sessions and Caching
+  # Redis Cache & Session Store
+  # Speichert temporäre Daten, Sessions und Cache für bessere Performance
   redis:
     image: redis:7-alpine
     container_name: campershare_redis
     ports:
-      - "6379:6379"
+      - "6379:6379"                         # Standard Redis Port
     volumes:
-      - redis_data:/data
+      - redis_data:/data                    # Persistente Redis-Daten
     networks:
       - campershare_network
     restart: unless-stopped
