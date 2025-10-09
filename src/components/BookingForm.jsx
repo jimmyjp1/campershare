@@ -1,3 +1,32 @@
+/**
+ * CamperShare - Buchungsformular (BookingForm.jsx)
+ * 
+ * Kernkomponente für den kompletten Buchungsprozess von der Auswahl
+ * bis zur Zahlungsabwicklung. Multi-Step-Form mit umfassender Validierung.
+ * 
+ * Buchungsschritte:
+ * 1. Datumsauswahl & Verfügbarkeitsprüfung
+ * 2. Zusatzoptionen (Versicherung, Extras, Kilometer)
+ * 3. Kundendaten & Abholort
+ * 4. Zahlungsabwicklung
+ * 5. Buchungsbestätigung
+ * 
+ * Features:
+ * - Echtzeit-Verfügbarkeitsprüfung
+ * - Dynamische Preisberechnung
+ * - Auto-Save (Draft-System)
+ * - Stripe-Integration
+ * - PDF-Generierung
+ * - E-Mail-Bestätigung
+ * - Responsive Design
+ * - Mehrsprachigkeit
+ * 
+ * State Management:
+ * - Lokales State für Formulardaten
+ * - Service-Integration für Backend-Calls
+ * - Error Handling für alle Schritte
+ */
+
 import React, { useState, useEffect } from 'react';
 import { BookingCalendar, PriceBreakdown, bookingService } from '../services/bookingService';
 import { getCamperVanById, ADDONS, INSURANCE_PACKAGES, MILEAGE_PACKAGES, PICKUP_LOCATIONS } from '../services/camperVehicleDataService';
@@ -11,8 +40,17 @@ import { VanLayoutCanvas, PricingChart, AvailabilityCalendar, SignatureCanvas } 
 import { useAutoSave, useBookingDrafts } from '../services/localDataStorageService';
 import { PickupLocationMap, RoutePlanningMap, LocationSearchInput } from './MapComponents';
 
+/**
+ * Hauptkomponente des Buchungsformulars
+ * 
+ * @param {string} vanId - ID des zu buchenden Wohnmobils
+ * @param {Function} onBookingComplete - Callback nach erfolgreicher Buchung
+ */
 export function BookingForm({ vanId, onBookingComplete }) {
+  // Fahrzeugdaten
   const [van, setVan] = useState(null);
+  
+  // UI-State Management
   const [currentStep, setCurrentStep] = useState(1);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -21,14 +59,20 @@ export function BookingForm({ vanId, onBookingComplete }) {
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [bookingComplete, setBookingComplete] = useState(false);
   
-  // 🛡️ Verfügbarkeitsprüfung Hook
+  /**
+   * Verfügbarkeitsprüfung Hook
+   * Prüft Echtzeit-Verfügbarkeit für gewählte Daten
+   */
   const availability = useAvailabilityCheck(
     vanId,
     bookingData.selectedDates.start,
     bookingData.selectedDates.end
   );
   
-  // Booking form data
+  /**
+   * Zentrale Buchungsdaten
+   * Wird durch alle Schritte des Formulars aufgebaut
+   */
   const [bookingData, setBookingData] = useState({
     vanId: vanId,
     selectedDates: { start: null, end: null },

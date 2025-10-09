@@ -1,41 +1,78 @@
-// Database connection utility with optimized connection handling
+/**
+ * CamperShare - Datenbankverbindung (databaseConnection.js)
+ * 
+ * Zentrale Datenbankverbindungs-Utilities für PostgreSQL und Redis.
+ * Optimiert für Performance, Sicherheit und Connection-Pooling.
+ * 
+ * Features:
+ * - PostgreSQL Connection Pool mit optimierten Einstellungen
+ * - Redis-Cache für Session- und Performance-Optimierung
+ * - Environment-spezifische Konfiguration (Dev/Prod)
+ * - Automatisches Retry und Error Handling
+ * - Query-Timeouts und Connection-Monitoring
+ * - SSL-Support für Production
+ * 
+ * Verwendung:
+ * const result = await query('SELECT * FROM users WHERE id = $1', [userId])
+ * 
+ * Connection Pool Benefits:
+ * - Wiederverwendung von DB-Verbindungen
+ * - Reduzierte Latenz
+ * - Begrenzte Ressourcennutzung
+ * - Automatisches Timeout-Management
+ */
+
+// PostgreSQL Client für Connection Pooling
 const { Pool } = require('pg');
 
-// Dynamic Redis import only on server-side
+/**
+ * Redis-Import (nur Server-seitig)
+ * Client-side wird Redis nicht benötigt
+ */
 let createClient = null;
 const isServer = typeof window === 'undefined';
 
-// Only import Redis on server-side
+// Redis nur auf Server-Seite importieren
 if (isServer) {
   try {
     const redis = require('redis');
     createClient = redis.createClient;
   } catch (error) {
-    console.warn('Redis not available:', error.message);
+    console.warn('⚠️ Redis not available:', error.message);
   }
 }
 
-// Optimized PostgreSQL connection pool
+/**
+ * PostgreSQL Connection Pool
+ * Optimiert für hohe Performance und Stabilität
+ */
 const pool = new Pool({
+  // Verbindungsstring (Environment-abhängig)
   connectionString: process.env.DATABASE_URL || 'postgresql://campershare_user:campershare_pass@localhost:5432/campershare',
+  
+  // SSL für Production (Heroku, AWS, etc.)
   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
-  // Connection pool optimization
-  max: 20, // Maximum number of clients in the pool
-  idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
-  connectionTimeoutMillis: 2000, // Return an error after 2 seconds if connection cannot be established
-  // Add query timeout
-  query_timeout: 20000, // 20 seconds query timeout
-  // Statement timeout to prevent hanging queries
-  statement_timeout: 60000 // 60 seconds for complex queries
+  
+  // Connection Pool Optimierung
+  max: 20,                      // Maximale Anzahl gleichzeitiger Verbindungen
+  idleTimeoutMillis: 30000,     // Idle-Verbindungen nach 30s schließen
+  connectionTimeoutMillis: 2000, // Timeout für neue Verbindungen (2s)
+  
+  // Query Performance & Sicherheit
+  query_timeout: 20000,         // 20s Timeout für Standard-Queries
+  statement_timeout: 60000      // 60s für komplexe Queries (Analytics, Reports)
 });
 
-// Connection monitoring
+/**
+ * Connection-Monitoring für Debugging
+ * Hilft bei der Identifikation von Connection-Problemen
+ */
 pool.on('connect', (client) => {
-  console.log('New PostgreSQL client connected');
+  console.log('✅ New PostgreSQL client connected');
 });
 
 pool.on('error', (err, client) => {
-  console.error('Unexpected PostgreSQL client error:', err);
+  console.error('❌ Unexpected PostgreSQL client error:', err);
 });
 
 // Redis connection with error handling

@@ -1,36 +1,75 @@
-// E-Mail-Service für CamperShare
-// Verwendet Mailtrap für E-Mail-Tests und -Versendung
+/**
+ * CamperShare - E-Mail-Service (automaticEmailSender.js)
+ * 
+ * Zentrale E-Mail-Versendungslogik für alle automatisierten E-Mails.
+ * Nutzt Mailtrap für Development und SMTP für Production.
+ * 
+ * E-Mail-Typen:
+ * - Buchungsbestätigungen mit PDF-Rechnung
+ * - Willkommens-E-Mails nach Registrierung
+ * - Passwort-Reset-Links
+ * - Erinnerungen vor Reiseantritt
+ * - Stornierungsbestätigungen
+ * - Support-Nachrichten
+ * 
+ * Features:
+ * - HTML + Text-Versionen aller E-Mails
+ * - PDF-Attachments (Rechnungen, Verträge)
+ * - Mehrsprachige E-Mail-Templates
+ * - Responsive E-Mail-Design
+ * - Tracking für Zustellstatus
+ * - Template-System für konsistente Gestaltung
+ * 
+ * Sicherheit:
+ * - Environment-basierte Konfiguration
+ * - SMTP-Authentifizierung
+ * - Rate-Limiting für Spam-Schutz
+ */
 
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const { query } = require('./databaseConnection');
 const { generateInvoicePDF } = require('./invoicePdfGenerator');
 
-// Mailtrap-Konfiguration (funktioniert perfekt!)
-const transporter = nodemailer.createTransport({
+/**
+ * Mailtrap-Konfiguration für Development
+ * Für Production: echte SMTP-Credentials verwenden
+ */
+const transporter = nodemailer.createTransporter({
   host: 'sandbox.smtp.mailtrap.io',
   port: 587,
-  secure: false,
+  secure: false, // TLS wird automatisch aktiviert
   auth: {
     user: '8e61e2d38ca7ea',
     pass: 'cd47f197ff9186'
   }
 });
 
-// Buchungsbestätigungs-E-Mail senden
+/**
+ * Buchungsbestätigungs-E-Mail mit PDF-Rechnung
+ * 
+ * @param {Object} bookingData - Buchungsdaten aus der Datenbank
+ * @param {Object} userData - Kundendaten des Buchenden
+ * @returns {Promise<Object>} E-Mail-Versendungsstatus
+ */
 async function sendBookingConfirmationEmail(bookingData, userData) {
   try {
     console.log('📧 Sende Buchungsbestätigung über Mailtrap...');
     
+    // Buchungsnummer generieren falls nicht vorhanden
     const bookingNumber = bookingData.booking_number || 'BK' + Date.now();
     const currentDate = new Date().toLocaleDateString('de-DE');
     const currentTime = new Date().toLocaleTimeString('de-DE');
 
-    // PDF-Rechnung generieren
+    /**
+     * PDF-Rechnung generieren
+     * Enthält alle Buchungsdetails, Preisaufstellung und AGB
+     */
     console.log('📄 Generiere PDF-Rechnung...');
     const pdfBuffer = await generateInvoicePDF(bookingData, userData);
     const invoiceNumber = `RE-${bookingNumber}`;
 
+    // E-Mail-Konfiguration mit HTML und Text-Version
     const emailContent = {
       from: '"CamperShare Deutschland" <bookings@campershare.de>',
       to: userData.email,

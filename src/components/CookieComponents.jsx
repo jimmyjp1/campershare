@@ -1,3 +1,29 @@
+/**
+ * CamperShare - Cookie-Management-Komponenten (CookieComponents.jsx)
+ * 
+ * DSGVO-konforme Cookie-Verwaltung mit benutzerfreundlicher UI.
+ * Bietet vollständige Kontrolle über Cookie-Kategorien und Tracking.
+ * 
+ * Komponenten:
+ * - CookieBanner: Haupt-Cookie-Consent-Banner
+ * - CookieSettings: Detaillierte Einstellungen-Modal
+ * - CookieStatusButton: Status-Anzeige für Entwicklung
+ * 
+ * Cookie-Kategorien:
+ * - Necessary: Grundlegende Funktionalität (immer aktiv)
+ * - Functional: Erweiterte Features (LocalStorage, etc.)
+ * - Analytics: Tracking und Statistiken
+ * - Marketing: Werbung und Personalisierung
+ * 
+ * Features:
+ * - Glassmorphism-Design
+ * - Responsive Layout
+ * - Dark Mode Support
+ * - Granulare Kontrolle
+ * - LocalStorage-basierte Persistierung
+ * - Opt-in/Opt-out für alle Kategorien
+ */
+
 import React, { useState, useEffect } from 'react'
 import { useCookies, COOKIE_CATEGORIES } from '../services/browserCookieManager'
 import { 
@@ -8,16 +34,23 @@ import {
   MegaphoneIcon 
 } from '@heroicons/react/24/outline'
 
-// Cookie Banner Component
+/**
+ * Haupt-Cookie-Banner
+ * Erscheint am unteren Bildschirmrand bei erstem Besuch
+ */
 export function CookieBanner() {
   const { showBanner, acceptAll, acceptNecessaryOnly, openSettings } = useCookies()
   const [isClient, setIsClient] = useState(false)
 
-  // Client-only rendering um Hydration Errors zu vermeiden
+  /**
+   * Client-side only rendering
+   * Verhindert Hydration-Fehler bei SSR
+   */
   useEffect(() => {
     setIsClient(true)
   }, [])
 
+  // Nicht rendern wenn Banner nicht angezeigt werden soll
   if (!isClient || !showBanner) return null
 
   return (
@@ -29,7 +62,7 @@ export function CookieBanner() {
           
           <div className="relative p-6 md:p-8">
             <div className="flex flex-col gap-4">
-              {/* Content */}
+              {/* Header mit Icon und Titel */}
               <div className="flex-1">
                 <div className="flex items-start gap-3 mb-4">
                   <div className="flex-shrink-0">

@@ -1,5 +1,31 @@
-// Modern authentication service with full German/English i18n support
+/**
+ * CamperShare - Benutzerauthentifizierung-Service (userAuthenticationService.js)
+ * 
+ * Zentrale Authentifizierungslogik für die gesamte Anwendung.
+ * Verwaltet Login, Registrierung, Session-Management und Rollenverwaltung.
+ * 
+ * Hauptfunktionen:
+ * - Benutzerregistrierung und E-Mail-Verifizierung
+ * - Login/Logout mit Session-Management
+ * - Rollenverwaltung (Customer, Provider, Admin)
+ * - Passwort-Reset-Funktionalität
+ * - Profile-Management
+ * - Token-basierte Authentifizierung
+ * 
+ * Rollen-System:
+ * - GUEST: Nicht angemeldete Benutzer (nur öffentliche Inhalte)
+ * - CUSTOMER: Standardkunden (Buchungen, Profil)
+ * - PROVIDER: Anbieter (eigene Fahrzeuge verwalten)
+ * - ADMIN: Administratoren (vollständiger Zugriff)
+ * 
+ * Sicherheitsfeatures:
+ * - Passwort-Hashing
+ * - Session-Timeouts
+ * - E-Mail-Verifizierung
+ * - Rate-Limiting
+ */
 
+// Benutzerrollen-Definition
 export const USER_ROLES = {
   GUEST: 'guest',
   CUSTOMER: 'customer', 
@@ -7,14 +33,17 @@ export const USER_ROLES = {
   ADMIN: 'admin'
 };
 
-// Demo users for development
+/**
+ * Demo-Benutzer für Development und Testing
+ * In Production würden diese aus der Datenbank kommen
+ */
 const DEMO_USERS = [
   {
     id: 1,
     firstName: 'Max',
     lastName: 'Mustermann',
     email: 'max@example.com',
-    password: 'password123',
+    password: 'password123', // In Production: gehashed
     role: USER_ROLES.CUSTOMER,
     verified: true,
     createdAt: new Date('2024-01-15')
@@ -24,10 +53,10 @@ const DEMO_USERS = [
     firstName: 'Anna',
     lastName: 'Schmidt',
     email: 'anna@provider.com',
-    password: 'provider123',
+    password: 'provider123', // In Production: gehashed
     role: USER_ROLES.PROVIDER,
     verified: true,
-    companyName: 'Schmidt Campers',
+    companyName: 'Schmidt Campers', // Zusätzliche Provider-Daten
     createdAt: new Date('2024-01-10')
   },
   {
@@ -35,7 +64,7 @@ const DEMO_USERS = [
     firstName: 'Admin',
     lastName: 'User',
     email: 'admin@campervan.com',
-    password: 'admin123',
+    password: 'admin123', // In Production: gehashed
     role: USER_ROLES.ADMIN,
     verified: true,
     createdAt: new Date('2024-01-01')

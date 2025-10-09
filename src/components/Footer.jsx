@@ -1,3 +1,26 @@
+/**
+ * CamperShare - Footer-Komponente (Footer.jsx)
+ * 
+ * Der globale Footer der Anwendung mit umfassenden Links und Informationen.
+ * Enthält alle wichtigen Seiten-Links, rechtliche Hinweise und Kontaktdaten.
+ * 
+ * Features:
+ * - Responsive Multi-Spalten-Layout
+ * - Dark Mode Unterstützung
+ * - Mehrsprachige Links und Texte
+ * - Cookie-Status-Anzeige
+ * - Scroll-Animation beim ersten Erscheinen
+ * - Social Media Links
+ * - Rechtliche Compliance (DSGVO)
+ * 
+ * Struktur:
+ * - Logo und Unternehmensbeschreibung
+ * - Navigation (Hauptseiten)
+ * - Services (Buchung, Support, etc.)
+ * - Rechtliches (Datenschutz, Impressum)
+ * - Kontaktinformationen
+ */
+
 import Link from 'next/link'
 import { useState, useEffect, useRef } from 'react'
 
@@ -6,6 +29,10 @@ import { CamperShareIcon } from '@/components/CamperShareIcon'
 import { CookieStatusButton } from '@/components/CookieComponents'
 import { useLanguage } from '@/services/multilanguageService'
 
+/**
+ * Einzelner Navigations-Link mit Hover-Effekten
+ * Verwendet für alle internen und externen Links im Footer
+ */
 function NavLink({ href, children, className = "" }) {
   return (
     <Link
@@ -17,7 +44,10 @@ function NavLink({ href, children, className = "" }) {
   )
 }
 
-// Hook for footer scroll animation
+/**
+ * Custom Hook: Footer Scroll-Animation
+ * Triggert eine Ein-Blende-Animation wenn der Footer ins Viewport kommt
+ */
 function useFooterAnimation() {
   const [isVisible, setIsVisible] = useState(false)
   const ref = useRef(null)
@@ -26,12 +56,12 @@ function useFooterAnimation() {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setIsVisible(true)
+          setIsVisible(true) // Animation nur einmal triggern
         }
       },
       {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
+        threshold: 0.1, // Trigger bei 10% Sichtbarkeit
+        rootMargin: '0px 0px -50px 0px' // 50px Puffer vom unteren Bildschirmrand
       }
     )
 
