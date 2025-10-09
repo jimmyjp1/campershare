@@ -1,8 +1,54 @@
+/**
+ * =============================================================================
+ * PAYMENT SERVICE
+ * =============================================================================
+ * 
+ * Umfassendes Zahlungssystem für die WWISCA Camper-Rental Plattform
+ * mit Multi-Provider Support und sicherer Transaktionsabwicklung.
+ * 
+ * HAUPTFUNKTIONEN:
+ * - Stripe Payment Integration mit PCI-Compliance
+ * - Multi-Payment Methods (Karte, PayPal, Apple Pay, etc.)
+ * - Flexible Zahlungstypen (Vollzahlung, Anzahlung, Kaution)
+ * - Automatische Rückerstattungsabwicklung
+ * - Real-time Payment Status Tracking
+ * - Secure Token-basierte Authentifizierung
+ * - Integration mit Notification Service
+ * 
+ * UNTERSTÜTZTE ZAHLUNGSMETHODEN:
+ * - Kreditkarten (Visa, Mastercard, American Express)
+ * - PayPal (Express Checkout & Standard)
+ * - Apple Pay (Mobile & Desktop Safari)
+ * - Google Pay (Android & Chrome)
+ * - SEPA Banküberweisung (EU)
+ * - Klarna (Buy Now, Pay Later)
+ * 
+ * ZAHLUNGSTYPEN:
+ * - Vollzahlung: Kompletter Betrag bei Buchung
+ * - Anzahlung: Teilbetrag mit Restbetrag vor Anreise
+ * - Kaution: Sicherheitseinbehalt (wird nach Rückgabe freigegeben)
+ * - Strafgebühren: Zusätzliche Kosten bei Schäden/Verspätung
+ * 
+ * SICHERHEITSFEATURES:
+ * - PCI DSS Level 1 Compliance via Stripe
+ * - End-to-End Verschlüsselung
+ * - 3D Secure Authentication für EU-Karten
+ * - Fraud Detection & Prevention
+ * - Automatische CVV/AVS Validation
+ * 
+ * VERWENDUNG:
+ * const paymentService = new PaymentService()
+ * const session = await paymentService.createCheckoutSession(bookingData)
+ * const result = await paymentService.processPayment(paymentData)
+ */
 import { loadStripe } from '@stripe/stripe-js';
 import { authService } from './userAuthenticationService';
 import { notificationService, notificationTemplates } from './notificationService';
 
-// Initialize Stripe
+/**
+ * STRIPE INITIALISIERUNG
+ * Lazy Loading der Stripe Library für bessere Performance
+ */
 let stripePromise;
 const getStripe = () => {
   if (!stripePromise) {
@@ -11,33 +57,42 @@ const getStripe = () => {
   return stripePromise;
 };
 
-// Payment methods enum
+/**
+ * PAYMENT METHODS ENUMERATION
+ * Definiert alle unterstützten Zahlungsmethoden
+ */
 export const PAYMENT_METHODS = {
-  CARD: 'card',
-  PAYPAL: 'paypal',
-  APPLE_PAY: 'apple_pay',
-  GOOGLE_PAY: 'google_pay',
-  BANK_TRANSFER: 'bank_transfer',
-  KLARNA: 'klarna'
+  CARD: 'card',                    // Kreditkarten (Visa, Mastercard, Amex)
+  PAYPAL: 'paypal',               // PayPal Express & Standard
+  APPLE_PAY: 'apple_pay',         // Apple Pay (iOS/macOS)
+  GOOGLE_PAY: 'google_pay',       // Google Pay (Android/Chrome)
+  BANK_TRANSFER: 'bank_transfer', // SEPA Banküberweisung
+  KLARNA: 'klarna'               // Klarna Buy Now, Pay Later
 };
 
-// Payment status enum
+/**
+ * PAYMENT STATUS ENUMERATION  
+ * Tracking verschiedener Zahlungsstadien für UI und Business Logic
+ */
 export const PAYMENT_STATUS = {
-  PENDING: 'pending',
-  PROCESSING: 'processing',
-  SUCCEEDED: 'succeeded',
-  FAILED: 'failed',
-  CANCELLED: 'cancelled',
-  REFUNDED: 'refunded',
-  PARTIALLY_REFUNDED: 'partially_refunded'
+  PENDING: 'pending',                        // Zahlung eingeleitet, wartet auf Bestätigung
+  PROCESSING: 'processing',                  // Zahlung wird verarbeitet
+  SUCCEEDED: 'succeeded',                    // Zahlung erfolgreich abgeschlossen
+  FAILED: 'failed',                         // Zahlung fehlgeschlagen
+  CANCELLED: 'cancelled',                   // Zahlung vom Benutzer abgebrochen
+  REFUNDED: 'refunded',                     // Vollständige Rückerstattung
+  PARTIALLY_REFUNDED: 'partially_refunded'  // Teilweise Rückerstattung
 };
 
-// Payment type enum
+/**
+ * PAYMENT TYPE ENUMERATION
+ * Verschiedene Zahlungsarten für flexible Buchungsmodelle
+ */
 export const PAYMENT_TYPE = {
-  FULL_PAYMENT: 'full_payment',
-  DEPOSIT: 'deposit',
-  REMAINING_BALANCE: 'remaining_balance',
-  SECURITY_DEPOSIT: 'security_deposit',
+  FULL_PAYMENT: 'full_payment',           // Vollzahlung bei Buchung (100%)
+  DEPOSIT: 'deposit',                     // Anzahlung (typisch 20-30%)
+  REMAINING_BALANCE: 'remaining_balance', // Restbetrag vor Anreise
+  SECURITY_DEPOSIT: 'security_deposit',   // Kaution (wird nach Rückgabe freigegeben)
   ADDON_PAYMENT: 'addon_payment'
 };
 

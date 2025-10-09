@@ -1,20 +1,67 @@
+/**
+ * =============================================================================
+ * ANALYTICS SERVICE
+ * =============================================================================
+ * 
+ * Umfassendes Analytics-System für Business Intelligence und 
+ * Daten-Dashboard der WWISCA Camper-Rental Plattform.
+ * 
+ * HAUPTFUNKTIONEN:
+ * - Real-time Dashboard KPI Berechnungen
+ * - Revenue Tracking und Umsatzanalysen
+ * - Booking Performance Metriken
+ * - Customer Segmentation und Verhalten
+ * - Camper Utilization Rate Analytics
+ * - Trend-Analysen mit Zeitraum-Filtern
+ * - Export-Funktionen für Reporting
+ * 
+ * KEY PERFORMANCE INDICATORS (KPIs):
+ * - Total Revenue: Gesamtumsatz nach Zeitraum
+ * - Booking Count: Anzahl Buchungen und Conversion Rate
+ * - Customer Metrics: Neue vs. wiederkehrende Kunden
+ * - Average Booking Value: Durchschnittlicher Buchungswert
+ * - Camper Utilization: Auslastungsgrad pro Fahrzeug
+ * - Revenue Per Day: Tägliche Umsatzentwicklung
+ * - Popular Destinations: Beliebteste Reiseziele
+ * 
+ * ZEITRAUM-FILTER:
+ * - 7 Tage: Kurze Performance-Übersicht
+ * - 30 Tage: Standard Monatsauswertung
+ * - 90 Tage: Quartalsanalyse und Trends
+ * - 1 Jahr: Jahresvergleich und Saisonalität
+ * 
+ * DATENQUELLEN:
+ * - bookings Tabelle: Buchungsdaten und Status
+ * - payments Tabelle: Transaktions- und Umsatzdaten
+ * - users Tabelle: Kundendaten und Segmentierung
+ * - campers Tabelle: Fahrzeugdaten und Verfügbarkeit
+ * 
+ * VERWENDUNG:
+ * const analytics = new AnalyticsService()
+ * const overview = await analytics.getDashboardOverview('30days')
+ * const revenue = await analytics.getRevenueByTimeframe('90days')
+ * const utilization = await analytics.getCamperUtilization()
+ */
 const { query } = require('../lib/databaseConnection');
 
 class AnalyticsService {
   /**
-   * Dashboard Overview
+   * DASHBOARD OVERVIEW
+   * Zentrale KPI-Sammlung für das Analytics Dashboard
+   * @param {string} timeframe - Zeitraum für Analyse ('7days', '30days', '90days', '1year')
+   * @returns {Object} Dashboard KPIs mit Revenue, Bookings, Customers, Avg. Value
    */
   async getDashboardOverview(timeframe = '30days') {
     try {
-      // Konvertiere timeframe zu Tagen
+      // Konvertiere timeframe zu Tagen für SQL-Queries
       const days = this.timeframeToDays(timeframe);
       
-      // KPI Queries mit Zeitraum-Filter
+      // Parallel KPI Queries für bessere Performance
       const [revenue, bookings, customers, avgBooking] = await Promise.all([
-        this.getTotalRevenue(days),
-        this.getTotalBookings(days), 
-        this.getTotalCustomers(days),
-        this.getAverageBookingValue(days)
+        this.getTotalRevenue(days),        // Gesamtumsatz im Zeitraum
+        this.getTotalBookings(days),       // Anzahl Buchungen im Zeitraum  
+        this.getTotalCustomers(days),      // Neue Kunden im Zeitraum
+        this.getAverageBookingValue(days)  // Durchschnittlicher Buchungswert
       ]);
 
       return {
@@ -30,13 +77,16 @@ class AnalyticsService {
   }
 
   /**
-   * Konvertiert Timeframe String zu Anzahl Tagen
+   * TIMEFRAME CONVERTER
+   * Konvertiert menschenlesbare Zeiträume zu Tage-Anzahl für SQL
+   * @param {string} timeframe - Zeitraum String
+   * @returns {number} Anzahl Tage
    */
   timeframeToDays(timeframe) {
     switch(timeframe) {
-      case '7days': return 7;
-      case '30days': return 30;
-      case '90days': return 90;
+      case '7days': return 7;      // Wöchentliche Analyse
+      case '30days': return 30;    // Monatliche Analyse (Standard)
+      case '90days': return 90;    // Quartalsanalyse
       case '1year': return 365;
       default: return 30;
     }

@@ -1,43 +1,93 @@
+/**
+ * =============================================================================
+ * NOTIFICATION SERVICE
+ * =============================================================================
+ * 
+ * Umfassendes Benachrichtigungssystem für Real-Time Updates und 
+ * Benutzer-Kommunikation in der WWISCA Camper-Rental Plattform.
+ * 
+ * HAUPTFUNKTIONEN:
+ * - Real-Time Benachrichtigungen via Server-Sent Events (SSE)
+ * - Multi-Type Notification System (Buchungen, Zahlungen, Erinnerungen)
+ * - Priority-basierte Benachrichtigungs-Kategorisierung  
+ * - Lokale Notification-Persistierung und Caching
+ * - Unread Counter Management mit Badge-Updates
+ * - Auto-Reconnection bei Verbindungsverlusten
+ * - Browser Notification API Integration
+ * 
+ * NOTIFICATION TYPES:
+ * - Booking: Bestätigungen, Updates, Stornierungen
+ * - Payment: Erfolg/Fehler Benachrichtigungen
+ * - Reminders: Abholung/Rückgabe Erinnerungen
+ * - Reviews: Bewertungsanfragen nach Buchungen
+ * - Messages: Direkte Nachrichten zwischen Nutzern
+ * - System: Updates und Wartungshinweise
+ * - Promotions: Marketing und Angebote
+ * 
+ * PRIORITY LEVELS:
+ * - LOW: Promotions, allgemeine Updates
+ * - MEDIUM: Review-Requests, Standard-Nachrichten
+ * - HIGH: Buchungsbestätigungen, Zahlungsbestätigungen
+ * - URGENT: Zahlungsfehler, kritische System-Updates
+ * 
+ * VERWENDUNG:
+ * const notificationService = new NotificationService()
+ * notificationService.initialize(userId)
+ * notificationService.subscribe((notification) => handleNotification(notification))
+ */
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { authService } from './userAuthenticationService';
 
-// Notification types
+/**
+ * NOTIFICATION TYPES ENUMERATION
+ * Definiert alle verfügbaren Benachrichtigungstypen für Type-Safety
+ */
 export const NOTIFICATION_TYPES = {
-  BOOKING_CONFIRMED: 'booking_confirmed',
-  BOOKING_UPDATED: 'booking_updated',
-  BOOKING_CANCELLED: 'booking_cancelled',
-  PAYMENT_SUCCESSFUL: 'payment_successful',
-  PAYMENT_FAILED: 'payment_failed',
-  REMINDER_PICKUP: 'reminder_pickup',
-  REMINDER_RETURN: 'reminder_return',
-  REVIEW_REQUEST: 'review_request',
-  MESSAGE_RECEIVED: 'message_received',
-  SYSTEM_UPDATE: 'system_update',
-  PROMOTION: 'promotion'
+  BOOKING_CONFIRMED: 'booking_confirmed',     // Buchungsbestätigung
+  BOOKING_UPDATED: 'booking_updated',         // Buchungsänderung
+  BOOKING_CANCELLED: 'booking_cancelled',     // Buchungsstornierung
+  PAYMENT_SUCCESSFUL: 'payment_successful',   // Erfolgreiche Zahlung
+  PAYMENT_FAILED: 'payment_failed',          // Fehlgeschlagene Zahlung
+  REMINDER_PICKUP: 'reminder_pickup',         // Abholungs-Erinnerung
+  REMINDER_RETURN: 'reminder_return',         // Rückgabe-Erinnerung
+  REVIEW_REQUEST: 'review_request',           // Bewertungsanfrage
+  MESSAGE_RECEIVED: 'message_received',       // Neue Nachricht
+  SYSTEM_UPDATE: 'system_update',            // System-Update
+  PROMOTION: 'promotion'                     // Werbe-Angebot
 };
 
-// Notification priority levels
+/**
+ * PRIORITY LEVELS ENUMERATION
+ * Definiert Wichtigkeitsstufen für Notification-Priorisierung
+ */
 export const NOTIFICATION_PRIORITY = {
-  LOW: 'low',
-  MEDIUM: 'medium',
-  HIGH: 'high',
-  URGENT: 'urgent'
+  LOW: 'low',        // Niedrige Priorität - Promotions, optionale Updates
+  MEDIUM: 'medium',  // Mittlere Priorität - Standard Nachrichten, Reviews
+  HIGH: 'high',      // Hohe Priorität - Buchungen, Zahlungsbestätigungen
+  URGENT: 'urgent'   // Dringende Priorität - Fehler, kritische Updates
 };
 
-// Notification service class
+/**
+ * NOTIFICATION SERVICE KLASSE
+ * Zentrale Verwaltung aller Benachrichtigungsfunktionen mit Real-Time Updates
+ */
 class NotificationService {
   constructor() {
-    this.eventSource = null;
-    this.subscribers = new Set();
-    this.reconnectInterval = null;
-    this.reconnectAttempts = 0;
-    this.maxReconnectAttempts = 5;
-    this.isConnected = false;
-    this.notifications = [];
-    this.unreadCount = 0;
+    this.eventSource = null              // SSE-Verbindung für Real-Time Updates
+    this.subscribers = new Set()         // Subscriber für Notification-Events
+    this.reconnectInterval = null        // Interval für automatische Wiederverbindung
+    this.reconnectAttempts = 0          // Zähler für Reconnection-Versuche
+    this.maxReconnectAttempts = 5       // Maximum Reconnection-Versuche
+    this.isConnected = false            // Verbindungsstatus
+    this.notifications = []             // Lokaler Notification-Cache
+    this.unreadCount = 0               // Anzahl ungelesener Benachrichtigungen
   }
 
-  // Initialize the notification service
+  /**
+   * SERVICE INITIALISIERUNG
+   * Startet die Notification-Verbindung für den angegebenen Benutzer
+   * @param {string} userId - Eindeutige Benutzer-ID
+   */
   initialize(userId) {
     if (!userId) {
       console.warn('Cannot initialize notifications without user ID');
@@ -45,8 +95,8 @@ class NotificationService {
     }
 
     this.userId = userId;
-    this.connect();
-    this.loadStoredNotifications();
+    this.connect();                     // SSE-Verbindung aufbauen
+    this.loadStoredNotifications();     // Gespeicherte Notifications laden
   }
 
   // Connect to Server-Sent Events

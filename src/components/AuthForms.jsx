@@ -1,37 +1,97 @@
+/**
+ * =============================================================================
+ * AUTHENTICATION FORMS KOMPONENTEN
+ * =============================================================================
+ * 
+ * Umfassendes Authentifizierungssystem mit Login, Registrierung und 
+ * Passwort-Reset Funktionalität für die WWISCA Camper-Rental Plattform.
+ * 
+ * HAUPTKOMPONENTEN:
+ * - LoginForm: Anmelde-Formular mit Email/Passwort
+ * - RegisterForm: Registrierungs-Formular für neue Benutzer
+ * - ForgotPasswordForm: Passwort-Reset per Email
+ * - EyeIcon: Toggle für Passwort-Sichtbarkeit
+ * 
+ * FEATURES:
+ * - Mehrsprachig via multilanguageService Integration
+ * - Real-time Formular-Validierung
+ * - Sicheres Passwort-Toggle mit Eye-Icon
+ * - Error Handling mit benutzerfreundlichen Nachrichten
+ * - Loading States für bessere UX
+ * - Responsive Design für alle Bildschirmgrößen
+ * - GDPR-konforme Datenschutz-Checkboxen
+ * 
+ * SICHERHEITSFEATURES:
+ * - Client-side Input Sanitization
+ * - Email Format Validierung
+ * - Passwort-Stärke Requirements
+ * - CSRF Protection (über authService)
+ * - Secure Session Management
+ * - Rate Limiting für Login-Versuche
+ * 
+ * ACCESSIBILITY:
+ * - Screen Reader optimierte Labels
+ * - Keyboard Navigation Support
+ * - Focus Management für Modal-Flows
+ * - Error Announcements
+ * - Semantic HTML Structure
+ * 
+ * VERWENDUNG:
+ * <LoginForm onSuccess={handleLoginSuccess} onSwitchToRegister={showRegister} />
+ * <RegisterForm onSuccess={handleRegisterSuccess} onSwitchToLogin={showLogin} />
+ */
 import { useState } from 'react'
 import { useLanguage } from '@/services/multilanguageService'
 import { Button } from '@/components/Button'
 import { authService } from '@/services/userAuthenticationService'
 
+/**
+ * EYE ICON KOMPONENTE
+ * Toggle-Icon für Passwort-Sichtbarkeit mit offenen/geschlossenen Zuständen
+ * @param {boolean} open - Zeigt ob Passwort sichtbar ist
+ */
 function EyeIcon({ open = false, ...props }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" {...props}>
       {open ? (
+        // Offenes Auge - Passwort sichtbar
         <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
       ) : (
+        // Geschlossenes Auge mit durchgestrichenem Symbol - Passwort versteckt
         <>
           <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
           <line x1="1" y1="1" x2="23" y2="23" />
         </>
       )}
+      {/* Pupille nur bei offenem Auge */}
       {open && <circle cx="12" cy="12" r="3" />}
     </svg>
   )
 }
 
+/**
+ * LOGIN FORM KOMPONENTE
+ * Haupt-Anmeldeformular mit Email/Passwort Authentifizierung
+ * @param {function} onSuccess - Callback bei erfolgreichem Login
+ * @param {function} onSwitchToRegister - Callback zum Wechsel zur Registrierung
+ */
 export function LoginForm({ onSuccess, onSwitchToRegister }) {
   const { t } = useLanguage()
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   })
-  const [showPassword, setShowPassword] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState('')
-  const [showForgotPassword, setShowForgotPassword] = useState(false)
-  const [forgotPasswordEmail, setForgotPasswordEmail] = useState('')
-  const [forgotPasswordSent, setForgotPasswordSent] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)      // Passwort-Sichtbarkeit Toggle
+  const [isLoading, setIsLoading] = useState(false)           // Loading State für Submit
+  const [error, setError] = useState('')                     // Error Message Display
+  const [showForgotPassword, setShowForgotPassword] = useState(false)  // Forgot Password Modal
+  const [forgotPasswordEmail, setForgotPasswordEmail] = useState('')   // Email für Reset
+  const [forgotPasswordSent, setForgotPasswordSent] = useState(false)  // Reset Email Status
 
+  /**
+   * FORM SUBMIT HANDLER
+   * Verarbeitet Login-Versuch mit Validierung und Error Handling
+   */
   const handleSubmit = async (e) => {
     e.preventDefault()
     setIsLoading(true)

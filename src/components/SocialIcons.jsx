@@ -1,3 +1,42 @@
+/**
+ * =============================================================================
+ * SOCIAL MEDIA ICONS KOMPONENTEN
+ * =============================================================================
+ * 
+ * Collection von SVG-basierten Social Media Icons für die 
+ * WWISCA Camper-Rental Plattform. Optimiert für Accessibility
+ * und konsistente Darstellung.
+ * 
+ * VERFÜGBARE ICONS:
+ * - TwitterIcon: X (ehemals Twitter) Platform
+ * - InstagramIcon: Instagram Social Network
+ * - GitHubIcon: GitHub Development Platform
+ * - LinkedInIcon: LinkedIn Business Network
+ * - AmazonIcon: Amazon Marketplace
+ * 
+ * EIGENSCHAFTEN:
+ * - SVG-basiert für skalierbare Darstellung
+ * - Accessibility-optimiert mit aria-hidden
+ * - Einheitlicher 24x24 ViewBox Standard
+ * - Props-kompatibel für Styling-Überrides
+ * - Optimierte Pfad-Daten für minimale Bundle-Größe
+ * 
+ * VERWENDUNG:
+ * <TwitterIcon className="w-6 h-6 text-blue-500" />
+ * <InstagramIcon className="w-5 h-5 text-pink-600" />
+ * <GitHubIcon className="w-8 h-8 text-gray-900 dark:text-white" />
+ * 
+ * STYLING:
+ * - Responsive Größen via Tailwind (w-4 bis w-12)
+ * - Farb-Anpassung via text-color Klassen
+ * - Hover-Effekte und Transitions unterstützt
+ * - Dark Mode kompatible Farbwechsel
+ */
+
+/**
+ * TWITTER (X) ICON
+ * SVG für die X Platform (ehemals Twitter)
+ */
 export function TwitterIcon(props) {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" {...props}>
@@ -6,6 +45,10 @@ export function TwitterIcon(props) {
   )
 }
 
+/**
+ * INSTAGRAM ICON
+ * SVG für Instagram Social Network mit Kamera-Symbol
+ */
 export function InstagramIcon(props) {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" {...props}>
@@ -15,6 +58,10 @@ export function InstagramIcon(props) {
   )
 }
 
+/**
+ * GITHUB ICON
+ * SVG für GitHub Development Platform (Octocat Logo)
+ */
 export function GitHubIcon(props) {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" {...props}>
@@ -27,6 +74,10 @@ export function GitHubIcon(props) {
   )
 }
 
+/**
+ * LINKEDIN ICON
+ * SVG für LinkedIn Business Network
+ */
 export function LinkedInIcon(props) {
   return (
     <svg viewBox="0 0 24 24" {...props}>
@@ -35,6 +86,10 @@ export function LinkedInIcon(props) {
   )
 }
 
+/**
+ * AMAZON ICON
+ * SVG für Amazon Marketplace Integration
+ */
 export function AmazonIcon(props) {
   return (
     <svg viewBox="0 0 448 512" {...props}>
