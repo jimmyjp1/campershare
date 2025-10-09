@@ -1,31 +1,87 @@
+/**
+ * =============================================================================
+ * CAMPER FILTERS KOMPONENTEN
+ * =============================================================================
+ * 
+ * Umfassendes Filter-System für die Camper-Suche mit erweiterten 
+ * Suchoptionen und geografischer Integration.
+ * 
+ * HAUPTKOMPONENTEN:
+ * - AdvancedFilters: Haupt-Filter Interface mit allen Optionen
+ * - LocationFilter: Standort-basierte Suche mit GPS Integration
+ * - PriceRangeFilter: Slider für Preisbereiche
+ * - CapacityFilter: Personenanzahl und Schlafplätze
+ * - AmenitiesFilter: Ausstattungsmerkmale (Küche, Bad, etc.)
+ * - AvailabilityFilter: Datums-basierte Verfügbarkeitssuche
+ * 
+ * FILTER KATEGORIEN:
+ * - Standort: GPS-basiert oder manuelle Eingabe mit Umkreissuche
+ * - Preis: Range Slider mit dynamischen Min/Max Werten
+ * - Fahrzeugtyp: Kategorien (Kastenwagen, Alkoven, Teilintegriert)
+ * - Kapazität: Anzahl Personen und Schlafplätze
+ * - Ausstattung: Küche, Bad, Heizung, Klimaanlage, etc.
+ * - Verfügbarkeit: Start- und Enddatum für Buchungszeitraum
+ * - Entfernung: Umkreissuche von Benutzerstandort
+ * - Sortierung: Preis, Entfernung, Bewertung, Baujahr
+ * 
+ * ERWEITERTE FEATURES:
+ * - GPS-Integration für automatische Standorterkennung
+ * - Real-time Verfügbarkeitsprüfung
+ * - Multi-Select für Ausstattungsmerkmale
+ * - Sticky Filter bei Seitennavigation
+ * - Responsive Collapse/Expand Interface
+ * - URL-Parameter Synchronisation für Bookmarks
+ * 
+ * PERFORMANCE OPTIMIERUNG:
+ * - useMemo für teure Filter-Berechnungen
+ * - Debounced Search Input für API-Schonung
+ * - Lazy Loading für große Fahrzeug-Listen
+ * - Client-side Caching von Filter-Ergebnissen
+ * 
+ * VERWENDUNG:
+ * <AdvancedFilters 
+ *   onFiltersChange={handleFilterChange}
+ *   availableVans={camperData}
+ * />
+ */
 import React, { useState, useEffect, useMemo } from 'react';
 import { useGeolocation } from '../services/mapIntegrationService';
 import { PICKUP_LOCATIONS, CAMPER_VANS } from '../services/camperVehicleDataService';
 
-// Main filter component with all filtering options
+/**
+ * ADVANCED FILTERS HAUPTKOMPONENTE
+ * Zentrale Filter-Oberfläche mit allen Suchoptionen
+ * @param {function} onFiltersChange - Callback bei Filter-Änderungen
+ * @param {Array} availableVans - Verfügbare Camper-Daten für Filter-Optionen
+ */
 export const AdvancedFilters = ({ onFiltersChange, availableVans = CAMPER_VANS }) => {
+  // Zentrale Filter-State Verwaltung
   const [filters, setFilters] = useState({
-    location: '',
-    priceRange: [0, 500],
-    vanType: '',
-    capacity: '',
-    amenities: [],
-    availability: {
+    location: '',                    // Standort-String oder GPS-Koordinaten
+    priceRange: [0, 500],           // Min/Max Preisspanne pro Tag
+    vanType: '',                    // Fahrzeugkategorie
+    capacity: '',                   // Anzahl Personen
+    amenities: [],                  // Ausstattungsmerkmale (Multi-Select)
+    availability: {                 // Verfügbarkeitszeitraum
       startDate: '',
       endDate: ''
     },
-    distance: 50, // miles from user location
-    sortBy: 'price-low',
-    transmission: '',
-    fuelType: '',
-    year: '',
-    features: []
+    distance: 50,                   // Umkreis in Kilometern
+    sortBy: 'price-low',           // Sortierung (price-low, price-high, distance, rating)
+    transmission: '',               // Getriebe (manual, automatic)
+    fuelType: '',                  // Kraftstoff (diesel, petrol, electric)
+    year: '',                      // Baujahr-Filter
+    features: []                   // Spezielle Features (Solar, Fahrradträger, etc.)
   });
 
-  const [isExpanded, setIsExpanded] = useState(false);
-  const { getCurrentLocation, calculateDistance } = useGeolocation();
-  const [userLocation, setUserLocation] = useState(null);
+  const [isExpanded, setIsExpanded] = useState(false);  // Erweiterte Filter Toggle
+  const { getCurrentLocation, calculateDistance } = useGeolocation();  // GPS Integration
+  const [userLocation, setUserLocation] = useState(null);  // Benutzer-Standort Cache
 
+  /**
+   * GPS STANDORT ERMITTLUNG
+   * Versucht automatisch den Benutzerstandort zu ermitteln
+   */
   useEffect(() => {
     const getUserLocation = async () => {
       try {
@@ -33,6 +89,7 @@ export const AdvancedFilters = ({ onFiltersChange, availableVans = CAMPER_VANS }
         setUserLocation(location);
       } catch (error) {
         console.warn('Could not get user location:', error);
+        // Fallback auf Standard-Standort oder manuelle Eingabe
       }
     };
     getUserLocation();
