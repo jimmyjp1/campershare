@@ -1,5 +1,6 @@
 // Get all campers API endpoint with filtering and search
 const { Pool } = require('pg');
+const { generateCamperImages } = require('../../../services/camperImageService');
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL || 'postgresql://campershare_user:campershare_pass@postgres:5432/campershare',
@@ -102,14 +103,20 @@ module.exports = async function handler(req, res) {
     // Execute query
     const result = await pool.query(queryText, queryParams);
 
-    // Transform data to ensure consistent field naming
-    const transformedData = result.rows.map(camper => ({
-      ...camper,
-      pricePerDay: parseFloat(camper.price_per_day || 0),
-      pricePerNight: parseFloat(camper.price_per_day || 0), // Same as pricePerDay for campers
-      // Keep the original field for backward compatibility
-      price_per_day: camper.price_per_day
-    }));
+    // Transform data to ensure consistent field naming and add dynamic images
+    const transformedData = result.rows.map(camper => {
+      // Generate dynamic image paths based on folder structure
+      const imageData = generateCamperImages(camper.slug);
+      
+      return {
+        ...camper,
+        ...imageData, // Add imageUrl and images from the image service
+        pricePerDay: parseFloat(camper.price_per_day || 0),
+        pricePerNight: parseFloat(camper.price_per_day || 0), // Same as pricePerDay for campers
+        // Keep the original field for backward compatibility
+        price_per_day: camper.price_per_day
+      }
+    });
 
     // Get total count for pagination
     let countQuery = `

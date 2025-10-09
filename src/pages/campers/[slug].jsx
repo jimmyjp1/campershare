@@ -692,7 +692,7 @@ export default function CamperVanDetail({ caravan }) {
       functionalCookies.addRecentVehicle({
         id: camperVan.id,
         name: camperVan.name,
-        imageUrl: `/images/campers/${camperVan.slug}/1.jpg`,
+        imageUrl: `/images/caravans/${camperVan.slug}/main.avif`,
         pricePerDay: camperVan.pricePerDay || camperVan.price_per_day,
         location: camperVan.location
       })
@@ -778,11 +778,13 @@ export default function CamperVanDetail({ caravan }) {
     (Array.isArray(camperVan.features) ? camperVan.features : camperVan.features.split(',').map(f => f.trim())) 
     : []
 
+  // Generate dynamic image paths based on new folder structure
   const images = [
-    { url: `/images/campers/${camperVan.slug}/1.jpg`, alt: `${camperVan.name} - Außenansicht` },
-    { url: `/images/campers/${camperVan.slug}/2.jpg`, alt: `${camperVan.name} - Innenraum` },
-    { url: `/images/campers/${camperVan.slug}/3.jpg`, alt: `${camperVan.name} - Küche` },
-    { url: `/images/campers/${camperVan.slug}/4.jpg`, alt: `${camperVan.name} - Schlafbereich` }
+    { url: `/images/caravans/${camperVan.slug}/main.avif`, alt: `${camperVan.name} - Hauptansicht` },
+    { url: `/images/caravans/${camperVan.slug}/exterior-1.avif`, alt: `${camperVan.name} - Außenansicht` },
+    { url: `/images/caravans/${camperVan.slug}/interior-1.avif`, alt: `${camperVan.name} - Innenraum` },
+    { url: `/images/caravans/${camperVan.slug}/interior-2.avif`, alt: `${camperVan.name} - Schlafbereich` },
+    { url: `/images/caravans/${camperVan.slug}/detail-1.avif`, alt: `${camperVan.name} - Detailansicht` }
   ]
 
   return (
@@ -792,7 +794,7 @@ export default function CamperVanDetail({ caravan }) {
         <meta name="description" content={`${camperVan.name} mieten bei CamperShare. ${camperVan.description} Jetzt ab ${formatPrice(parseFloat(camperVan.pricePerDay || camperVan.price_per_day || 0))}/Tag buchen!`} />
         <meta property="og:title" content={`${camperVan.name} - CamperShare`} />
         <meta property="og:description" content={camperVan.description || ''} />
-        <meta property="og:image" content={`/images/campers/${camperVan.slug}/1.jpg`} />
+        <meta property="og:image" content={`/images/caravans/${camperVan.slug}/main.avif`} />
       </Head>
 
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-zinc-100 dark:from-zinc-900 dark:to-slate-900">

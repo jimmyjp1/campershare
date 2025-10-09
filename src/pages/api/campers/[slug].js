@@ -1,5 +1,6 @@
 // Get camper by slug API endpoint
 const { Pool } = require('pg');
+const { generateCamperImages } = require('../../../services/camperImageService');
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL || 'postgresql://campershare_user:campershare_pass@postgres:5432/campershare',
@@ -77,10 +78,14 @@ module.exports = async function handler(req, res) {
       price_per_day: camper.price_per_day
     };
 
+    // Generate dynamic image paths based on folder structure
+    const imageData = generateCamperImages(camper.slug);
+
     res.status(200).json({
       success: true,
       data: {
         ...transformedCamper,
+        ...imageData, // Add imageUrl and images from the image service
         reviews: reviewsResult.rows,
         bookedDates
       }

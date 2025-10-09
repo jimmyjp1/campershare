@@ -909,11 +909,26 @@ function CamperCard({ caravan, userLocation, distance, nearestLocation, vanId, b
   return (
     <div className="group h-full">
       <div className="bg-white dark:bg-zinc-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform group-hover:-translate-y-2 overflow-hidden border border-zinc-200 dark:border-zinc-700 h-full flex flex-col">
-        {/* Image Placeholder */}
+        {/* Camper Image */}
         <div className="relative aspect-video bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-700 dark:to-zinc-800">
-          <div className="absolute inset-0 flex items-center justify-center">
-            <VanIcon className="h-16 w-16 text-zinc-400" />
-          </div>
+          <img 
+            src={`/images/caravans/${caravan.slug}/main.avif`}
+            alt={`${caravan.name} - Hauptansicht`}
+            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+            onError={(e) => {
+              // Fallback zu Platzhalter-Icon wenn Bild nicht verfügbar
+              e.target.style.display = 'none'
+              e.target.parentElement.innerHTML = `
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <div class="h-16 w-16 text-zinc-400">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 2L4 5v6c0 5.2 3.1 10.1 8 12 4.9-1.9 8-6.8 8-12V5l-8-3z" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                  </div>
+                </div>
+              `
+            }}
+          />
           
           {/* Wishlist Button - Client Only */}
           <div className="absolute top-4 left-4">
