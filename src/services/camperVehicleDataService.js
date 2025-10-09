@@ -1,43 +1,98 @@
-// Camper van data for the booking system
+/**
+ * CamperShare - Fahrzeugdaten-Service (camperVehicleDataService.js)
+ * 
+ * Zentrale Datenbank für alle verfügbaren Wohnmobile der Plattform.
+ * Enthält detaillierte Spezifikationen, Preise und Verfügbarkeiten.
+ * 
+ * Datenstruktur pro Fahrzeug:
+ * - Grunddaten (Name, Kategorie, Hersteller)
+ * - Technische Spezifikationen (Motor, Verbrauch, Gewicht)
+ * - Ausstattung und Features
+ * - Preise und Verfügbarkeit
+ * - Standorte und GPS-Koordinaten
+ * - Bewertungen und Badge-System
+ * - Bilder und Medien
+ * 
+ * Kategorien:
+ * - Kompakt: VW California, Ford Nugget (2-4 Personen)
+ * - Standard: Dethleffs, Hobby (4-6 Personen)
+ * - Premium: Concorde, Morelo (6+ Personen)
+ * - Luxus: Concorde Charisma, Morelo Palace
+ * 
+ * Zusatzservices:
+ * - Versicherungspakete (Basis bis Premium)
+ * - Kilometerpakete (500km bis Unlimited)
+ * - Extras (GPS, Fahrräder, Campingausrüstung)
+ * - Abholstandorte deutschlandweit
+ * 
+ * Performance-Optimierungen:
+ * - Lazy Loading für Bilder
+ * - Caching von Suchergebnissen
+ * - Filterbare Datenstrukturen
+ */
+
+// Haupt-Fahrzeugdatenbank mit 19+ konfigurierten Wohnmobilen
 export const CAMPER_VANS = [
   {
     id: 'vw-california-ocean',
     name: 'VW California Ocean',
     imageUrl: '/images/campers/vw-california-ocean.jpg',
     images: ['/images/campers/vw-california-ocean-1.jpg', '/images/campers/vw-california-ocean-2.jpg'],
+    
+    // Preisgestaltung
     pricePerDay: 89,
-    beds: 4,
-    seats: 4,
-    requiredLicense: 'B',
-    fuelConsumption: 7.5,
-    enginePower: 150,
+    
+    // Kapazitäten
+    beds: 4,                    // Schlafplätze
+    seats: 4,                   // Sitzplätze während Fahrt
+    
+    // Fahrzeug-Spezifikationen
+    requiredLicense: 'B',       // Führerscheinklasse
+    fuelConsumption: 7.5,       // Liter/100km
+    enginePower: 150,           // PS
     driveType: 'diesel',
     emissionClass: 'Euro 6',
+    
+    // Abmessungen und Gewichte
     dimensions: { length: 4.90, width: 1.93, height: 1.99 },
-    emptyWeight: 2300,
-    maxTotalWeight: 3080,
+    emptyWeight: 2300,          // kg
+    maxTotalWeight: 3080,       // kg zulässiges Gesamtgewicht
+    
+    // Anhängerkupplung
     hasTrailerHitch: true,
-    maxTrailerLoad: 1500,
+    maxTrailerLoad: 1500,       // kg
+    
+    // Ausstattungsmerkmale
     features: ['Aufstelldach', 'Miniküche', 'Kühlschrank', 'Aufbewahrungsschränke', 'Ausziehbares Bett', 'Swivel-Sitze'],
+    
+    // Verfügbarkeitszeiträume
     availability: [
       { startDate: '2025-03-15', endDate: '2025-03-22' },
       { startDate: '2025-04-01', endDate: '2025-04-15' }
     ],
+    
+    // Marketing-Daten
     description: 'Der beliebte VW California Ocean bietet kompakte Luxusausstattung für 4 Personen mit Aufstelldach und Miniküche.',
-    rating: 4.5,
+    rating: 4.5,                // Kundenbewertung (1-5)
     category: 'Kompakt',
-    badge: 'Beliebt',
+    badge: 'Beliebt',          // Marketing-Badge
+    
+    // Standorte
     pickupLocations: ['Berlin', 'Hamburg', 'München'],
     location: 'Berlin (PLZ 10115)',
-    latitude: 52.5200,
+    latitude: 52.5200,         // GPS für Karten-Integration
     longitude: 13.4050,
+    
+    // Klassifizierung
     type: 'Van',
     manufacturer: 'Volkswagen',
     year: 2022,
+    
+    // Detaillierte technische Daten
     specifications: {
       transmission: 'Automatik DSG',
-      fuelTankCapacity: 70,
-      waterTankCapacity: 30,
+      fuelTankCapacity: 70,     // Liter
+      waterTankCapacity: 30,    // Liter
       wasteWaterCapacity: 25,
       electricalSystem: '12V/230V',
       heating: 'Standheizung',

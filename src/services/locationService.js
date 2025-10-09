@@ -1,19 +1,61 @@
+/**
+ * =============================================================================
+ * LOCATION SERVICE
+ * =============================================================================
+ * 
+ * Intelligenter Standort-Service für standortbasierte Features der 
+ * WWISCA Camper-Rental Plattform. Verwaltet Benutzer-Standorte, 
+ * Abholstationen und geografische Berechnungen.
+ * 
+ * HAUPTFUNKTIONEN:
+ * - Browser-Geolocation API Integration
+ * - Fallback-Standorte für IP-basierte Erkennung
+ * - Distanzberechnungen zwischen Koordinaten
+ * - Pickup-Locations Management und Suche
+ * - Cookie-basierte Standort-Persistierung
+ * - Error Handling für verschiedene Browser/Geräte
+ * 
+ * FEATURES:
+ * - High-Accuracy GPS Positioning
+ * - Smart Caching mit konfigurierbaren Timeouts
+ * - Nearest Pickup Location Detection
+ * - Location Permission Handling
+ * - Cross-Browser Kompatibilität
+ * - TypeScript-ähnliche Error Messages
+ * 
+ * VERWENDUNG:
+ * const locationService = new LocationService()
+ * const position = await locationService.getCurrentPosition()
+ * const nearest = locationService.findNearestPickupLocation(lat, lng)
+ * 
+ * HOOKS:
+ * const { location, loading, error } = useLocation()
+ * const { pickupLocations } = usePickupLocations()
+ */
+
 // Smart Location Service für standortbasierte Features
 import { useState, useEffect, useCallback } from 'react'
 import { cookieService } from './browserCookieManager'
 import { PICKUP_LOCATIONS } from './camperVehicleDataService'
 
-// Utility function for browser detection (memoized)
+// Browser-Umgebung Detection (memoized für Performance)
 const isBrowser = typeof window !== 'undefined';
 
-// Location Service Klasse
+/**
+ * LOCATION SERVICE KLASSE
+ * Zentrale Verwaltung aller standortbezogenen Funktionen
+ */
 class LocationService {
   constructor() {
     this.currentLocation = null
     this.isGeolocationAvailable = isBrowser && 'geolocation' in navigator
   }
 
-  // Browser-Geolocation abfragen
+  /**
+   * BROWSER GEOLOCATION ABFRAGEN
+   * Nutzt native Browser-API für präzise GPS-Positionierung
+   * @returns {Promise<Object>} Location-Objekt mit Koordinaten und Metadaten
+   */
   async getCurrentPosition() {
     if (!this.isGeolocationAvailable) {
       throw new Error('Geolocation nicht verfügbar')
@@ -25,9 +67,9 @@ class LocationService {
           const location = {
             lat: position.coords.latitude,
             lng: position.coords.longitude,
-            accuracy: position.coords.accuracy,
-            source: 'geolocation',
-            timestamp: new Date().toISOString()
+            accuracy: position.coords.accuracy,      // Genauigkeit in Metern
+            source: 'geolocation',                   // Quelle der Positionsdaten
+            timestamp: new Date().toISOString()      // ISO-Zeitstempel
           }
           resolve(location)
         },
@@ -35,9 +77,9 @@ class LocationService {
           reject(new Error(`Geolocation Fehler: ${error.message}`))
         },
         {
-          enableHighAccuracy: true,
-          timeout: 15000, // Längere Timeout für bessere Genauigkeit
-          maximumAge: 60000 // Kürzeres Cache für aktuellere Position (1 Minute)
+          enableHighAccuracy: true,  // GPS aktivieren für bessere Genauigkeit
+          timeout: 15000,           // 15s Timeout für langsame GPS-Fixes
+          maximumAge: 60000        // 1 Minute Cache für aktuellere Positionen
         }
       )
     })

@@ -1,17 +1,58 @@
+/**
+ * =============================================================================
+ * REVIEW SYSTEM KOMPONENTEN
+ * =============================================================================
+ * 
+ * Vollständiges Bewertungssystem für Camper-Rental Plattform mit:
+ * - Interaktives Stern-Rating System
+ * - Review-Anzeige und -Erstellung
+ * - Benutzer-Authentifizierung Integration
+ * - Admin-Funktionen für Review-Management
+ * - Responsive Design mit Mobile-First Ansatz
+ * 
+ * HAUPT KOMPONENTEN:
+ * - StarRating: Interaktive Sterne-Bewertung
+ * - ReviewCard: Anzeige einzelner Reviews
+ * - ReviewForm: Formular für neue Reviews
+ * - ReviewList: Container für Review-Listings
+ * - ReviewSummary: Statistik-Übersicht
+ * 
+ * FEATURES:
+ * - Real-time Rating Updates
+ * - Conditional Rendering basierend auf Auth-Status
+ * - AJAX-Integration für API-Calls
+ * - Responsive Layouts mit Tailwind CSS
+ * - Accessibility-optimierte Interaktionen
+ * 
+ * VERWENDUNG:
+ * <StarRating rating={4} onRatingChange={handleRating} />
+ * <ReviewCard review={reviewData} />
+ * <ReviewForm camperId={123} />
+ */
 import React, { useState, useEffect, useRef } from 'react';
 import { authService } from '../services/userAuthenticationService';
 import { ajaxService } from '../services/externalApiConnector';
 
-// Star Rating Component
+/**
+ * STAR RATING KOMPONENTE
+ * Interaktive 5-Sterne Bewertung mit Hover-Effekten
+ * 
+ * @param {number} rating - Aktuelle Bewertung (0-5)
+ * @param {function} onRatingChange - Callback bei Rating-Änderung
+ * @param {string} size - Größe: 'sm', 'md', 'lg', 'xl'
+ * @param {boolean} readonly - Nur-Lese Modus
+ * @param {string} className - Zusätzliche CSS-Klassen
+ */
 export const StarRating = ({ rating = 0, onRatingChange, size = 'md', readonly = false, className = '' }) => {
   const [hoverRating, setHoverRating] = useState(0);
   const [selectedRating, setSelectedRating] = useState(rating);
 
+  // Responsive Größen für verschiedene Kontexte
   const sizeClasses = {
-    sm: 'w-4 h-4',
-    md: 'w-5 h-5',
-    lg: 'w-6 h-6',
-    xl: 'w-8 h-8'
+    sm: 'w-4 h-4',    // 16px - Kompakte Listen
+    md: 'w-5 h-5',    // 20px - Standard Größe
+    lg: 'w-6 h-6',    // 24px - Hervorgehobene Ratings
+    xl: 'w-8 h-8'     // 32px - Hero/Header Bereiche
   };
 
   const handleStarClick = (starRating) => {

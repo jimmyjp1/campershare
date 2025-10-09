@@ -1,3 +1,33 @@
+/**
+ * CamperShare - Über Uns Seite (about.jsx)
+ * 
+ * Umfassende Unternehmensdarstellung mit moderner, interaktiver Gestaltung.
+ * Erzählt die Geschichte von CamperShare und stellt das Team vor.
+ * 
+ * Hauptsektionen:
+ * - Hero Section: Video-Hintergrund mit Unternehmens-Vision
+ * - Story Section: Unternehmensgeschichte mit Timeline
+ * - Values Section: Kernwerte mit interaktiven Karten
+ * - Team Section: Mitarbeiter-Profile mit Fotos
+ * - Stats Section: Vertrauen durch Zahlen
+ * - CTA Section: Kontakt-Aufforderung
+ * 
+ * Design-Features:
+ * - Video-Hintergrund (Über_Uns_Video.mp4)
+ * - Glassmorphism-Effekte
+ * - Scroll-gesteuerte Animationen
+ * - Interaktive Value-Cards mit Hover-Effekten
+ * - Responsive Team-Grid
+ * - Dark Mode Support
+ * - Mehrsprachige Inhalte
+ * 
+ * Technische Highlights:
+ * - CSS-in-JS Animationen
+ * - Intersection Observer für Performance
+ * - Next.js Image-Optimierung
+ * - SEO-optimierte Meta-Tags
+ */
+
 import Head from 'next/head'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -8,7 +38,10 @@ import { Button } from '@/components/Button'
 import { useLanguage } from '@/services/multilanguageService'
 import { CamperShareIcon, CamperShareBrandIcon } from '@/components/CamperShareIcon'
 
-// CSS Keyframes für Animationen
+/**
+ * CSS Keyframes für komplexe Animationen
+ * Definiert verschiedene Einfade- und Bewegungseffekte
+ */
 const animationStyles = `
   @keyframes fadeInUp {
     from {

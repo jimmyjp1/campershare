@@ -1,3 +1,30 @@
+/**
+ * CamperShare - Admin Dashboard (admin.jsx)
+ * 
+ * Vollständiges Admin-Panel für die Verwaltung der CamperShare-Plattform.
+ * Bietet umfassende Kontrolle über alle Geschäftsbereiche.
+ * 
+ * Hauptfunktionen:
+ * - Dashboard mit KPI-Übersicht und Charts
+ * - Buchungsmanagement (Bestätigen, Stornieren, Bearbeiten)
+ * - Benutzerverwaltung (Rollen, Freischaltungen)
+ * - Fahrzeugverwaltung (Status, Preise, Verfügbarkeit)
+ * - Analytics & Reporting
+ * - System-Einstellungen
+ * 
+ * Sicherheit:
+ * - Admin-Rolle erforderlich
+ * - Session-basierte Authentifizierung
+ * - Audit-Logging für alle Aktionen
+ * 
+ * UI-Features:
+ * - Tab-basierte Navigation
+ * - Responsive Tables mit Pagination
+ * - Modal-Dialoge für Details
+ * - Dark Mode Support
+ * - Export-Funktionen (CSV, PDF)
+ */
+
 import React, { useState, useEffect } from 'react';
 import { authService } from '../services/userAuthenticationService';
 import { bookingService } from '../services/bookingService';
@@ -6,24 +33,39 @@ import { Button } from '../components/Button';
 import { Container } from '../components/Container';
 import { BookingManagementTable, BookingDetailsModal } from '../components/AdminComponents';
 
-// Admin authentication service
+/**
+ * Admin-Service-Klasse
+ * Zentrale Logik für Admin-Operationen und Berechtigungsprüfung
+ */
 export class AdminService {
+  /**
+   * Prüft ob aktueller Benutzer Admin-Rechte hat
+   * @returns {boolean} True wenn Admin-Rolle vorhanden
+   */
   static isAdmin() {
     const currentUser = authService.getCurrentUser();
     return currentUser && (currentUser.role === 'admin' || currentUser.role === 'super_admin');
   }
 
+  /**
+   * Wirft Fehler wenn kein Admin-Zugriff vorhanden
+   * Verwendet für Methodenabsicherung
+   */
   static requireAdmin() {
     if (!this.isAdmin()) {
       throw new Error('Admin access required');
     }
   }
 
+  /**
+   * Lädt System-Statistiken für Dashboard
+   * Kombiniert API-Daten mit lokalen Berechnungen
+   */
   static async getSystemStats() {
     this.requireAdmin();
     
     try {
-      // Fetch analytics data from API
+      // Analytics-Daten von API abrufen
       const response = await fetch('/api/admin/analytics');
       if (!response.ok) {
         throw new Error('Failed to fetch analytics');
@@ -31,11 +73,11 @@ export class AdminService {
       
       const analyticsData = await response.json();
       
-      // Get additional local stats
+      // Zusätzliche lokale Statistiken berechnen
       const bookings = bookingService.getAllBookings();
       const now = new Date();
       
-      // Calculate growth rates (simplified)
+      // Wachstumsraten berechnen (vereinfacht für Demo)
       const currentRevenue = analyticsData.dashboard.totalRevenue;
       const currentBookings = analyticsData.dashboard.totalBookings;
       
