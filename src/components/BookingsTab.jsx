@@ -35,6 +35,7 @@
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/Button'
 import { bookingAPI } from '@/services/bookingService'
+import { authService } from '@/services/userAuthenticationService'
 
 // Status mapping for German display
 const statusLabels = {
@@ -222,27 +223,53 @@ export function BookingsTab() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
   const [selectedBooking, setSelectedBooking] = useState(null)
+  const [user, setUser] = useState(null)
 
   useEffect(() => {
-    loadBookings()
+    initializeAndLoadBookings()
   }, [])
+
+  const initializeAndLoadBookings = async () => {
+    try {
+      // Hole den aktuell angemeldeten Benutzer
+      const currentUser = await authService.getCurrentUser()
+      if (currentUser) {
+        setUser(currentUser)
+        await loadBookings()
+      } else {
+        setError('Benutzer nicht angemeldet')
+        setIsLoading(false)
+      }
+    } catch (err) {
+      console.error('Error initializing bookings:', err)
+      setError('Fehler beim Laden der Benutzerdaten')
+      setIsLoading(false)
+    }
+  }
 
   const loadBookings = async () => {
     try {
       setIsLoading(true)
       setError(null)
       
-      // Da alle Test-Buchungen gelöscht wurden, verwenden wir den echten Benutzer Jimmi
-      const userId = '427c4a4b-b5a2-4cd7-838d-197dbb512982' // Jimmi Pollomi
-      
-      const response = await fetch(`/api/bookings/by-user/${userId}`, {
+      // Verwende die JWT-basierte my-bookings API-Route
+      const token = localStorage.getItem('authToken')
+      if (!token) {
+        throw new Error('Keine Authentifizierung gefunden')
+      }
+
+      const response = await fetch('/api/bookings/my-bookings', {
         method: 'GET',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         }
       })
 
       if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('Sitzung abgelaufen. Bitte melden Sie sich erneut an.')
+        }
         throw new Error('Fehler beim Laden der Buchungen')
       }
 
@@ -287,9 +314,18 @@ export function BookingsTab() {
             Fehler beim Laden der Buchungen
           </h3>
           <p className="text-red-600 dark:text-red-400 mb-4">{error}</p>
-          <Button onClick={loadBookings} variant="secondary">
-            Erneut versuchen
-          </Button>
+          {error.includes('Authentifizierung') || error.includes('angemeldet') || error.includes('Sitzung') ? (
+            <Button 
+              href="/auth?redirect=/bookings" 
+              variant="primary"
+            >
+              Anmelden
+            </Button>
+          ) : (
+            <Button onClick={initializeAndLoadBookings} variant="secondary">
+              Erneut versuchen
+            </Button>
+          )}
         </div>
       </div>
     )
