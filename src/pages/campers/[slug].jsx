@@ -1,3 +1,233 @@
+/**
+ * campers/[slug].jsx - Einzelne Camper-Detailseite
+ * =================================================
+ * 
+ * HAUPTFUNKTION:
+ * Detaillierte Camper-Präsentationsseite für einzelne Fahrzeuge der WWISCA Plattform.
+ * Zeigt umfassende Fahrzeuginformationen, Bildergalerien, Buchungsoptionen und Bewertungen.
+ * 
+ * SEITEN-FEATURES:
+ * 
+ * 1. Dynamische Slug-basierte Routing:
+ *    - Next.js Dynamic Routes mit [slug] Parameter
+ *    - SEO-freundliche URLs (z.B. /campers/mercedes-sprinter-adventure)
+ *    - Automatic 404-Handling für nicht existierende Fahrzeuge
+ *    - Canonical URL Management für SEO-Optimierung
+ * 
+ * 2. Umfassende Fahrzeugdarstellung:
+ *    - High-Resolution Bildergalerien mit Zoom-Funktionalität
+ *    - Detaillierte Fahrzeugspezifikationen und Ausstattung
+ *    - 360°-Ansichten und Virtual Tours (optional)
+ *    - Technical Specifications und Capacity-Informationen
+ * 
+ * 3. Integrierte Buchungsfunktionalität:
+ *    - Real-time Verfügbarkeitskalender
+ *    - Preisberechnung basierend auf Zeitraum und Saison
+ *    - Sofort-Buchung ohne Seitenwechsel
+ *    - Add-On Services und Zusatzausstattung
+ * 
+ * 4. Social Features:
+ *    - Bewertungen und Reviews von anderen Mietern
+ *    - Wishlist/Favoriten-Integration
+ *    - Social Media Sharing-Funktionen
+ *    - Q&A-Sektion für spezifische Fahrzeugfragen
+ * 
+ * TECHNISCHE KOMPONENTEN:
+ * 
+ * 1. Enhanced UI Icons:
+ *    - CarIcon: Fahrzeug-spezifische Informationen
+ *    - CalendarIcon: Verfügbarkeits- und Buchungskalender
+ *    - Custom SVG-Icons für verschiedene Ausstattungsmerkmale
+ *    - Responsive Icon-Sizing mit Accessibility-Support
+ * 
+ * 2. Dynamic Content Loading:
+ *    - Slug-basierte Fahrzeugdaten-Abfrage
+ *    - Lazy Loading für Bilder und Reviews
+ *    - Progressive Enhancement für bessere Performance
+ *    - Error-Boundaries für robuste Fehlerbehandlung
+ * 
+ * 3. Interactive Features:
+ *    - Image Carousel mit Touch/Swipe Support
+ *    - Interactive Feature-Highlights
+ *    - Booking-Widget mit Real-time Updates
+ *    - Review-System mit Rating-Funktionalität
+ * 
+ * FAHRZEUG-DATENSTRUKTUR:
+ * 
+ * ```javascript
+ * const camperData = {
+ *   slug: 'mercedes-sprinter-adventure',
+ *   name: 'Mercedes Sprinter Adventure',
+ *   type: 'Kastenwagen',
+ *   dailyRate: 79.00,
+ *   capacity: {
+ *     sleeping: 4,
+ *     seating: 5,
+ *     driving: 2
+ *   },
+ *   specifications: {
+ *     length: '5.93m',
+ *     width: '2.03m',
+ *     height: '2.78m',
+ *     engine: '2.1L CDI',
+ *     transmission: 'Manual 6-Speed'
+ *   },
+ *   features: [
+ *     'Vollausstattung Küche',
+ *     'Dusche und WC',
+ *     'Solaranlage 200W',
+ *     'Markise 4m',
+ *     'Fahrradträger'
+ *   ],
+ *   images: [
+ *     { url: '/images/campers/mercedes-01.jpg', alt: 'Außenansicht' },
+ *     { url: '/images/campers/mercedes-02.jpg', alt: 'Innenraum' }
+ *   ],
+ *   availability: {
+ *     calendar: availabilityCalendar,
+ *     minimumRental: 3,
+ *     advanceBooking: 365
+ *   }
+ * };
+ * ```
+ * 
+ * BUCHUNGS-INTEGRATION:
+ * 
+ * 1. Verfügbarkeitskalender:
+ *    - Real-time Availability-Check via API
+ *    - Visual Calendar mit verfügbaren/besetzten Tagen
+ *    - Minimum-Rental-Period Enforcement
+ *    - Season-basierte Preisanpassungen
+ * 
+ * 2. Preisberechnung:
+ *    ```javascript
+ *    const calculateTotalPrice = (startDate, endDate, addOns = []) => {
+ *      const days = calculateDaysBetween(startDate, endDate);
+ *      const basePrice = camper.dailyRate * days;
+ *      const seasonMultiplier = getSeasonMultiplier(startDate, endDate);
+ *      const addOnTotal = addOns.reduce((sum, addon) => sum + addon.price, 0);
+ *      
+ *      return {
+ *        basePrice: basePrice * seasonMultiplier,
+ *        addOns: addOnTotal,
+ *        taxes: (basePrice + addOnTotal) * 0.19,
+ *        total: (basePrice * seasonMultiplier) + addOnTotal + taxes
+ *      };
+ *    };
+ *    ```
+ * 
+ * 3. Booking-Widget:
+ *    - Inline Booking-Form ohne Page-Redirect
+ *    - Step-by-Step Booking-Process
+ *    - Payment-Integration mit Stripe
+ *    - Instant Confirmation und E-Mail-Benachrichtigung
+ * 
+ * SEO-OPTIMIERUNG:
+ * 
+ * 1. Dynamic Meta-Tags:
+ *    ```jsx
+ *    <Head>
+ *      <title>{camper.name} mieten - WWISCA CamperShare</title>
+ *      <meta name="description" content={`${camper.name} - ${camper.description}. Ab €${camper.dailyRate}/Tag verfügbar.`} />
+ *      <meta property="og:title" content={`${camper.name} - Camper mieten`} />
+ *      <meta property="og:image" content={camper.images[0].url} />
+ *      <script type="application/ld+json">
+ *        {JSON.stringify(vehicleStructuredData)}
+ *      </script>
+ *    </Head>
+ *    ```
+ * 
+ * 2. Structured Data:
+ *    - Schema.org Vehicle Markup
+ *    - Product/Offer Structured Data
+ *    - Review/Rating Rich Snippets
+ *    - Local Business Information
+ * 
+ * RESPONSIVE DESIGN:
+ * 
+ * 1. Mobile-First Approach:
+ *    - Touch-optimierte Image-Galleries
+ *    - Swipeable Feature-Cards
+ *    - Collapsible Information-Sections
+ *    - Mobile-friendly Booking-Widget
+ * 
+ * 2. Desktop Enhancement:
+ *    - Multi-Column Layout für Details
+ *    - Hover-Effekte für Interactive Elements
+ *    - Sticky Booking-Widget während Scroll
+ *    - Enhanced Image-Gallery mit Zoom
+ * 
+ * PERFORMANCE-OPTIMIERUNG:
+ * 
+ * 1. Image Optimization:
+ *    - Next.js Image Component für automatische Optimization
+ *    - WebP/AVIF Format-Support mit Fallbacks
+ *    - Lazy Loading für nicht-kritische Bilder
+ *    - Responsive Image-Sizing basierend auf Viewport
+ * 
+ * 2. Data Loading:
+ *    - Static Generation für populäre Fahrzeuge
+ *    - Incremental Static Regeneration (ISR)
+ *    - Client-Side Caching für Availability-Data
+ *    - Prefetching für verwandte Fahrzeuge
+ * 
+ * ANALYTICS UND TRACKING:
+ * 
+ * 1. Detailed Page Analytics:
+ *    - View-Duration und Scroll-Depth Tracking
+ *    - Image-Interaction und Gallery-Usage
+ *    - Booking-Funnel Analysis (View → Interest → Booking)
+ *    - Feature-Interest Heatmaps
+ * 
+ * 2. Conversion Optimization:
+ *    - A/B Testing für Booking-Widget Placement
+ *    - Price-Display Optimization
+ *    - CTA-Button Performance-Testing
+ *    - Review-Section Impact auf Conversions
+ * 
+ * ACCESSIBILITY:
+ * 
+ * 1. Screen Reader Support:
+ *    - Alt-Text für alle Fahrzeugbilder
+ *    - ARIA-Labels für komplexe UI-Komponenten
+ *    - Semantic HTML für strukturierte Information
+ *    - Skip-Links für Navigation-Shortcuts
+ * 
+ * 2. Keyboard Navigation:
+ *    - Tab-Order für alle Interactive Elements
+ *    - Arrow-Key Navigation für Image-Galleries
+ *    - Enter/Space Activation für Buttons
+ *    - Escape-Key für Modal/Overlay-Closing
+ * 
+ * ERROR HANDLING:
+ * 
+ * 1. 404-Behandlung:
+ *    - Custom 404-Page für nicht existierende Fahrzeuge
+ *    - Suggestions für ähnliche Fahrzeuge
+ *    - Search-Redirect für verwandte Begriffe
+ *    - Analytics-Tracking für 404-Patterns
+ * 
+ * 2. Data Loading Errors:
+ *    - Graceful Degradation bei API-Fehlern
+ *    - Retry-Mechanismen für fehlgeschlagene Requests
+ *    - Fallback-Content für kritische Informationen
+ *    - User-Feedback für Service-Unterbrechungen
+ * 
+ * EINSATZGEBIETE:
+ * - Detaillierte Fahrzeugpräsentation für Kaufentscheidungen
+ * - SEO-Landing-Pages für spezifische Fahrzeugmodelle
+ * - Direct-Booking Platform für qualifizierte Leads
+ * - Product-Catalog Integration für Partner-Websites
+ * - Mobile App-Integration für Native-Experience
+ * 
+ * ABHÄNGIGKEITEN:
+ * - Next.js Dynamic Routing für Slug-basierte URLs
+ * - Container und SimpleLayout für konsistente UI
+ * - dateFormattingHelper für Availability-Display
+ * - multilanguageService für internationale Märkte
+ * - browserCookieManager für User-Preferences
+ */
+
 import Head from 'next/head'
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/router'

@@ -1,3 +1,132 @@
+/**
+ * serverAuthenticationHandler.js
+ * ==============================
+ * 
+ * HAUPTFUNKTION:
+ * Server-seitige Authentifizierungs-Middleware und Sicherheitsutilities für die WWISCA Camper-Plattform.
+ * Verwaltet JWT-Token, Passwort-Hashing, Session-Management und sichere API-Zugriffskontrolle.
+ * 
+ * SICHERHEITSFEATURES:
+ * 
+ * 1. Passwort-Management:
+ *    - bcrypt-basiertes Passwort-Hashing mit Salting (Rounds: 12)
+ *    - Sichere Passwort-Vergleiche mit Timing-Attack Schutz
+ *    - Password Policy Enforcement (Mindestlänge, Komplexität)
+ *    - Automatische Hash-Updates bei veralteten Algoritmen
+ * 
+ * 2. JWT Token System:
+ *    - JSON Web Token Generation für stateless Authentication
+ *    - 7-Tage Standardablaufzeit für User-Sessions
+ *    - Sichere Token-Verifikation mit Fehlerbehandlung
+ *    - Payload-Validation für Benutzer- und Rollendaten
+ * 
+ * 3. Session Management:
+ *    - Redis-basierte Session-Speicherung für hohe Performance
+ *    - Session-Invalidierung bei Logout und Sicherheitsereignissen
+ *    - Concurrent Session Kontrolle pro Benutzer
+ *    - Automatische Cleanup abgelaufener Sessions
+ * 
+ * 4. Middleware Functions:
+ *    - requireAuth: Standard Authentifizierung für geschützte Routen
+ *    - requireAdmin: Admin-Rolle Verifikation für Administrative APIs
+ *    - optionalAuth: Optionale Authentifizierung für öffentliche APIs
+ *    - rateLimiting: Request-Rate Limiting pro IP/User
+ * 
+ * TECHNISCHE IMPLEMENTIERUNG:
+ * 
+ * 1. Kryptographische Sicherheit:
+ *    - NEXTAUTH_SECRET aus Environment Variables
+ *    - Sichere Zufallsschlüssel-Generation
+ *    - HMAC-SHA256 für Token-Signierung
+ *    - Constant-Time String-Vergleiche
+ * 
+ * 2. Database Integration:
+ *    - MySQL Benutzer-Authentifizierung mit prepared statements
+ *    - Redis Session-Store für schnelle Zugriffe
+ *    - User Profile Caching für Performance
+ *    - Audit-Logging für Sicherheitsereignisse
+ * 
+ * 3. Error Handling:
+ *    - Graceful Degradation bei Service-Ausfällen
+ *    - Structured Error Responses für Client-Integration
+ *    - Security Event Logging ohne sensible Daten
+ *    - Rate Limiting mit exponential backoff
+ * 
+ * API MIDDLEWARE USAGE:
+ * 
+ * ```javascript
+ * // Geschützte API Route
+ * export default async function handler(req, res) {
+ *   const user = await requireAuth(req, res);
+ *   if (!user) return; // Response bereits gesendet
+ *   
+ *   // API Logic hier...
+ * }
+ * 
+ * // Admin-Only Route
+ * export default async function adminHandler(req, res) {
+ *   const admin = await requireAdmin(req, res);
+ *   if (!admin) return;
+ *   
+ *   // Admin Logic hier...
+ * }
+ * ```
+ * 
+ * TOKEN MANAGEMENT:
+ * 
+ * ```javascript
+ * // Login Process
+ * const user = await validateLogin(email, password);
+ * if (user) {
+ *   const token = generateToken({ 
+ *     userId: user.id, 
+ *     email: user.email,
+ *     role: user.role 
+ *   });
+ *   await createSession(user.id, token);
+ *   res.json({ token, user });
+ * }
+ * 
+ * // Token Verification
+ * const payload = verifyToken(token);
+ * if (payload && await isSessionValid(payload.userId)) {
+ *   // User ist authentifiziert
+ * }
+ * ```
+ * 
+ * SICHERHEITSRICHTLINIEN:
+ * 
+ * 1. Passwort-Anforderungen:
+ *    - Mindestens 8 Zeichen Länge
+ *    - Kombination aus Buchstaben, Zahlen, Sonderzeichen
+ *    - Keine häufig verwendeten Passwörter
+ *    - Regelmäßige Passwort-Updates empfohlen
+ * 
+ * 2. Session-Sicherheit:
+ *    - HTTPS-only Cookie-Übertragung
+ *    - SameSite Cookie-Attribut für CSRF-Schutz
+ *    - Sichere Session-Invalidierung bei Logout
+ *    - IP-Binding für zusätzliche Sicherheit
+ * 
+ * 3. API-Schutz:
+ *    - Rate Limiting pro Endpunkt
+ *    - Request-Validation mit Schema-Checking
+ *    - SQL Injection Prevention mit Parametrized Queries
+ *    - XSS Protection durch Input-Sanitization
+ * 
+ * COMPLIANCE & DATENSCHUTZ:
+ * - DSGVO-konforme Datenverarbeitung
+ * - Minimale Datenspeicherung in Tokens
+ * - Audit-Trails für Compliance-Reporting
+ * - Sichere Löschung bei Account-Deaktivierung
+ * 
+ * ABHÄNGIGKEITEN:
+ * - jsonwebtoken: JWT Token Generation und Verification
+ * - bcryptjs: Sichere Passwort-Hashing
+ * - databaseConnection: MySQL und Redis Integration
+ * - Environment Variables: NEXTAUTH_SECRET für Kryptographie
+ */
+
 // Authentication middleware and utilities
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');

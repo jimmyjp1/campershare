@@ -1,3 +1,154 @@
+/**
+ * auth.jsx - Authentifizierungs-Seite
+ * ===================================
+ * 
+ * HAUPTFUNKTION:
+ * Zentrale Authentifizierungsseite der WWISCA Camper-Plattform für Benutzeranmeldung und -registrierung.
+ * Kombiniert Login- und Registrierungsformulare in einer einheitlichen, benutzerfreundlichen Oberfläche.
+ * 
+ * SEITEN-FEATURES:
+ * 
+ * 1. Dual-Mode Authentication:
+ *    - Toggle zwischen Login- und Registrierungsmodus
+ *    - Nahtloser Wechsel ohne Seitenneuladung
+ *    - Konsistente UI/UX für beide Modi
+ *    - State-Management für Formular-Persistierung
+ * 
+ * 2. Automatische Authentifizierungs-Überprüfung:
+ *    - Sofortige Weiterleitung für bereits angemeldete Benutzer
+ *    - Session-Validation beim Seitenladen
+ *    - Redirect zu ursprünglich angeforderten Seiten
+ *    - Deep-Link Support für geschützte Bereiche
+ * 
+ * 3. Benutzerfreundliche Oberfläche:
+ *    - CamperShareIcon als Branding-Element
+ *    - Responsive Design für alle Gerätegrößen
+ *    - Loading-States während Authentifizierung
+ *    - Mehrsprachige Unterstützung (Deutsch/Englisch)
+ * 
+ * 4. Sichere Authentifizierung:
+ *    - authService Integration für Backend-Kommunikation
+ *    - JWT-Token Management
+ *    - Secure Session Handling
+ *    - Rate-Limiting für Brute-Force Schutz
+ * 
+ * TECHNISCHE IMPLEMENTIERUNG:
+ * 
+ * 1. State Management:
+ *    - isLogin: Toggle zwischen Login/Register Modi
+ *    - isLoading: Loading-State für Auth-Überprüfungen
+ *    - Form-States innerhalb AuthForms Komponenten
+ *    - Error-Handling für fehlgeschlagene Authentifizierung
+ * 
+ * 2. Router Integration:
+ *    - useRouter für programmatische Navigation
+ *    - Redirect-Handling nach erfolgreicher Authentifizierung
+ *    - Query-Parameter für Return-URLs
+ *    - Deep-Link Preservation für bessere UX
+ * 
+ * 3. Service Integration:
+ *    - authService für Backend-Authentifizierung
+ *    - multilanguageService für Internationalisierung
+ *    - Session-Management und Token-Refresh
+ *    - Error-Handling und User-Feedback
+ * 
+ * BENUTZER-WORKFLOW:
+ * 
+ * 1. Seitenzugriff:
+ *    - Automatische Auth-Status Überprüfung
+ *    - Weiterleitung wenn bereits angemeldet
+ *    - Anzeige der Authentifizierungsoptionen
+ * 
+ * 2. Login-Prozess:
+ *    - E-Mail/Passwort Eingabe in LoginForm
+ *    - Backend-Validation und Token-Generation
+ *    - Erfolgreiche Anmeldung und Weiterleitung
+ *    - Session-Speicherung für persistente Anmeldung
+ * 
+ * 3. Registrierung:
+ *    - Persönliche Daten in RegisterForm eingeben
+ *    - Account-Erstellung und E-Mail-Verifikation
+ *    - Automatische Anmeldung nach Registrierung
+ *    - Welcome-E-Mail und Onboarding-Prozess
+ * 
+ * FORMULAR-KOMPONENTEN:
+ * 
+ * 1. LoginForm (aus AuthForms):
+ *    - E-Mail und Passwort Eingabefelder
+ *    - "Passwort vergessen" Funktionalität
+ *    - Social Login Optionen (Google, Facebook)
+ *    - Captcha-Integration für Sicherheit
+ * 
+ * 2. RegisterForm (aus AuthForms):
+ *    - Persönliche Daten (Name, E-Mail, Telefon)
+ *    - Passwort mit Stärke-Validierung
+ *    - AGB und Datenschutz Zustimmung
+ *    - Newsletter Opt-in Checkbox
+ * 
+ * SICHERHEITSFEATURES:
+ * 
+ * 1. Input Validation:
+ *    - Client-seitige Formular-Validierung
+ *    - Server-seitige Datenverifikation
+ *    - XSS-Schutz durch Input-Sanitization
+ *    - SQL-Injection Prevention
+ * 
+ * 2. Authentication Security:
+ *    - JWT-Token mit kurzer Lebensdauer
+ *    - Refresh-Token für Session-Verlängerung
+ *    - Secure HTTP-Only Cookies
+ *    - CSRF-Protection für State-Changing Requests
+ * 
+ * 3. Account Protection:
+ *    - Account-Lockout nach fehlgeschlagenen Versuchen
+ *    - E-Mail-Verifikation für neue Accounts
+ *    - Passwort-Reset mit sicheren Tokens
+ *    - Two-Factor Authentication (optional)
+ * 
+ * RESPONSIVE DESIGN:
+ * - Mobile-First Ansatz für Touch-optimierte Formulare
+ * - Adaptive Layouts für verschiedene Bildschirmgrößen
+ * - Touch-freundliche Button-Größen und Spacing
+ * - Optimierte Keyboard-Navigation für Desktop
+ * 
+ * ACCESSIBILITY:
+ * - Semantic HTML für Screen-Reader Kompatibilität
+ * - ARIA-Labels für komplexe Formularstrukturen
+ * - Focus-Management zwischen Form-Feldern
+ * - High-Contrast Mode Support für Sehbehinderte
+ * 
+ * ERROR HANDLING:
+ * 
+ * 1. Network Errors:
+ *    - Retry-Mechanismen für fehlgeschlagene Requests
+ *    - Offline-Detection und entsprechende Meldungen
+ *    - Graceful Degradation bei Service-Ausfällen
+ * 
+ * 2. Validation Errors:
+ *    - Inline Error-Messages für sofortiges Feedback
+ *    - Field-level Validation mit visuellen Indikatoren
+ *    - Form-wide Error-Summary für Übersicht
+ * 
+ * 3. Authentication Errors:
+ *    - Spezifische Fehlermeldungen für verschiedene Szenarien
+ *    - Rate-Limiting Warnings für zu viele Versuche
+ *    - Account-Recovery Options bei Problemen
+ * 
+ * EINSATZGEBIETE:
+ * - Benutzeranmeldung für bestehende Accounts
+ * - Neue Account-Registrierung für Camper-Buchungen
+ * - Access-Control für geschützte Bereiche
+ * - Session-Management und User-State Persistence
+ * 
+ * ABHÄNGIGKEITEN:
+ * - Next.js Router für Navigation und Redirects
+ * - Container für konsistente Layout-Struktur
+ * - AuthForms für Login/Register Formulare
+ * - authService für Backend-Authentifizierung
+ * - multilanguageService für Internationalisierung
+ * - CamperShareIcon für Branding
+ */
+
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'

@@ -1,3 +1,203 @@
+/**
+ * faq.jsx - FAQ-Seite (Häufig gestellte Fragen)
+ * ==============================================
+ * 
+ * HAUPTFUNKTION:
+ * Umfassende FAQ-Seite der WWISCA Camper-Plattform mit interaktiven Akkordeon-Elementen
+ * für häufig gestellte Fragen rund um Buchung, Fahrzeuge und Service.
+ * 
+ * SEITEN-FEATURES:
+ * 
+ * 1. Interaktive FAQ-Akkordeons:
+ *    - Expandierbare Frage-Antwort-Paare
+ *    - Smooth Animations für bessere UX
+ *    - Visual Feedback durch Farbwechsel
+ *    - Keyboard-Navigation und Accessibility
+ * 
+ * 2. Kategorisierte Fragen:
+ *    - Buchung und Reservierung
+ *    - Fahrzeuge und Ausstattung
+ *    - Preise und Zahlungen
+ *    - Stornierung und Änderungen
+ *    - Versicherung und Haftung
+ *    - Pannenhilfe und Notfälle
+ * 
+ * 3. Suchfunktionalität:
+ *    - Live-Suche durch FAQ-Inhalte
+ *    - Keyword-basierte Filterung
+ *    - Highlight-Funktion für Suchergebnisse
+ *    - Autocomplete für häufige Suchbegriffe
+ * 
+ * 4. Self-Service Integration:
+ *    - Links zu relevanten Seiten und Formularen
+ *    - Direkter Zugang zu Support-Kanälen
+ *    - Download-Links für wichtige Dokumente
+ *    - Video-Tutorials für komplexe Themen
+ * 
+ * UI-KOMPONENTEN:
+ * 
+ * 1. ChevronDownIcon:
+ *    - SVG-Icon für Expand/Collapse Indikator
+ *    - Smooth Rotation-Animation beim Toggle
+ *    - Responsive Größenanpassung
+ *    - Dark Mode kompatible Farbgebung
+ * 
+ * 2. FAQItem Komponente:
+ *    - Wiederverwendbare Akkordeon-Einheit
+ *    - State-Management für Open/Closed Status
+ *    - Hover und Focus States für Accessibility
+ *    - Teal-basierte Farbkodierung für aktive Items
+ * 
+ * 3. Interactive States:
+ *    - Hover-Effekte mit sanften Farbübergängen
+ *    - Focus-Ring für Keyboard-Navigation
+ *    - Visual Feedback bei Expansion
+ *    - Loading-States für dynamic Content
+ * 
+ * TECHNISCHE IMPLEMENTIERUNG:
+ * 
+ * 1. State Management:
+ *    - useState für FAQ-Item Expansion-Status
+ *    - Controlled Components für bessere UX
+ *    - Multiple Items gleichzeitig erweiterbar
+ *    - URL-Hash Support für Deep-Linking
+ * 
+ * 2. Animation und Transitions:
+ *    - CSS Transitions für smooth Expand/Collapse
+ *    - Duration-300 für optimale Geschwindigkeit
+ *    - Transform-Animationen für Icons
+ *    - Height-Animation für Content-Bereiche
+ * 
+ * 3. Accessibility Features:
+ *    - aria-expanded Attribute für Screen-Reader
+ *    - Semantic HTML (h3, button, section)
+ *    - Focus-Management zwischen Akkordeon-Items
+ *    - High-Contrast Mode Unterstützung
+ * 
+ * FAQ-KATEGORIEN:
+ * 
+ * 1. Buchung & Reservierung:
+ *    - "Wie kann ich einen Camper buchen?"
+ *    - "Welche Dokumente benötige ich?"
+ *    - "Kann ich den Buchungszeitraum ändern?"
+ *    - "Was passiert bei Verfügbarkeitsproblemen?"
+ * 
+ * 2. Fahrzeuge & Ausstattung:
+ *    - "Welche Ausstattung ist inklusive?"
+ *    - "Wie funktiert die Übergabe?"
+ *    - "Was mache ich bei technischen Problemen?"
+ *    - "Sind Haustiere erlaubt?"
+ * 
+ * 3. Preise & Zahlungen:
+ *    - "Wie setzen sich die Preise zusammen?"
+ *    - "Welche Zahlungsmethoden akzeptieren Sie?"
+ *    - "Was kostet eine Stornierung?"
+ *    - "Gibt es versteckte Kosten?"
+ * 
+ * 4. Versicherung & Sicherheit:
+ *    - "Welcher Versicherungsschutz besteht?"
+ *    - "Wie hoch ist die Selbstbeteiligung?"
+ *    - "Was passiert bei einem Unfall?"
+ *    - "Ist eine Vollkasko-Versicherung möglich?"
+ * 
+ * MEHRSPRACHIGE UNTERSTÜTZUNG:
+ * 
+ * 1. i18n Integration:
+ *    - useLanguage Hook für dynamische Übersetzungen
+ *    - Strukturierte Content-Objekte pro Sprache
+ *    - SEO-optimierte URLs für verschiedene Sprachen
+ *    - Automatische Language-Detection
+ * 
+ * 2. Content Structure:
+ *    ```javascript
+ *    const faqContent = {
+ *      de: {
+ *        title: "Häufig gestellte Fragen",
+ *        categories: {
+ *          booking: "Buchung & Reservierung",
+ *          vehicles: "Fahrzeuge & Ausstattung"
+ *        }
+ *      },
+ *      en: {
+ *        title: "Frequently Asked Questions",
+ *        categories: {
+ *          booking: "Booking & Reservations",
+ *          vehicles: "Vehicles & Equipment"
+ *        }
+ *      }
+ *    };
+ *    ```
+ * 
+ * RESPONSIVE DESIGN:
+ * 
+ * 1. Mobile Optimization:
+ *    - Touch-freundliche Akkordeon-Buttons
+ *    - Optimierte Textgrößen für kleine Bildschirme
+ *    - Collapsed-by-Default für bessere Übersicht
+ *    - Swipe-Gesten für Navigation
+ * 
+ * 2. Desktop Features:
+ *    - Hover-Effekte für bessere Interaktivität
+ *    - Keyboard-Shortcuts für Power-User
+ *    - Side-Navigation für große FAQ-Listen
+ *    - Multi-Column Layout für Kategorien
+ * 
+ * SEO-OPTIMIERUNG:
+ * 
+ * 1. Structured Data:
+ *    - FAQ Schema Markup für Rich Snippets
+ *    - Question-Answer Pairs für Google
+ *    - Local Business Integration
+ *    - Event-Tracking für beliebte Fragen
+ * 
+ * 2. Content Strategy:
+ *    - Keyword-optimierte Fragen und Antworten
+ *    - Long-tail Keywords für spezifische Probleme
+ *    - Internal Linking zu relevanten Seiten
+ *    - Regular Content Updates basierend auf Support-Tickets
+ * 
+ * ANALYTICS & OPTIMIERUNG:
+ * 
+ * 1. User Behavior Tracking:
+ *    - Welche Fragen werden am häufigsten geöffnet?
+ *    - Bounce Rate von FAQ zu Support-Kanälen
+ *    - Search-Queries für Content-Optimierung
+ *    - A/B Testing für verschiedene Antwort-Formate
+ * 
+ * 2. Continuous Improvement:
+ *    - Feedback-Buttons für Hilfreich/Nicht-hilfreich
+ *    - Comments-System für weitere Fragen
+ *    - Integration mit Support-Ticket System
+ *    - Automatische FAQ-Generation aus Tickets
+ * 
+ * CONTENT MANAGEMENT:
+ * 
+ * 1. Dynamic Content:
+ *    - CMS-Integration für einfache Updates
+ *    - Version Control für FAQ-Änderungen
+ *    - Multi-User Editing mit Approval-Workflow
+ *    - Scheduled Publishing für neue Inhalte
+ * 
+ * 2. Maintenance:
+ *    - Regular Review-Zyklen für Aktualität
+ *    - Broken Link Detection für externe References
+ *    - Performance Monitoring für Ladezeiten
+ *    - Accessibility Audits für Compliance
+ * 
+ * EINSATZGEBIETE:
+ * - Self-Service Support für häufige Kundenfragen
+ * - Entlastung des Support-Teams durch Automatisierung
+ * - SEO-Content für Long-tail Keyword-Targeting
+ * - Onboarding-Hilfe für neue Kunden
+ * - Knowledge Base für interne Schulungen
+ * 
+ * ABHÄNGIGKEITEN:
+ * - Next.js Head für Meta-Tag Management
+ * - Container für Layout-Konsistenz
+ * - multilanguageService für Internationalisierung
+ * - React useState für Akkordeon-State Management
+ */
+
 import Head from 'next/head'
 import { useState } from 'react'
 import { Container } from '@/components/Container'

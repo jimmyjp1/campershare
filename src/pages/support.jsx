@@ -1,3 +1,188 @@
+/**
+ * support.jsx - Support-Seite
+ * ============================
+ * 
+ * HAUPTFUNKTION:
+ * Umfassende Kundensupport-Seite der WWISCA Camper-Plattform mit verschiedenen Kontaktmöglichkeiten,
+ * Self-Service-Optionen und strukturierter Hilfe für alle Anfragekategorien.
+ * 
+ * SUPPORT-FEATURES:
+ * 
+ * 1. Multi-Channel Support:
+ *    - Telefon-Support mit direkten Durchwahlnummern
+ *    - E-Mail-Support mit kategorisierten Anfragen
+ *    - Live-Chat für sofortige Hilfe
+ *    - Ticket-System für komplexe Problemstellungen
+ * 
+ * 2. Self-Service Portal:
+ *    - FAQ-Sektion mit häufigen Fragen
+ *    - Schritt-für-Schritt Anleitungen
+ *    - Video-Tutorials für komplexe Themen
+ *    - Download-Bereich für Dokumente und Formulare
+ * 
+ * 3. Kategorisierte Hilfe:
+ *    - Buchungs- und Reservierungshilfe
+ *    - Technische Probleme und Website-Issues
+ *    - Zahlungs- und Abrechnungsfragen
+ *    - Fahrzeug- und Ausrüstungsprobleme
+ * 
+ * 4. Notfall-Support:
+ *    - 24/7 Notfall-Hotline für Pannen
+ *    - Pannenhilfe und Ersatzfahrzeuge
+ *    - Versicherungsabwicklung
+ *    - Reise-Notfallunterstützung
+ * 
+ * UI-KOMPONENTEN:
+ * 
+ * 1. Support-Icons:
+ *    - PhoneIcon: Telefonische Kontaktmöglichkeiten
+ *    - EmailIcon: E-Mail-basierte Anfragen
+ *    - ChatIcon: Live-Chat und Messaging
+ *    - Responsive SVG-Icons mit einheitlichem Design
+ * 
+ * 2. Kontakt-Karten:
+ *    - Strukturierte Darstellung der Kontaktoptionen
+ *    - Öffnungszeiten und Verfügbarkeiten
+ *    - Erwartete Antwortzeiten
+ *    - Direkte Aktions-Buttons (Anrufen, E-Mail, Chat)
+ * 
+ * 3. FAQ-Integration:
+ *    - Expandierbare Antwort-Bereiche
+ *    - Suchfunktion für spezifische Themen
+ *    - Kategorisierte Frage-Gruppen
+ *    - Hilfreich/Nicht-hilfreich Bewertungen
+ * 
+ * TECHNISCHE IMPLEMENTIERUNG:
+ * 
+ * 1. SimpleLayout Integration:
+ *    - Konsistente Seitenstruktur mit Header und Footer
+ *    - Responsive Design für alle Gerätegrößen
+ *    - Accessibility-optimierte Navigation
+ *    - Dark Mode Unterstützung
+ * 
+ * 2. Interactive State Management:
+ *    - useState für FAQ-Expandierung
+ *    - Form-State für Kontaktformulare
+ *    - Loading-States für API-Calls
+ *    - Error-Handling für fehlgeschlagene Submissions
+ * 
+ * 3. Link Integration:
+ *    - Next.js Link für interne Navigation
+ *    - External Links für Phone/Email Actions
+ *    - Deep-Links zu spezifischen FAQ-Sektionen
+ *    - Breadcrumb-Navigation für Orientierung
+ * 
+ * SUPPORT-KATEGORIEN:
+ * 
+ * 1. Buchung & Reservierung:
+ *    - Buchungsprozess-Hilfe
+ *    - Änderung bestehender Reservierungen
+ *    - Stornierungen und Rückerstattungen
+ *    - Verfügbarkeitsprüfungen
+ * 
+ * 2. Zahlungen & Abrechnung:
+ *    - Zahlungsprobleme und -methoden
+ *    - Rechnungserklärungen
+ *    - Rückerstattungsverfahren
+ *    - Zusatzkosten und Gebühren
+ * 
+ * 3. Fahrzeuge & Ausstattung:
+ *    - Fahrzeugübergabe und -rückgabe
+ *    - Ausstattungs- und Bedienungsanleitungen
+ *    - Schäden und Versicherungsfälle
+ *    - Wartung und technische Probleme
+ * 
+ * 4. Account & Profile:
+ *    - Anmelde- und Registrierungsprobleme
+ *    - Profil-Updates und Datenänderungen
+ *    - Passwort-Reset und Sicherheit
+ *    - DSGVO-Anfragen und Datenschutz
+ * 
+ * CONTACT METHODS:
+ * 
+ * 1. Telefon-Support:
+ *    ```javascript
+ *    const phoneSupport = {
+ *      general: '+49 (0) 30 12345-100',
+ *      emergency: '+49 (0) 30 12345-911',
+ *      hours: 'Mo-Fr 8:00-20:00, Sa-So 9:00-18:00',
+ *      emergencyHours: '24/7'
+ *    };
+ *    ```
+ * 
+ * 2. E-Mail-Support:
+ *    ```javascript
+ *    const emailSupport = {
+ *      general: 'support@wwisca.com',
+ *      booking: 'booking@wwisca.com',
+ *      billing: 'billing@wwisca.com',
+ *      technical: 'tech@wwisca.com',
+ *      responseTime: '< 4 Stunden'
+ *    };
+ *    ```
+ * 
+ * 3. Live-Chat:
+ *    ```javascript
+ *    const chatSupport = {
+ *      availability: 'Mo-So 7:00-23:00',
+ *      responseTime: '< 2 Minuten',
+ *      languages: ['Deutsch', 'English'],
+ *      topics: ['Buchung', 'Technik', 'Zahlung']
+ *    };
+ *    ```
+ * 
+ * SELF-SERVICE FEATURES:
+ * 
+ * 1. Knowledge Base:
+ *    - Umfangreiche Artikel-Sammlung
+ *    - Video-Tutorials und Screenshots
+ *    - Step-by-Step Anleitungen
+ *    - Troubleshooting-Guides
+ * 
+ * 2. Interactive Tools:
+ *    - Buchungsassistent für komplexe Anfragen
+ *    - Kostenrechner für Zusatzleistungen
+ *    - Verfügbarkeitskalender
+ *    - Fahrzeugvergleich-Tool
+ * 
+ * 3. Community Support:
+ *    - User-Forum für Erfahrungsaustausch
+ *    - Bewertungen und Tipps
+ *    - Community-moderierte FAQ
+ *    - Best-Practice Sharing
+ * 
+ * RESPONSIVE DESIGN:
+ * - Mobile-optimierte Kontakt-Buttons
+ * - Touch-freundliche FAQ-Akkordeons
+ * - Adaptive Layouts für verschiedene Bildschirmgrößen
+ * - Optimierte Telefonnummern-Links für Mobile
+ * 
+ * ACCESSIBILITY:
+ * - Semantic HTML für Screen-Reader
+ * - ARIA-Labels für komplexe Interaktionen
+ * - Keyboard-Navigation für alle Funktionen
+ * - High-Contrast Mode für bessere Sichtbarkeit
+ * 
+ * ANALYTICS & TRACKING:
+ * - Support-Request Categorization
+ * - Response-Time Tracking
+ * - Customer Satisfaction Scoring
+ * - Self-Service Success Rate Measurement
+ * 
+ * EINSATZGEBIETE:
+ * - Erste Anlaufstelle für alle Kundenanfragen
+ * - Self-Service Portal für einfache Probleme
+ * - Eskalationspunkt für komplexe Fälle
+ * - Knowledge Base für wiederkehrende Fragen
+ * - Emergency Support für Reise-Notfälle
+ * 
+ * ABHÄNGIGKEITEN:
+ * - Container für Layout-Konsistenz
+ * - SimpleLayout für strukturierte Darstellung
+ * - Next.js Link für Navigation
+ * - React useState für Interactive Elements
+ */
+
 import { Container } from '@/components/Container'
 import { SimpleLayout } from '@/components/SimpleLayout'
 import Link from 'next/link'

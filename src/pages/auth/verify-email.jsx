@@ -1,3 +1,213 @@
+/**
+ * verify-email.jsx - E-Mail-Verifizierungs-Seite
+ * ===============================================
+ * 
+ * HAUPTFUNKTION:
+ * E-Mail-Verifizierungsseite für die Bestätigung von Benutzer-E-Mail-Adressen nach der Registrierung.
+ * Verarbeitet Verifizierungs-Token aus E-Mail-Links und aktiviert Benutzeraccounts.
+ * 
+ * SEITEN-FEATURES:
+ * 
+ * 1. Token-basierte Verifizierung:
+ *    - URL-Parameter Token-Extraktion aus Router Query
+ *    - Automatische Verifizierung beim Seitenladen
+ *    - Sichere Token-Validation über Backend-API
+ *    - Einmalige Token-Verwendung für Sicherheit
+ * 
+ * 2. Status-Management:
+ *    - Loading-State während Verifizierungsprozess
+ *    - Success-State bei erfolgreicher Bestätigung
+ *    - Error-State bei ungültigen oder abgelaufenen Token
+ *    - Benutzerfreundliche Statusmeldungen
+ * 
+ * 3. User Experience:
+ *    - Automatische Weiterleitung nach erfolgreicher Verifizierung
+ *    - Klare Anweisungen für verschiedene Szenarien
+ *    - Links zu alternativen Aktionen (erneut senden, Support)
+ *    - Responsive Design für E-Mail-Client Integration
+ * 
+ * 4. Security Features:
+ *    - Token-Expiration Handling (normalerweise 24-48h)
+ *    - Rate-Limiting für Verifizierungsversuche
+ *    - Fraud-Detection für ungewöhnliche Aktivitäten
+ *    - Secure Token-Storage und -Validation
+ * 
+ * TECHNISCHE IMPLEMENTIERUNG:
+ * 
+ * 1. Router Integration:
+ *    - useRouter für URL-Parameter Zugriff
+ *    - Query-Parameter 'token' Extraktion
+ *    - Programmatische Navigation nach Verifizierung
+ *    - Deep-Link Support für E-Mail-Client Integration
+ * 
+ * 2. State Management:
+ *    - status: 'loading' | 'success' | 'error'
+ *    - message: Benutzer-Feedback Text
+ *    - userEmail: E-Mail für Bestätigungsanzeige
+ *    - Controlled State Updates basierend auf API-Response
+ * 
+ * 3. API Integration:
+ *    - POST /api/auth/verify-email mit Token-Payload
+ *    - JSON-Response Handling für verschiedene Szenarien
+ *    - Error-Handling für Network und Server-Errors
+ *    - Success-Callback für Account-Aktivierung
+ * 
+ * VERIFIZIERUNGS-WORKFLOW:
+ * 
+ * 1. Benutzer-Registrierung:
+ *    ```
+ *    Registrierung → E-Mail-Versand → Link-Klick → Verifizierung
+ *    ```
+ * 
+ * 2. Token-Verarbeitung:
+ *    ```javascript
+ *    const verifyEmail = async (verificationToken) => {
+ *      const response = await fetch('/api/auth/verify-email', {
+ *        method: 'POST',
+ *        headers: { 'Content-Type': 'application/json' },
+ *        body: JSON.stringify({ token: verificationToken })
+ *      });
+ *      
+ *      const result = await response.json();
+ *      handleVerificationResult(result);
+ *    };
+ *    ```
+ * 
+ * 3. Status-Updates:
+ *    - Loading: Spinner und "Verifizierung läuft..."
+ *    - Success: Grüner Check und "E-Mail erfolgreich bestätigt!"
+ *    - Error: Rotes X und spezifische Fehlermeldung
+ * 
+ * API-RESPONSES:
+ * 
+ * 1. Erfolgreiche Verifizierung:
+ *    ```json
+ *    {
+ *      "success": true,
+ *      "message": "E-Mail erfolgreich verifiziert",
+ *      "user": {
+ *        "email": "user@example.com",
+ *        "verified": true
+ *      }
+ *    }
+ *    ```
+ * 
+ * 2. Ungültiger Token:
+ *    ```json
+ *    {
+ *      "success": false,
+ *      "error": "INVALID_TOKEN",
+ *      "message": "Ungültiger oder abgelaufener Verifizierungslink"
+ *    }
+ *    ```
+ * 
+ * 3. Bereits verifiziert:
+ *    ```json
+ *    {
+ *      "success": true,
+ *      "message": "E-Mail bereits verifiziert",
+ *      "alreadyVerified": true
+ *    }
+ *    ```
+ * 
+ * ERROR HANDLING:
+ * 
+ * 1. Token-Fehler:
+ *    - Ungültiger Token-Format
+ *    - Abgelaufener Token (Expiration)
+ *    - Bereits verwendeter Token
+ *    - Nicht existierender Token
+ * 
+ * 2. Network-Fehler:
+ *    - Connection-Timeout
+ *    - Server nicht erreichbar
+ *    - Rate-Limiting Überschreitung
+ *    - Maintenance-Mode
+ * 
+ * 3. User-Feedback:
+ *    - Spezifische Fehlermeldungen für jeden Fehlertyp
+ *    - Handlungsanweisungen für Problemlösung
+ *    - Support-Kontakt für komplexe Fälle
+ *    - Alternative Verifizierungsoptionen
+ * 
+ * BENUTZER-SZENARIEN:
+ * 
+ * 1. Erfolgreiche Verifizierung:
+ *    - Token ist gültig und nicht abgelaufen
+ *    - Account wird aktiviert
+ *    - Automatische Anmeldung (optional)
+ *    - Weiterleitung zum Dashboard/Profil
+ * 
+ * 2. Abgelaufener Token:
+ *    - Token ist älter als Expiration-Zeit
+ *    - "Token abgelaufen" Meldung
+ *    - "Neuen Link anfordern" Button
+ *    - E-Mail-Eingabe für erneuten Versand
+ * 
+ * 3. Bereits verifiziert:
+ *    - Account ist bereits aktiviert
+ *    - "Bereits verifiziert" Meldung
+ *    - Link zu Login-Seite
+ *    - Information über Account-Status
+ * 
+ * SECURITY CONSIDERATIONS:
+ * 
+ * 1. Token-Security:
+ *    - Kryptographisch sichere Token-Generation
+ *    - Einmalige Verwendung (Token-Invalidierung)
+ *    - Zeitbasierte Expiration (24-48h)
+ *    - Rate-Limiting für Abuse-Prevention
+ * 
+ * 2. Privacy Protection:
+ *    - Keine sensible Daten-Exposition in URLs
+ *    - Secure Token-Transmission
+ *    - Audit-Logging für Compliance
+ *    - DSGVO-konforme Datenbehandlung
+ * 
+ * 3. Fraud Prevention:
+ *    - IP-basierte Rate-Limiting
+ *    - Geolocation-basierte Anomalie-Detection
+ *    - Automated Bot-Detection
+ *    - Suspicious Activity Monitoring
+ * 
+ * RESPONSIVE DESIGN:
+ * - Mobile-optimierte E-Mail-Link-Behandlung
+ * - Touch-freundliche Buttons und Links
+ * - Readable Typography auf allen Bildschirmgrößen
+ * - E-Mail-Client kompatible Layouts
+ * 
+ * ACCESSIBILITY:
+ * - Screen-Reader optimierte Status-Meldungen
+ * - ARIA-Live-Regions für dynamische Updates
+ * - High-Contrast Mode Support
+ * - Keyboard-Navigation für alle Aktionen
+ * 
+ * ANALYTICS & TRACKING:
+ * - Verifizierungs-Success-Rate Tracking
+ * - Token-Expiration-Analyse
+ * - User-Journey von Registration zu Verification
+ * - Error-Pattern Analysis für UX-Optimierung
+ * 
+ * EINSATZGEBIETE:
+ * - E-Mail-Adresse Bestätigung nach Registrierung
+ * - Account-Aktivierung für neue Benutzer
+ * - E-Mail-Änderungen Bestätigung
+ * - Doppel-Opt-In für Newsletter-Anmeldungen
+ * - Compliance-Nachweis für Anti-Spam-Gesetze
+ * 
+ * INTEGRATION:
+ * - E-Mail-Templates mit Verifizierungs-Links
+ * - CRM-System Integration für Lead-Tracking
+ * - Marketing-Automation für Follow-Up-Sequences
+ * - Customer Support Tools für Manual Verification
+ * 
+ * ABHÄNGIGKEITEN:
+ * - Next.js Router für URL-Parameter Handling
+ * - React Hooks (useState, useEffect) für State Management
+ * - Fetch API für Backend-Kommunikation
+ * - Link Component für Navigation
+ */
+
 // Email verification page
 // /pages/auth/verify-email.jsx
 

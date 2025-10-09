@@ -1,3 +1,140 @@
+/**
+ * AdminComponents.jsx
+ * ===================
+ * 
+ * HAUPTFUNKTION:
+ * Vollständige Administrator-Dashboard Komponenten für die WWISCA Camper-Vermietungsplattform.
+ * Bietet umfassende Verwaltungstools für Buchungen, Zahlungen, Fahrzeuge und Systemüberwachung.
+ * 
+ * HAUPTKOMPONENTEN:
+ * 
+ * 1. BookingManagementTable - Buchungsverwaltung:
+ *    - Tabularische Anzeige aller Buchungen mit Filteroptionen
+ *    - Status-basierte Filterung (alle, aktiv, abgeschlossen, storniert)
+ *    - Datumsbereich-Filter für zeitliche Eingrenzung
+ *    - Suchfunktion für Kunden- und Buchungsdaten
+ *    - Sortierung nach verschiedenen Kriterien (Datum, Status, Kunde)
+ *    - Inline-Bearbeitung und Detailansicht
+ * 
+ * 2. PaymentStatusOverview - Zahlungsübersicht:
+ *    - Dashboard für alle Zahlungstransaktionen
+ *    - Status-Tracking (ausstehend, erfolgreich, fehlgeschlagen, erstattet)
+ *    - Integration mit Stripe Payment Processing
+ *    - Refund-Management für Stornierungen
+ *    - Zahlungshistorie und Transaction-Details
+ * 
+ * 3. CamperAvailabilityCalendar - Fahrzeugverfügbarkeit:
+ *    - Kalender-basierte Verfügbarkeitsanzeige
+ *    - Multi-Fahrzeug Übersicht für Flottenmanagement
+ *    - Drag-and-Drop Buchungsverschiebung
+ *    - Wartungszeiträume und Blockierungen
+ *    - Real-time Verfügbarkeitsupdates
+ * 
+ * 4. UserManagementPanel - Benutzerverwaltung:
+ *    - Kundendatenbank mit Such- und Filterfunktionen
+ *    - Benutzerrollen und Berechtigungsverwaltung
+ *    - Account-Status Management (aktiv, gesperrt, gelöscht)
+ *    - Kommunikationshistorie und Support-Tickets
+ *    - DSGVO-konforme Datenverwaltung
+ * 
+ * 5. AnalyticsDashboard - Geschäftsanalyse:
+ *    - KPI-Dashboard mit Umsatz- und Buchungsstatistiken
+ *    - Grafische Datenvisualisierung mit Charts
+ *    - Zeitraum-basierte Analysen (täglich, wöchentlich, monatlich)
+ *    - Fahrzeugauslastung und Rentabilitätsanalyse
+ *    - Export-Funktionen für Berichte
+ * 
+ * TECHNISCHE FEATURES:
+ * 
+ * 1. Service Integration:
+ *    - bookingService: CRUD-Operationen für Buchungsdaten
+ *    - paymentService: Zahlungsabwicklung und Refund-Processing
+ *    - camperVehicleDataService: Fahrzeugdaten und Spezifikationen
+ *    - AdminService: Administrative API-Calls und Bulk-Operationen
+ * 
+ * 2. Datenmanagement:
+ *    - Real-time Datenaktualisierung mit useEffect Hooks
+ *    - Optimistic Updates für bessere Benutzererfahrung
+ *    - Fehlerbehandlung und Loading-States
+ *    - Pagination für große Datensätze
+ *    - Client-seitige Filterung und Sortierung
+ * 
+ * 3. UI/UX Features:
+ *    - Responsive Design für Desktop und Tablet
+ *    - Interactive Data Tables mit Sortierung
+ *    - Modal-Dialoge für Detailansichten
+ *    - Toast-Benachrichtigungen für Benutzer-Feedback
+ *    - Bulk-Actions für Massenoperationen
+ * 
+ * SICHERHEITSFEATURES:
+ * 
+ * 1. Authentifizierung:
+ *    - Admin-Rolle Verification vor Component-Rendering
+ *    - Session-basierte Zugriffskontrolle
+ *    - JWT Token Validation für API-Calls
+ *    - Automatische Logout bei Session-Ablauf
+ * 
+ * 2. Autorisierung:
+ *    - Granulare Berechtigungen für verschiedene Admin-Funktionen
+ *    - Read-Only vs. Read-Write Zugriffsebenen
+ *    - Audit-Logging für alle Admin-Aktionen
+ *    - IP-basierte Zugriffsbeschränkungen
+ * 
+ * 3. Datenschutz:
+ *    - DSGVO-konforme Datenbehandlung
+ *    - Pseudonymisierung sensibler Kundendaten
+ *    - Sichere Datenübertragung mit HTTPS
+ *    - Automatische Datenlöschung nach Retention-Periode
+ * 
+ * VERWENDUNG:
+ * 
+ * Standard Dashboard Integration:
+ * ```jsx
+ * import { BookingManagementTable, PaymentStatusOverview } from './AdminComponents';
+ * 
+ * function AdminDashboard() {
+ *   return (
+ *     <div className="admin-dashboard">
+ *       <BookingManagementTable 
+ *         onEditBooking={handleEditBooking}
+ *         onViewDetails={handleViewDetails}
+ *       />
+ *       <PaymentStatusOverview />
+ *     </div>
+ *   );
+ * }
+ * ```
+ * 
+ * PERFORMANCE OPTIMIERUNGEN:
+ * 
+ * 1. Data Loading:
+ *    - Lazy Loading für große Datensätze
+ *    - Virtualized Tables für bessere Performance
+ *    - Debounced Search für reduzierte API-Calls
+ *    - Caching-Strategien für häufig abgerufene Daten
+ * 
+ * 2. Rendering Optimization:
+ *    - React.memo für wiederverwendbare Komponenten
+ *    - useMemo für berechnete Werte
+ *    - useCallback für Event-Handler
+ *    - Component Splitting für bessere Code-Organisation
+ * 
+ * EINSATZGEBIETE:
+ * - Administrator-Dashboard für Campervermietung
+ * - Buchungsmanagement und Kundenservice
+ * - Finanzmanagement und Zahlungsüberwachung
+ * - Flottenmanagement und Wartungsplanung
+ * - Business Intelligence und Reporting
+ * 
+ * ABHÄNGIGKEITEN:
+ * - bookingService: Buchungsdatenmanagement
+ * - paymentService: Zahlungsabwicklung
+ * - camperVehicleDataService: Fahrzeugdaten
+ * - Button: Wiederverwendbare UI-Komponente
+ * - AdminService: Administrative Backend-Integration
+ * - React Hooks: useState, useEffect für Zustandsverwaltung
+ */
+
 import React, { useState, useEffect } from 'react';
 import { bookingService } from '../services/bookingService';
 import { paymentService } from '../services/paymentService';

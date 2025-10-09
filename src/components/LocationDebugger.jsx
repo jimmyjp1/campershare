@@ -1,3 +1,85 @@
+/**
+ * LocationDebugger.jsx
+ * ====================
+ * 
+ * HAUPTFUNKTION:
+ * Entwicklungs- und Debug-Komponente zur Analyse und Überprüfung der Geolocation-Funktionalität.
+ * Testet GPS-Koordinaten, Google Maps Reverse Geocoding und Standorterkennungsdienste.
+ * 
+ * ENTWICKLUNGS-FEATURES:
+ * 
+ * 1. GPS-Koordinaten Debugging:
+ *    - Echzeit-Anzeige der aktuellen GPS-Position
+ *    - Latitude/Longitude Koordinaten mit hoher Präzision
+ *    - Fehlerbehandlung für Geolocation-Probleme
+ *    - Browser-Kompatibilitätstests
+ * 
+ * 2. Google Maps Reverse Geocoding Test:
+ *    - Umwandlung von Koordinaten in lesbare Adressen
+ *    - Extraktion von Stadt und Region aus Address Components
+ *    - Validation der Google Maps API Integration
+ *    - Debugging der Geocoder-Antworten
+ * 
+ * 3. Debug-Informationsanzeige:
+ *    - Strukturierte Darstellung aller Standortdaten
+ *    - Raw GPS Coordinates für technische Analyse
+ *    - Formatierte Google Maps Adressergebnisse
+ *    - Detaillierte Address Components Aufschlüsselung
+ * 
+ * TECHNISCHE INTEGRATION:
+ * 
+ * 1. Geolocation Service:
+ *    - Verwendet useGeolocation Hook aus mapIntegrationService
+ *    - Asynchrone Koordinatenabfrage mit getCurrentLocation
+ *    - Automatische Fehlerbehandlung und Retry-Logik
+ * 
+ * 2. Google Maps API:
+ *    - Direkter Zugriff auf window.google.maps.Geocoder
+ *    - Reverse Geocoding für Koordinaten-zu-Adresse Konvertierung
+ *    - Address Components Parsing für Stadt-Extraktion
+ *    - Status-Code Überprüfung für API-Antworten
+ * 
+ * 3. Debug-Datenstruktur:
+ *    - rawCoords: Original GPS-Koordinaten (lat, lng)
+ *    - googleResult: Formatierte Adresse von Google Maps
+ *    - detectedCity: Extrahierte Stadt aus Address Components
+ *    - allComponents: Vollständige Address Components Array
+ * 
+ * VERWENDUNG (NUR FÜR ENTWICKLUNG):
+ * 
+ * Integration in Entwicklungsumgebung:
+ * {process.env.NODE_ENV === 'development' && <LocationDebugger />}
+ * 
+ * Temporäre Debug-Einbindung:
+ * <LocationDebugger />
+ * 
+ * DEBUGGING-WORKFLOW:
+ * 
+ * 1. Komponente rendern
+ * 2. "Test Location" Button klicken
+ * 3. GPS-Permission gewähren
+ * 4. Debug-Informationen analysieren
+ * 5. Console-Logs für detaillierte Daten prüfen
+ * 
+ * EINSATZGEBIETE:
+ * - Entwicklungsphase für Standortfunktionen
+ * - Qualitätssicherung der GPS-Integration
+ * - Debugging von Geolocation-Problemen
+ * - Testing auf verschiedenen Geräten und Browsern
+ * - Validierung der Google Maps API Konfiguration
+ * 
+ * SICHERHEITSHINWEISE:
+ * - NUR in Entwicklungsumgebung verwenden
+ * - Sensible Koordinatendaten nicht in Produktion loggen
+ * - Component vor Production Build entfernen
+ * - Debug-Informationen können persönliche Daten enthalten
+ * 
+ * ABHÄNGIGKEITEN:
+ * - mapIntegrationService: Geolocation Hooks und Services
+ * - Google Maps JavaScript API: Reverse Geocoding
+ * - React Hooks: useState, useEffect für Zustandsverwaltung
+ */
+
 import React, { useState, useEffect } from 'react';
 import { useGeolocation } from '../services/mapIntegrationService';
 

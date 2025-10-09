@@ -1,9 +1,72 @@
+/**
+ * =============================================================================
+ * PAYMENT FORM KOMPONENTE
+ * =============================================================================
+ * 
+ * Umfassendes Zahlungsformular mit Stripe Integration für sichere
+ * Transaktionsabwicklung in der WWISCA Camper-Rental Plattform.
+ * 
+ * HAUPTFUNKTIONEN:
+ * - Multi-Payment Method Support (Karten, PayPal, Apple Pay, etc.)
+ * - Stripe Elements Integration für PCI-Compliance
+ * - Gespeicherte Zahlungsmethoden Management
+ * - Flexible Zahlungstypen (Vollzahlung, Anzahlung, Kaution)
+ * - Real-time Payment Breakdown Calculation
+ * - Billing Address Validation
+ * - 3D Secure Authentication Support
+ * 
+ * ZAHLUNGSMETHODEN:
+ * - Kreditkarten: Visa, Mastercard, American Express
+ * - Digital Wallets: Apple Pay, Google Pay
+ * - Alternative: PayPal, Klarna, SEPA
+ * - Gespeicherte Karten: Für wiederkehrende Kunden
+ * 
+ * SICHERHEITSFEATURES:
+ * - PCI DSS Level 1 Compliance via Stripe
+ * - Client-side Input Validation
+ * - Secure Tokenization (keine Kartendaten auf Server)
+ * - Fraud Detection & Prevention
+ * - SCA/3D Secure 2.0 Authentication
+ * - CVV/AVS Verification
+ * 
+ * PAYMENT BREAKDOWN:
+ * - Basis-Mietpreis nach Tagen
+ * - Zusatzausstattung und Services
+ * - Versicherungsoptionen
+ * - Steuern und Gebühren
+ * - Kaution (Security Deposit)
+ * - Gesamtsumme mit Währungsformatierung
+ * 
+ * USER EXPERIENCE:
+ * - Auto-Fill für wiederkehrende Kunden
+ * - Real-time Validierung mit Fehlermeldungen
+ * - Progress Indicators für mehrstufige Zahlungen
+ * - Mobile-optimierte Touch Controls
+ * - Accessibility-konforme Form Labels
+ * 
+ * VERWENDUNG:
+ * <PaymentForm 
+ *   bookingData={booking}
+ *   paymentType={PAYMENT_TYPE.DEPOSIT}
+ *   onPaymentSuccess={handleSuccess}
+ *   onPaymentError={handleError}
+ *   savedPaymentMethods={userCards}
+ * />
+ */
 import React, { useState, useEffect, useRef } from 'react';
 import { useStripe, useElements, CardElement, PaymentElement } from '@stripe/react-stripe-js';
 import { paymentService, PAYMENT_METHODS, PAYMENT_TYPE, formatCurrency } from '../services/paymentService';
 import { authService } from '../services/userAuthenticationService';
 
-// Payment form component
+/**
+ * PAYMENT FORM HAUPTKOMPONENTE
+ * Zentrale Zahlungsabwicklung mit Multi-Method Support
+ * @param {Object} bookingData - Buchungsdaten für Preisberechnung
+ * @param {string} paymentType - Art der Zahlung (FULL_PAYMENT, DEPOSIT, etc.)
+ * @param {function} onPaymentSuccess - Callback bei erfolgreicher Zahlung
+ * @param {function} onPaymentError - Callback bei Zahlungsfehlern
+ * @param {Array} savedPaymentMethods - Gespeicherte Zahlungsmethoden des Benutzers
+ */
 export const PaymentForm = ({ 
   bookingData, 
   paymentType = PAYMENT_TYPE.FULL_PAYMENT, 
@@ -11,31 +74,38 @@ export const PaymentForm = ({
   onPaymentError,
   savedPaymentMethods = []
 }) => {
+  // Stripe Hooks für Payment Processing
   const stripe = useStripe();
   const elements = useElements();
   
-  const [isLoading, setIsLoading] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState(PAYMENT_METHODS.CARD);
-  const [usesSavedCard, setUsesSavedCard] = useState(false);
-  const [selectedSavedCard, setSelectedSavedCard] = useState(null);
-  const [saveCard, setSaveCard] = useState(false);
-  const [paymentBreakdown, setPaymentBreakdown] = useState(null);
-  const [clientSecret, setClientSecret] = useState(null);
+  // State Management für Payment Flow
+  const [isLoading, setIsLoading] = useState(false);                     // Loading State für Submit
+  const [paymentMethod, setPaymentMethod] = useState(PAYMENT_METHODS.CARD); // Gewählte Zahlungsmethode
+  const [usesSavedCard, setUsesSavedCard] = useState(false);             // Toggle für gespeicherte Karten
+  const [selectedSavedCard, setSelectedSavedCard] = useState(null);      // Ausgewählte gespeicherte Karte
+  const [saveCard, setSaveCard] = useState(false);                      // Karte für zukünftige Zahlungen speichern
+  const [paymentBreakdown, setPaymentBreakdown] = useState(null);       // Berechnete Preisaufschlüsselung
+  const [clientSecret, setClientSecret] = useState(null);               // Stripe Payment Intent Secret
+  
+  // Billing Details für Zahlungsabwicklung
   const [billingDetails, setBillingDetails] = useState({
     name: '',
     email: '',
     phone: '',
     address: {
-      line1: '',
-      line2: '',
-      city: '',
-      state: '',
-      postal_code: '',
-      country: 'US'
+      line1: '',                    // Straße und Hausnummer
+      line2: '',                    // Zusatzangaben (Apartment, etc.)
+      city: '',                     // Stadt
+      state: '',                    // Bundesland/Region
+      postal_code: '',              // Postleitzahl
+      country: 'US'                 // Default: USA (kann erweitert werden)
     }
   });
 
-  // Calculate payment breakdown on mount
+  /**
+   * PAYMENT BREAKDOWN BERECHNUNG
+   * Berechnet Preisaufschlüsselung beim Component Mount
+   */
   useEffect(() => {
     const breakdown = paymentService.calculatePaymentBreakdown(bookingData, paymentType);
     setPaymentBreakdown(breakdown);

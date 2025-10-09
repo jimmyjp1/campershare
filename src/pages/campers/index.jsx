@@ -1,3 +1,207 @@
+/**
+ * campers/index.jsx - Camper-Übersichts- und Suchseite
+ * =====================================================
+ * 
+ * HAUPTFUNKTION:
+ * Hauptsuchseite für Camper-Fahrzeuge der WWISCA Plattform mit umfassenden Filter-, Such- und Buchungsfunktionen.
+ * Zentrale Landing-Page für die Fahrzeugsuche mit intelligenten Filtern und Location-basierter Suche.
+ * 
+ * SEITEN-FEATURES:
+ * 
+ * 1. Intelligente Fahrzeugsuche:
+ *    - Text-basierte Suche mit Debouncing für Performance
+ *    - Multi-Filter System (Typ, Preis, Ausstattung, Standort)
+ *    - Real-time Filter-Updates ohne Seitenneuladung
+ *    - Advanced Filtering mit useVanFiltering Hook
+ * 
+ * 2. Location-basierte Suche:
+ *    - GPS-Standortsuche mit LocationPickerClient
+ *    - Nahegelegene Fahrzeuge basierend auf Benutzerposition
+ *    - PICKUP_LOCATIONS Integration für verfügbare Standorte
+ *    - Smart Location Service für automatische Standorterkennung
+ * 
+ * 3. Responsive Fahrzeug-Grid:
+ *    - Card-basierte Fahrzeugdarstellung
+ *    - Responsive Grid-Layout (1-4 Spalten je nach Bildschirmgröße)
+ *    - Lazy Loading für große Fahrzeugmengen
+ *    - Wishlist-Integration für Favoriten-Management
+ * 
+ * 4. Enhanced User Experience:
+ *    - Analytics-Tracking für Suchverhalten
+ *    - Cookie-basierte Einstellungsspeicherung
+ *    - Mehrsprachige Unterstützung (DE/EN)
+ *    - Progressive Web App Features
+ * 
+ * TECHNISCHE KOMPONENTEN:
+ * 
+ * 1. Search und Filtering:
+ *    - useDebounce Hook für optimierte Sucheingaben
+ *    - useVanFiltering für komplexe Filter-Logic
+ *    - Real-time Updates ohne Performance-Einbußen
+ *    - URL-State Synchronisation für Deep-Linking
+ * 
+ * 2. Location Services:
+ *    - LocationPickerClient für SSR-sichere GPS-Integration
+ *    - useSmartLocation für intelligente Standortdienste
+ *    - PICKUP_LOCATIONS Datenbank für verfügbare Abholpunkte
+ *    - Geolocation API Integration mit Fallback-Mechanismen
+ * 
+ * 3. State Management:
+ *    - useState für lokale Suchfilter und UI-States
+ *    - useEffect für Daten-Loading und Side-Effects
+ *    - Router-State für URL-Parameter Synchronisation
+ *    - Context-Integration für globale App-States
+ * 
+ * SUCH- UND FILTER-SYSTEM:
+ * 
+ * 1. Text-basierte Suche:
+ *    ```javascript
+ *    const [searchTerm, setSearchTerm] = useState('');
+ *    const debouncedSearchTerm = useDebounce(searchTerm, 300);
+ *    
+ *    useEffect(() => {
+ *      filterVans(debouncedSearchTerm);
+ *    }, [debouncedSearchTerm]);
+ *    ```
+ * 
+ * 2. Advanced Filtering:
+ *    - Fahrzeugtyp (Kastenwagen, Alkoven, Vollintegriert)
+ *    - Preisbereich (Min-Max Slider)
+ *    - Ausstattung (Küche, Bad, Solar, etc.)
+ *    - Personenanzahl (2-8 Personen)
+ *    - Verfügbarkeitszeitraum
+ * 
+ * 3. Location-based Filtering:
+ *    - Radius-basierte Suche um Benutzerstandort
+ *    - Spezifische Abholstandorte
+ *    - Stadt- oder Postleitzahl-Suche
+ *    - Internationale Standorte
+ * 
+ * RESPONSIVE DESIGN:
+ * 
+ * 1. Mobile-First Approach:
+ *    - Touch-optimierte Filter-UI
+ *    - Swipeable Fahrzeug-Karten
+ *    - Collapsible Filter-Sidebar
+ *    - Optimierte Suchfeld-Positionierung
+ * 
+ * 2. Desktop Enhancement:
+ *    - Multi-Column Grid-Layout
+ *    - Hover-Effekte und Animations
+ *    - Advanced Filter-Sidebar
+ *    - Keyboard-Shortcuts für Power-User
+ * 
+ * 3. Tablet Optimization:
+ *    - Adaptive Grid (2-3 Spalten)
+ *    - Touch und Mouse-friendly Interactions
+ *    - Optimierte Filter-Panel Layouts
+ *    - Portrait/Landscape Mode Support
+ * 
+ * ANALYTICS UND TRACKING:
+ * 
+ * 1. Search Analytics:
+ *    - usePageViewTracking für Seitenaufrufe
+ *    - useAnalytics für detailliertes Benutzerverhalten
+ *    - Search-Term Tracking für Content-Optimierung
+ *    - Filter-Usage Analysis für UX-Improvements
+ * 
+ * 2. Conversion Tracking:
+ *    - Van-View zu Booking Conversion-Rate
+ *    - Popular Search-Terms und Filter-Kombinationen
+ *    - Geographic Search-Patterns
+ *    - Seasonal Search-Trends
+ * 
+ * 3. Performance Monitoring:
+ *    - Search-Response Times
+ *    - Filter-Performance Metrics
+ *    - Page-Load Speed Optimization
+ *    - Mobile vs Desktop Usage-Patterns
+ * 
+ * FAHRZEUG-DARSTELLUNG:
+ * 
+ * 1. Fahrzeug-Karten:
+ *    ```jsx
+ *    <VanCard>
+ *      <VanImage src={van.mainImage} alt={van.name} />
+ *      <VanDetails>
+ *        <VanName>{van.name}</VanName>
+ *        <VanType>{van.type}</VanType>
+ *        <VanPrice>€{van.dailyRate}/Tag</VanPrice>
+ *        <VanFeatures features={van.features} />
+ *        <WishlistButton vanId={van.id} />
+ *      </VanDetails>
+ *    </VanCard>
+ *    ```
+ * 
+ * 2. Interactive Elements:
+ *    - WishlistButton für Favoriten-Management
+ *    - Quick-View Modal für Fahrzeugdetails
+ *    - Direct-Booking Button für sofortige Reservierung
+ *    - Share-Funktionen für Social Media
+ * 
+ * SEO-OPTIMIERUNG:
+ * 
+ * 1. Meta-Tags und Structured Data:
+ *    ```jsx
+ *    <Head>
+ *      <title>Camper mieten - WWISCA CamperShare</title>
+ *      <meta name="description" content="Entdecken Sie unsere Auswahl an Campern für Ihren perfekten Roadtrip" />
+ *      <meta name="keywords" content="Camper mieten, Wohnmobil, Camping, Roadtrip" />
+ *      <script type="application/ld+json">
+ *        {JSON.stringify(vehicleListingSchema)}
+ *      </script>
+ *    </Head>
+ *    ```
+ * 
+ * 2. URL-Structure:
+ *    - Clean URLs für Filter-Kombinationen
+ *    - Canonical URLs für Duplicate-Content Prevention
+ *    - Hreflang für internationale Versionen
+ *    - Sitemap-Integration für bessere Crawlability
+ * 
+ * PERFORMANCE-OPTIMIERUNG:
+ * 
+ * 1. Data Loading:
+ *    - Lazy Loading für Fahrzeug-Bilder
+ *    - Infinite Scrolling für große Datensätze
+ *    - Caching-Strategien für häufige Suchen
+ *    - Debounced API-Calls für bessere Performance
+ * 
+ * 2. Rendering Optimization:
+ *    - React.memo für Fahrzeug-Komponenten
+ *    - useMemo für berechnete Filter-Werte
+ *    - Virtual Scrolling bei vielen Ergebnissen
+ *    - Code Splitting für Feature-spezifische Bundles
+ * 
+ * ACCESSIBILITY:
+ * 
+ * 1. Keyboard Navigation:
+ *    - Tab-Index für alle interaktiven Elemente
+ *    - Arrow-Key Navigation durch Fahrzeug-Grid
+ *    - Enter/Space Activation für Filter-Checkboxes
+ *    - Escape-Key für Modal/Filter-Panel Closing
+ * 
+ * 2. Screen Reader Support:
+ *    - ARIA-Labels für komplexe UI-Elemente
+ *    - Live-Regions für Dynamic Content-Updates
+ *    - Semantic HTML für Structure-Information
+ *    - Alternative Text für alle Bilder
+ * 
+ * EINSATZGEBIETE:
+ * - Hauptsuchseite für Camper-Vermietung
+ * - Landing-Page für Marketing-Kampagnen
+ * - Mobile App-Integration für Native-Feeling
+ * - B2B-Partner Integration für White-Label-Solutions
+ * - Analytics-Dashboard für Business-Intelligence
+ * 
+ * ABHÄNGIGKEITEN:
+ * - Container und Button für UI-Konsistenz
+ * - CamperFilters für Advanced Filtering
+ * - LocationPickerClient für GPS-Integration
+ * - StorageComponents für Wishlist-Funktionalität
+ * - Analytics Hooks für Tracking und Optimization
+ */
+
 import Head from 'next/head'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'

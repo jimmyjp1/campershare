@@ -1,3 +1,107 @@
+/**
+ * LocationDetector.jsx
+ * ====================
+ * 
+ * HAUPTFUNKTION:
+ * Benutzerfreundliche Komponente zur automatischen Standorterkennung mit GPS/Geolocation.
+ * Bietet intuitive UI für Standortabfrage, Fehlerbehandlung und Benutzer-Feedback.
+ * 
+ * BENUTZER-FEATURES:
+ * 
+ * 1. Automatische Standorterkennung:
+ *    - GPS-basierte Koordinatenermittlung
+ *    - Browser Geolocation API Integration
+ *    - Callback-System für erkannte Standorte
+ *    - Asynchrone Location-Abfrage mit Loading-States
+ * 
+ * 2. Benutzerfreundliche Oberfläche:
+ *    - Intuitive "Standort ermitteln" Button
+ *    - Visual Feedback mit Heroicons (MapPin, Check, Warning)
+ *    - Loading-Spinner während GPS-Abfrage
+ *    - Erweiterbarer Detailbereich für technische Informationen
+ * 
+ * 3. Fehlerbehandlung und Status:
+ *    - Permission-Status Überwachung (granted, denied, prompt)
+ *    - Benutzerfreundliche Fehlermeldungen
+ *    - Retry-Funktionalität bei fehlgeschlagenen Versuchen
+ *    - Graceful Degradation bei nicht verfügbarer Geolocation
+ * 
+ * TECHNISCHE INTEGRATION:
+ * 
+ * 1. Geolocation Service Integration:
+ *    - useGeolocation Hook aus mapIntegrationService
+ *    - Zustandsverwaltung für location, isLoading, error
+ *    - permissionStatus Monitoring für Browser-Permissions
+ *    - getCurrentLocation und clearLocation Funktionen
+ * 
+ * 2. React Lifecycle Management:
+ *    - useEffect für onLocationDetected Callbacks
+ *    - SSR-sichere Implementierung mit isMounted Check
+ *    - Automatische Callback-Auslösung bei neuen Standorten
+ *    - Memory Leak Prevention durch proper cleanup
+ * 
+ * 3. UI State Management:
+ *    - showDetails Toggle für erweiterte Informationen
+ *    - Conditional Rendering basierend auf Loading/Error States
+ *    - Responsive Button-Zustände (Loading, Success, Error)
+ * 
+ * PROPS INTERFACE:
+ * 
+ * @param {function} onLocationDetected - Callback-Funktion für erkannte Standorte
+ *   - Wird mit location-Objekt aufgerufen: { lat, lng, accuracy, address }
+ *   - Ermöglicht Integration in übergeordnete Komponenten
+ * 
+ * @param {string} className - CSS-Klassen für Container-Styling
+ *   - Standard: '' (leerer String)
+ *   - Ermöglicht TailwindCSS Styling-Anpassungen
+ * 
+ * VERWENDUNG:
+ * 
+ * Basis-Integration:
+ * <LocationDetector onLocationDetected={(loc) => setUserLocation(loc)} />
+ * 
+ * Mit Custom Styling:
+ * <LocationDetector 
+ *   onLocationDetected={handleLocationUpdate}
+ *   className="mb-6 p-4 bg-gray-50 rounded-lg"
+ * />
+ * 
+ * In Booking-Formularen:
+ * <LocationDetector 
+ *   onLocationDetected={(location) => {
+ *     setPickupLocation(location.address);
+ *     findNearbyPickupPoints(location.lat, location.lng);
+ *   }}
+ * />
+ * 
+ * BENUTZER-WORKFLOW:
+ * 
+ * 1. Benutzer sieht "Standort ermitteln" Button
+ * 2. Klick auf Button startet GPS-Abfrage
+ * 3. Browser fragt nach Geolocation-Permission
+ * 4. Loading-Spinner während Standortabfrage
+ * 5. Erfolg: Grüner Check mit Standortdaten
+ * 6. Fehler: Warnung mit Retry-Option
+ * 7. Optional: Details-Bereich für technische Infos
+ * 
+ * ACCESSIBILITY:
+ * - Tastatur-Navigation für alle Buttons
+ * - Screen-Reader freundliche Statusmeldungen
+ * - Hohe Kontraste für visuelle Klarheit
+ * - Loading-States mit aria-live Updates
+ * 
+ * SICHERHEIT & PRIVACY:
+ * - Benutzer-Zustimmung erforderlich für GPS-Zugriff
+ * - Keine automatische Standortabfrage ohne Benutzeraktion
+ * - Sensible Koordinaten nur bei Erfolg weitergegeben
+ * - Respektiert Browser Geolocation-Policies
+ * 
+ * ABHÄNGIGKEITEN:
+ * - mapIntegrationService: Geolocation Hooks
+ * - @heroicons/react: UI Icons für visuelles Feedback
+ * - React Hooks: useState, useEffect für Zustandsverwaltung
+ */
+
 import React, { useState, useEffect } from 'react';
 import { useGeolocation } from '../services/mapIntegrationService';
 import { 

@@ -1,3 +1,157 @@
+/**
+ * imageProcessingHelper.js
+ * ========================
+ * 
+ * HAUPTFUNKTION:
+ * Canvas und SVG-basierte Bildverarbeitungs- und Visualisierungskomponenten für die WWISCA Camper-Plattform.
+ * Bietet interaktive Grafiken, Fahrzeug-Layout-Diagramme und responsive Visualisierungen.
+ * 
+ * HAUPTKOMPONENTEN:
+ * 
+ * 1. VanLayoutCanvas - Interaktives Fahrzeug-Layout:
+ *    - Canvas-basierte Darstellung von Camper-Grundrissen
+ *    - Klickbare Ausstattungsmerkmale mit Koordinaten-Mapping
+ *    - Hover-Effekte und visuelle Feedback-Systeme
+ *    - Responsive Canvas-Größenanpassung
+ *    - Color-coded Amenity-Kategorien für bessere Übersicht
+ * 
+ * 2. Interactive Amenity Visualization:
+ *    - Detaillierte Koordinaten für Fahrzeugausstattung
+ *    - Kitchen, Shower, Toilet, Bed, Fridge, Storage Mapping
+ *    - Seating, Table, Air Conditioning, Solar Panel Integration
+ *    - Dynamische Farbkodierung nach Funktionskategorien
+ *    - Touch-optimierte Interaktion für mobile Geräte
+ * 
+ * 3. Canvas Rendering Engine:
+ *    - High-Performance 2D Canvas Rendering
+ *    - Anti-Aliasing für glatte Linien und Formen
+ *    - Layer-Management für komplexe Visualisierungen
+ *    - Memory-effiziente Drawing-Operationen
+ *    - Cross-Browser kompatible Canvas-APIs
+ * 
+ * TECHNISCHE FEATURES:
+ * 
+ * 1. Koordinaten-System:
+ *    - Präzise Pixel-basierte Positioning
+ *    - Skalierbare Koordinaten für verschiedene Canvas-Größen
+ *    - Hit-Detection für interaktive Bereiche
+ *    - Responsive Transformation-Matrizen
+ * 
+ * 2. Event-Handling:
+ *    - Mouse und Touch Event-Integration
+ *    - Hover-State Management mit useState
+ *    - Click-Handler für Amenity-Auswahl
+ *    - Drag-and-Drop Support für Layout-Editierung
+ * 
+ * 3. Performance Optimierung:
+ *    - useCallback für optimierte Re-Rendering
+ *    - Canvas-Caching für statische Elemente
+ *    - Debounced Resize-Handler für responsive Updates
+ *    - RAF (RequestAnimationFrame) für smooth Animationen
+ * 
+ * AMENITY KOORDINATEN-MAPPING:
+ * 
+ * ```javascript
+ * const amenityCoordinates = {
+ *   'Kitchen': { x: 50, y: 100, width: 120, height: 80, color: '#10B981' },
+ *   'Shower': { x: 200, y: 120, width: 80, height: 60, color: '#3B82F6' },
+ *   'Toilet': { x: 200, y: 200, width: 80, height: 60, color: '#6366F1' },
+ *   'Bed': { x: 320, y: 80, width: 200, height: 120, color: '#8B5CF6' },
+ *   'Fridge': { x: 50, y: 200, width: 60, height: 80, color: '#06B6D4' },
+ *   'Storage': { x: 520, y: 200, width: 60, height: 100, color: '#84CC16' },
+ *   'Seating': { x: 50, y: 300, width: 150, height: 80, color: '#F59E0B' },
+ *   'Table': { x: 220, y: 320, width: 100, height: 60, color: '#EF4444' },
+ *   'Air Conditioning': { x: 450, y: 50, width: 100, height: 30, color: '#14B8A6' },
+ *   'Solar Panel': { x: 200, y: 20, width: 200, height: 40, color: '#F97316' }
+ * };
+ * ```
+ * 
+ * VERWENDUNG:
+ * 
+ * Standard Canvas Integration:
+ * ```jsx
+ * import { VanLayoutCanvas } from './imageProcessingHelper';
+ * 
+ * function CamperDetailsPage({ camper }) {
+ *   const [selectedFeatures, setSelectedFeatures] = useState([]);
+ *   
+ *   return (
+ *     <VanLayoutCanvas 
+ *       van={camper}
+ *       selectedAmenities={selectedFeatures}
+ *       onAmenityClick={(amenity) => {
+ *         setSelectedFeatures(prev => 
+ *           prev.includes(amenity) 
+ *             ? prev.filter(a => a !== amenity)
+ *             : [...prev, amenity]
+ *         );
+ *       }}
+ *     />
+ *   );
+ * }
+ * ```
+ * 
+ * RESPONSIVE DESIGN:
+ * 
+ * 1. Canvas Größenanpassung:
+ *    - Automatische Skalierung basierend auf Container-Größe
+ *    - Aspect-Ratio Erhaltung für konsistente Darstellung
+ *    - Mobile-optimierte Touch-Targets
+ *    - High-DPI Display Support (Retina-kompatibel)
+ * 
+ * 2. Layout Adaptation:
+ *    - Breakpoint-basierte Canvas-Dimensionen
+ *    - Adaptive Schriftgrößen und Element-Größen
+ *    - Touch-freundliche Interaktionsbereiche
+ *    - Orientation-Change Handling
+ * 
+ * INTERAKTIONSFEATURES:
+ * 
+ * 1. Hover-Effekte:
+ *    - Visual Highlighting bei Mouse-Over
+ *    - Tooltip-Anzeige mit Amenity-Details
+ *    - Smooth Transitions zwischen States
+ *    - Cursor-Changes für interaktive Bereiche
+ * 
+ * 2. Click-Interaktionen:
+ *    - Single-Click für Amenity-Auswahl
+ *    - Multi-Select Support für Vergleiche
+ *    - Visual Feedback bei Auswahl
+ *    - Callback-Integration für Parent-Components
+ * 
+ * FARBKODIERUNG:
+ * - Grün (#10B981): Küche und Kochbereich
+ * - Blau (#3B82F6): Sanitäre Einrichtungen
+ * - Lila (#8B5CF6): Schlafbereiche
+ * - Orange (#F97316): Technische Ausstattung
+ * - Gelb (#F59E0B): Aufenthalts- und Essbereiche
+ * 
+ * ACCESSIBILITY:
+ * - Keyboard-Navigation für Canvas-Elemente
+ * - ARIA-Labels für Screen-Reader Support
+ * - High-Contrast Mode Unterstützung
+ * - Alternative Text-Beschreibungen
+ * 
+ * BROWSER COMPATIBILITY:
+ * - HTML5 Canvas Support (alle modernen Browser)
+ * - Touch Event Support für mobile Geräte
+ * - High-DPI Display Optimization
+ * - Progressive Enhancement für ältere Browser
+ * 
+ * EINSATZGEBIETE:
+ * - Fahrzeug-Detail-Seiten mit interaktiven Grundrissen
+ * - Ausstattungsvergleiche zwischen verschiedenen Campern
+ * - Buchungsformulare mit visueller Fahrzeugauswahl
+ * - Admin-Tools für Fahrzeug-Layout-Management
+ * - Marketing-Materialien mit interaktiven Elementen
+ * 
+ * ABHÄNGIGKEITEN:
+ * - React Hooks: useRef, useEffect, useState, useCallback
+ * - HTML5 Canvas API für 2D-Rendering
+ * - Native JavaScript Event-Handling
+ * - CSS für responsive Container-Styling
+ */
+
 // Canvas and SVG graphics components for interactive visualizations
 
 import React, { useRef, useEffect, useState, useCallback } from 'react';

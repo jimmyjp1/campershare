@@ -1,3 +1,239 @@
+/**
+ * reset-password.jsx - Passwort-Zurücksetzen-Seite
+ * =================================================
+ * 
+ * HAUPTFUNKTION:
+ * Sichere Passwort-Reset-Seite für die WWISCA Camper-Plattform zur Wiederherstellung vergessener Passwörter.
+ * Ermöglicht Benutzern das sichere Zurücksetzen ihrer Passwörter über Token-basierte E-Mail-Links.
+ * 
+ * SEITEN-FEATURES:
+ * 
+ * 1. Token-basierte Sicherheit:
+ *    - URL-Token-Extraktion aus Router Query-Parametern
+ *    - Sichere Token-Validation über Backend-API
+ *    - Einmalige Token-Verwendung für maximale Sicherheit
+ *    - Zeitbasierte Token-Expiration (normalerweise 1-2 Stunden)
+ * 
+ * 2. Passwort-Eingabe-Formular:
+ *    - Neues Passwort mit Stärke-Validierung
+ *    - Passwort-Bestätigung für Tippfehler-Prävention
+ *    - Show/Hide Toggle-Buttons für Passwort-Sichtbarkeit
+ *    - Real-time Validation und Feedback
+ * 
+ * 3. Benutzerfreundliche UX:
+ *    - Loading-States während API-Calls
+ *    - Erfolgs- und Fehlermeldungen
+ *    - Progressive Enhancement für bessere Accessibility
+ *    - Responsive Design für alle Gerätegrößen
+ * 
+ * 4. Sicherheitsfeatures:
+ *    - Passwort-Stärke-Requirements
+ *    - Client-seitige Validierung vor API-Call
+ *    - Rate-Limiting für Brute-Force-Schutz
+ *    - Secure Form-Handling ohne Passwort-Caching
+ * 
+ * TECHNISCHE IMPLEMENTIERUNG:
+ * 
+ * 1. State Management:
+ *    - formData: { newPassword, confirmPassword }
+ *    - showPassword/showConfirmPassword: Toggle-Zustände
+ *    - isLoading: Submit-Status für UI-Feedback
+ *    - error/success: Benutzer-Feedback Messages
+ * 
+ * 2. Form Validation:
+ *    - Password-Match Validation (newPassword === confirmPassword)
+ *    - Passwort-Stärke Requirements (Länge, Komplexität)
+ *    - Real-time Feedback während Eingabe
+ *    - Client-seitige Pre-Validation vor API-Call
+ * 
+ * 3. API Integration:
+ *    - POST /api/auth/reset-password mit Token und neuen Passwort
+ *    - JSON-Response Handling für verschiedene Szenarien
+ *    - Error-Handling für ungültige Token oder Server-Fehler
+ *    - Success-Callback für Passwort-Update Bestätigung
+ * 
+ * PASSWORT-RESET-WORKFLOW:
+ * 
+ * 1. Initiierung:
+ *    ```
+ *    "Passwort vergessen" → E-Mail-Eingabe → Reset-Link E-Mail → Link-Klick → Reset-Seite
+ *    ```
+ * 
+ * 2. Formular-Validation:
+ *    ```javascript
+ *    const validateForm = () => {
+ *      if (formData.newPassword !== formData.confirmPassword) {
+ *        setError('Die Passwörter stimmen nicht überein');
+ *        return false;
+ *      }
+ *      
+ *      if (formData.newPassword.length < 8) {
+ *        setError('Passwort muss mindestens 8 Zeichen lang sein');
+ *        return false;
+ *      }
+ *      
+ *      return true;
+ *    };
+ *    ```
+ * 
+ * 3. API-Call Struktur:
+ *    ```javascript
+ *    const resetPassword = async () => {
+ *      const response = await fetch('/api/auth/reset-password', {
+ *        method: 'POST',
+ *        headers: { 'Content-Type': 'application/json' },
+ *        body: JSON.stringify({
+ *          token: token,
+ *          newPassword: formData.newPassword
+ *        })
+ *      });
+ *    };
+ *    ```
+ * 
+ * PASSWORT-SICHERHEIT:
+ * 
+ * 1. Passwort-Requirements:
+ *    - Mindestlänge: 8 Zeichen
+ *    - Mindestens 1 Großbuchstabe
+ *    - Mindestens 1 Kleinbuchstabe
+ *    - Mindestens 1 Zahl
+ *    - Mindestens 1 Sonderzeichen (optional, aber empfohlen)
+ * 
+ * 2. Passwort-Stärke-Indikatoren:
+ *    ```javascript
+ *    const getPasswordStrength = (password) => {
+ *      let strength = 0;
+ *      if (password.length >= 8) strength++;
+ *      if (/[A-Z]/.test(password)) strength++;
+ *      if (/[a-z]/.test(password)) strength++;
+ *      if (/\d/.test(password)) strength++;
+ *      if (/[^A-Za-z\d]/.test(password)) strength++;
+ *      
+ *      return ['Sehr schwach', 'Schwach', 'Mittel', 'Stark', 'Sehr stark'][strength];
+ *    };
+ *    ```
+ * 
+ * 3. Sichere Passwort-Handling:
+ *    - Keine Passwort-Speicherung im Browser-Cache
+ *    - Automatisches Form-Clearing nach Submit
+ *    - Memory-Clearing für sensitive Daten
+ *    - Secure HTTP-Only für Token-Übertragung
+ * 
+ * API-RESPONSES:
+ * 
+ * 1. Erfolgreicher Reset:
+ *    ```json
+ *    {
+ *      "success": true,
+ *      "message": "Passwort erfolgreich zurückgesetzt",
+ *      "redirectUrl": "/login"
+ *    }
+ *    ```
+ * 
+ * 2. Ungültiger Token:
+ *    ```json
+ *    {
+ *      "success": false,
+ *      "error": "INVALID_TOKEN",
+ *      "message": "Ungültiger oder abgelaufener Reset-Link"
+ *    }
+ *    ```
+ * 
+ * 3. Schwaches Passwort:
+ *    ```json
+ *    {
+ *      "success": false,
+ *      "error": "WEAK_PASSWORD",
+ *      "message": "Passwort erfüllt nicht die Sicherheitsanforderungen"
+ *    }
+ *    ```
+ * 
+ * ERROR HANDLING:
+ * 
+ * 1. Validierungs-Fehler:
+ *    - Passwörter stimmen nicht überein
+ *    - Passwort zu schwach/kurz
+ *    - Leere Felder oder ungültige Eingaben
+ *    - Password-Policy Verletzungen
+ * 
+ * 2. Token-Fehler:
+ *    - Ungültiger oder fehlender Token
+ *    - Abgelaufener Reset-Link
+ *    - Bereits verwendeter Token
+ *    - Manipulierter Token-Parameter
+ * 
+ * 3. Server-Fehler:
+ *    - Network Connection Issues
+ *    - Database-Fehler beim Passwort-Update
+ *    - Rate-Limiting Überschreitung
+ *    - Internal Server Errors (500)
+ * 
+ * UX/UI FEATURES:
+ * 
+ * 1. Passwort-Visibility Toggle:
+ *    - Eye-Icon Buttons für Show/Hide Passwort
+ *    - Separate Toggle für beide Passwort-Felder
+ *    - Accessibility-freundliche Implementation
+ *    - Secure Handling ohne Memory-Leaks
+ * 
+ * 2. Visual Feedback:
+ *    - Real-time Passwort-Stärke Anzeige
+ *    - Farbkodierte Validation-Messages
+ *    - Loading-Spinner während API-Calls
+ *    - Success/Error Toast-Notifications
+ * 
+ * 3. Progressive Enhancement:
+ *    - Funktioniert ohne JavaScript (Basic Form)
+ *    - Enhanced UX mit JavaScript aktiviert
+ *    - Graceful Degradation bei API-Fehlern
+ *    - Offline-Handling für bessere Robustheit
+ * 
+ * RESPONSIVE DESIGN:
+ * - Mobile-optimierte Passwort-Eingabe
+ * - Touch-freundliche Toggle-Buttons
+ * - Adaptive Layouts für verschiedene Bildschirmgrößen
+ * - Optimierte Virtual Keyboard-Integration
+ * 
+ * ACCESSIBILITY:
+ * - ARIA-Labels für Passwort-Felder
+ * - Screen-Reader kompatible Error-Messages
+ * - High-Contrast Mode für Show/Hide-Buttons
+ * - Keyboard-Navigation für alle Interaktionen
+ * 
+ * SECURITY BEST PRACTICES:
+ * 
+ * 1. Token-Management:
+ *    - Sichere Token-Generation mit Crypto-Zufälligkeit
+ *    - Kurze Token-Lebensdauer (1-2 Stunden)
+ *    - One-time-use Token mit sofortiger Invalidierung
+ *    - Audit-Logging für alle Reset-Versuche
+ * 
+ * 2. Brute-Force-Protection:
+ *    - Rate-Limiting pro IP-Adresse
+ *    - Account-Lockout nach mehreren Failed-Attempts
+ *    - CAPTCHA für verdächtige Aktivitäten
+ *    - Geolocation-basierte Anomalie-Detection
+ * 
+ * 3. Data Protection:
+ *    - HTTPS-only für alle Reset-Operationen
+ *    - Secure Password-Hashing (bcrypt, Argon2)
+ *    - No Password-Logging in Server-Logs
+ *    - DSGVO-konforme Audit-Trails
+ * 
+ * EINSATZGEBIETE:
+ * - Vergessene Passwort-Wiederherstellung
+ * - Kompromittierte Account-Recovery
+ * - Proaktive Passwort-Rotation
+ * - Admin-initiierte Passwort-Resets
+ * - Security-Incident Response
+ * 
+ * ABHÄNGIGKEITEN:
+ * - Next.js Router für Token-Parameter Handling
+ * - React Hooks (useState, useEffect) für State-Management
+ * - Fetch API für sichere Backend-Kommunikation
+ * - Link Component für Navigation nach Success
+ */
+
 // Password reset page
 // /pages/auth/reset-password.jsx
 

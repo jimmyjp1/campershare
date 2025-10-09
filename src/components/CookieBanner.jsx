@@ -1,3 +1,36 @@
+/**
+ * =============================================================================
+ * COOKIE BANNER & RECENTLY VIEWED COMPONENTS
+ * =============================================================================
+ * 
+ * Cookie-Management und zuletzt angesehene Fahrzeuge System für 
+ * DSGVO-Compliance und verbesserte Benutzererfahrung.
+ * 
+ * HAUPTKOMPONENTEN:
+ * - RecentlyViewedVehicles: Anzeige der letzten 4 besuchten Fahrzeuge
+ * - CookieBanner: DSGVO-konformer Cookie-Consent Banner
+ * - CookieNotification: Info-Banner über Cookie-Status
+ * 
+ * FEATURES:
+ * - LocalStorage Integration für Fahrzeughistorie
+ * - Cookie-Kategorien Management (Functional/Analytics/Marketing)
+ * - Responsive Design mit Glassmorphism-Effekten
+ * - Multi-Language Support
+ * - Accessibility-optimierte Navigation
+ * - Privacy-First Ansatz mit Opt-in Verhalten
+ * 
+ * DSGVO COMPLIANCE:
+ * - Explizite Einwilligung für alle nicht-essentiellen Cookies
+ * - Granulare Kontrolle über Cookie-Kategorien
+ * - Einfache Widerrufsmöglichkeit der Einwilligung
+ * - Transparente Datenverwendung Erklärung
+ * 
+ * INTEGRATION:
+ * - browserCookieManager für Cookie-Verwaltung
+ * - multilanguageService für Internationalisierung
+ * - Fahrzeugdaten aus camperVanData Service
+ */
+
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { ClockIcon, EyeIcon } from '@heroicons/react/24/outline'

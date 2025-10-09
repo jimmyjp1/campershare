@@ -1,3 +1,37 @@
+/**
+ * =============================================================================
+ * BOOKINGS TAB KOMPONENTE
+ * =============================================================================
+ * 
+ * Benutzer-Dashboard Tab für Buchungsverwaltung mit Übersicht aller
+ * Campervermietungen und Buchungsmanagement-Funktionen.
+ * 
+ * HAUPTFUNKTIONEN:
+ * - Anzeige aller Benutzerbuchungen mit Status-Übersicht
+ * - Interaktive Buchungsdetails mit Expand/Collapse
+ * - Status-Management (Ausstehend, Bestätigt, Storniert, Abgeschlossen)
+ * - Buchungsstornierung mit Bestätigungsdialog
+ * - Responsive Tabellen-Layout für mobile und Desktop
+ * 
+ * STATUS SYSTEM:
+ * - pending: Gelb - Buchung wartet auf Bestätigung
+ * - confirmed: Grün - Buchung bestätigt und bezahlt
+ * - cancelled: Rot - Buchung vom Kunden oder Admin storniert
+ * - completed: Blau - Buchung erfolgreich abgeschlossen
+ * 
+ * FEATURES:
+ * - Automatisches Laden der Buchungsdaten bei Tab-Aktivierung
+ * - Dark Mode kompatibles Farbschema
+ * - Deutsche Lokalisierung aller Texte und Statuslabels
+ * - Error Handling mit Benutzerfreundlichen Meldungen
+ * - Loading States während API-Aufrufen
+ * 
+ * INTEGRATION:
+ * - bookingService für API-Kommunikation
+ * - Button-Komponente für konsistente UI
+ * - Responsive Design mit Tailwind CSS
+ */
+
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/Button'
 import { bookingAPI } from '@/services/bookingService'

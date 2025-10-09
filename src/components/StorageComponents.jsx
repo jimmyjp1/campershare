@@ -1,28 +1,98 @@
+/**
+ * =============================================================================
+ * STORAGE KOMPONENTEN SYSTEM
+ * =============================================================================
+ * 
+ * Client-side Storage-Komponenten für Benutzer-Präferenzen, Wunschlisten
+ * und Session-Management der WWISCA Camper-Rental Plattform.
+ * 
+ * HAUPTKOMPONENTEN:
+ * - WishlistButton: Heart-Icon für Camper-Favoriten
+ * - WishlistPanel: Übersicht gespeicherter Fahrzeuge
+ * - RecentViewsPanel: Zuletzt angesehene Camper
+ * - UserPreferencesPanel: Einstellungen und Präferenzen
+ * - SearchHistoryPanel: Suchverlauf und gespeicherte Filter
+ * 
+ * STORAGE FEATURES:
+ * - LocalStorage für persistente Daten
+ * - SessionStorage für temporäre Session-Daten
+ * - IndexedDB für große Datasets (Offline-Funktionen)
+ * - Cookie-basierte Tracking-Präferenzen
+ * - Cross-Tab Synchronisation
+ * 
+ * WISHLIST SYSTEM:
+ * - Heart-Animation für visuelles Feedback
+ * - Persistent Storage zwischen Sessions
+ * - Bulk-Aktionen für Multiple Selection
+ * - Wishlist-Sharing via URLs
+ * - Email-Export für gespeicherte Favoriten
+ * 
+ * USER PREFERENCES:
+ * - Sprach-Einstellungen (German/English)
+ * - Theme-Präferenzen (Light/Dark/Auto)
+ * - Notification-Einstellungen
+ * - Suchergebnisse pro Seite
+ * - Bevorzugte Maßeinheiten (km/miles)
+ * - Cookie-Zustimmung Status
+ * 
+ * RECENT VIEWS TRACKING:
+ * - Automatisches Tracking besuchter Camper
+ * - Zeitstempel-basierte Sortierung
+ * - Duplicate-Prevention
+ * - Konfigurierbare History-Länge
+ * - Privacy-respecting (kann deaktiviert werden)
+ * 
+ * PERFORMANCE OPTIMIERUNGEN:
+ * - Lazy Loading für große Listen
+ * - Debounced Updates für häufige Änderungen
+ * - Memory-efficient Storage Management
+ * - Automatic Cleanup alter Daten
+ * 
+ * VERWENDUNG:
+ * <WishlistButton vanId="vw-california" vanData={camperData} />
+ * <WishlistPanel />
+ * <RecentViewsPanel limit={5} />
+ * <UserPreferencesPanel />
+ */
+
 // Wishlist components and user preferences panel
 import React, { useState, useEffect } from 'react';
 import { useWishlist, useUserPreferences, useRecentViews } from '../services/localDataStorageService';
 import { Button } from './Button';
 import { VanIcon, LocationIcon, CalendarIcon } from '../services/imageProcessingHelper';
 
-// Wishlist Heart Icon Component
+/**
+ * WISHLIST BUTTON KOMPONENTE
+ * Interaktiver Heart-Button für Camper-Favoriten mit Animation
+ * @param {string} vanId - Eindeutige Fahrzeug-ID
+ * @param {Object} vanData - Fahrzeugdaten für Storage
+ * @param {string} className - Zusätzliche CSS-Klassen
+ * @param {string} size - Icon-Größe (default: "w-6 h-6")
+ */
 export function WishlistButton({ vanId, vanData, className = "", size = "w-6 h-6" }) {
   const { isInWishlist, addToWishlist, removeFromWishlist } = useWishlist();
   const [isAnimating, setIsAnimating] = useState(false);
   
   const inWishlist = isInWishlist(vanId);
 
+  /**
+   * WISHLIST TOGGLE HANDLER
+   * Fügt Camper zur Wunschliste hinzu oder entfernt ihn
+   * Verhindert Event-Propagation für Card-Klicks
+   */
   const handleToggleWishlist = (e) => {
     e.preventDefault();
     e.stopPropagation();
     
-    setIsAnimating(true);
+    setIsAnimating(true);  // Start Animation
     
     if (inWishlist) {
       removeFromWishlist(vanId);
     } else {
-      addToWishlist(vanId, vanData);
+      addToWishlist(vanId, vanData);  // Speichere komplette Fahrzeugdaten
     }
     
+    // Animation Reset nach 300ms
     setTimeout(() => setIsAnimating(false), 300);
   };
 
@@ -32,6 +102,7 @@ export function WishlistButton({ vanId, vanData, className = "", size = "w-6 h-6
       className={`${className} ${isAnimating ? 'animate-pulse' : ''} transition-all duration-200 hover:scale-110`}
       title={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
     >
+      {/* Heart SVG Icon mit dynamischer Füllung */}
       <svg className={size} viewBox="0 0 24 24" fill="none" stroke="currentColor">
         <path
           strokeLinecap="round"

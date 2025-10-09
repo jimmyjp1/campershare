@@ -1,3 +1,157 @@
+/**
+ * checkout.jsx - Checkout-Seite
+ * ==============================
+ * 
+ * HAUPTFUNKTION:
+ * Vollständige Checkout-Seite für die Finalisierung von Camper-Buchungen.
+ * Integriert Buchungsdetails, Zahlungsabwicklung und Bestätigungsprozess in einem streamlined Workflow.
+ * 
+ * SEITEN-FEATURES:
+ * 
+ * 1. Buchungsübersicht:
+ *    - Detaillierte Camper-Informationen mit Bildern
+ *    - Buchungszeitraum und Gästeanzahl
+ *    - Preisaufschlüsselung mit Steuern und Gebühren
+ *    - Stornierungsbedingungen und Richtlinien
+ * 
+ * 2. Zahlungsabwicklung:
+ *    - Stripe Payment Integration für sichere Transaktionen
+ *    - Multiple Zahlungsmethoden (Kreditkarte, SEPA, PayPal)
+ *    - 3D Secure Authentication für Kreditkartenzahlungen
+ *    - PCI-konforme Datenbehandlung
+ * 
+ * 3. Benutzerinformationen:
+ *    - Automatische Befüllung mit Account-Daten
+ *    - Zusätzliche Buchungsinformationen
+ *    - Notfallkontakte und Führerschein-Verifikation
+ *    - Marketing-Opt-ins und Newsletter-Anmeldung
+ * 
+ * 4. Rechtliche Komponenten:
+ *    - AGB-Zustimmung und Datenschutzerklärung
+ *    - Mietbedingungen und Haftungsausschlüsse
+ *    - Versicherungsoptionen und Zusatzleistungen
+ *    - DSGVO-konforme Einverständniserklärungen
+ * 
+ * CHECKOUT-WORKFLOW:
+ * 
+ * 1. Buchungsvalidierung:
+ *    - Verfügbarkeitsprüfung für gewählten Zeitraum
+ *    - Preisberechnung mit aktuellen Tarifen
+ *    - Validierung von Gästeanzahl und Fahrzeug-Kapazität
+ *    - Prüfung von Mindestmietdauer und Saisonbeschränkungen
+ * 
+ * 2. Zahlungsprozess:
+ *    - Sichere Token-basierte Zahlungsdatenübertragung
+ *    - Real-time Zahlungsvalidierung
+ *    - Automatische Rechnungserstellung
+ *    - E-Mail-Bestätigung mit PDF-Anhängen
+ * 
+ * 3. Buchungsabschluss:
+ *    - Buchungsbestätigung mit eindeutiger Referenznummer
+ *    - Kalender-Integration für Abhol-/Rückgabetermine
+ *    - Automatische Benachrichtigungen an alle Beteiligten
+ *    - Weiterleitung zur Bestätigungsseite
+ * 
+ * UI-KOMPONENTEN:
+ * 
+ * 1. ChevronLeftIcon - Navigation:
+ *    - Zurück-Navigation zur vorherigen Seite
+ *    - Breadcrumb-Integration
+ *    - Accessibility-optimierte Button-Navigation
+ * 
+ * 2. StarIcon - Bewertungsanzeige:
+ *    - Camper-Bewertungen und Sterne-Rating
+ *    - Benutzer-Feedback Integration
+ *    - Trust-Building für Buchungsentscheidungen
+ * 
+ * 3. Responsive Layout-Komponenten:
+ *    - Multi-Column Layout für Desktop
+ *    - Single-Column für mobile Geräte
+ *    - Sticky Preisübersicht während Scroll
+ * 
+ * TECHNISCHE INTEGRATION:
+ * 
+ * 1. State Management:
+ *    - camperVan: Fahrzeugdaten aus URL-Parametern oder Session
+ *    - bookingDetails: Buchungsinformationen (checkIn, checkOut, guests)
+ *    - paymentState: Zahlungsstatus und Transaktions-Tracking
+ *    - validationErrors: Client-seitige Fehlerbehandlung
+ * 
+ * 2. Router Integration:
+ *    - URL-Parameter für Camper-ID und Buchungsdaten
+ *    - Programmatische Navigation nach erfolgreicher Zahlung
+ *    - Back-Button Handling für mehrstufigen Checkout
+ *    - Deep-Linking für direkte Checkout-Zugriffe
+ * 
+ * 3. Service Dependencies:
+ *    - multilanguageService für mehrsprachigen Checkout
+ *    - paymentService für Stripe-Integration
+ *    - bookingService für Reservierungsmanagement
+ *    - emailService für Bestätigungs-E-Mails
+ * 
+ * SICHERHEITSFEATURES:
+ * 
+ * 1. Payment Security:
+ *    - PCI DSS Level 1 konforme Zahlungsabwicklung
+ *    - Tokenisierte Kreditkartendaten
+ *    - SSL/TLS Verschlüsselung für alle Transaktionen
+ *    - Fraud Detection und Risk Assessment
+ * 
+ * 2. Data Protection:
+ *    - DSGVO-konforme Datenverarbeitung
+ *    - Minimale Datenspeicherung (Data Minimization)
+ *    - Verschlüsselte Datenübertragung
+ *    - Sichere Session-Verwaltung
+ * 
+ * 3. Input Validation:
+ *    - Client- und serverseitige Validierung
+ *    - XSS-Schutz durch Input-Sanitization
+ *    - SQL-Injection Prevention
+ *    - Rate-Limiting für API-Requests
+ * 
+ * PREISBERECHNUNG:
+ * 
+ * ```javascript
+ * const calculateTotal = () => {
+ *   const basePrice = camperVan.dailyRate * numberOfDays;
+ *   const taxes = basePrice * 0.19; // 19% MwSt
+ *   const serviceFee = basePrice * 0.05; // 5% Service-Gebühr
+ *   const insurance = selectedInsurance.price;
+ *   return basePrice + taxes + serviceFee + insurance;
+ * };
+ * ```
+ * 
+ * RESPONSIVE DESIGN:
+ * - Mobile-First Checkout-Flow für Touch-Optimierung
+ * - Adaptive Payment-Form Layouts
+ * - Optimierte Button-Größen für Touch-Interaktion
+ * - Sticky Summary für mobile Geräte
+ * 
+ * ACCESSIBILITY:
+ * - ARIA-Labels für komplexe Formularstrukturen
+ * - Keyboard-Navigation für gesamten Checkout-Prozess
+ * - Screen-Reader optimierte Preisaufschlüsselungen
+ * - Focus-Management zwischen Checkout-Schritten
+ * 
+ * ERROR HANDLING:
+ * - Payment Failure Recovery mit Retry-Mechanismen
+ * - Network Error Handling mit Offline-Support
+ * - Validation Error Display mit inline Feedback
+ * - Transaction Timeout Handling
+ * 
+ * EINSATZGEBIETE:
+ * - Finale Buchungsabwicklung für Camper-Reservierungen
+ * - Sichere Zahlungsabwicklung mit Multi-Payment-Support
+ * - Rechtlich bindende Vertragsabschlüsse
+ * - Customer Journey Completion und Conversion Optimization
+ * 
+ * ABHÄNGIGKEITEN:
+ * - Next.js Router für Navigation und URL-Parameter
+ * - Container-Komponente für Layout-Konsistenz
+ * - multilanguageService für Internationalisierung
+ * - Stripe Elements für sichere Zahlungsabwicklung
+ */
+
 import Head from 'next/head'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'

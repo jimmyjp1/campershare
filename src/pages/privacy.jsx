@@ -1,3 +1,208 @@
+/**
+ * privacy.jsx - Datenschutzerklärung
+ * ===================================
+ * 
+ * HAUPTFUNKTION:
+ * DSGVO-konforme Datenschutzerklärung der WWISCA Camper-Plattform mit vollständigen Informationen
+ * zur Datenverarbeitung, Betroffenenrechten und Compliance-Maßnahmen.
+ * 
+ * DSGVO-COMPLIANCE:
+ * 
+ * 1. Rechtliche Grundlagen:
+ *    - EU-Datenschutz-Grundverordnung (DSGVO/GDPR) konform
+ *    - Bundesdatenschutzgesetz (BDSG) Berücksichtigung
+ *    - Telemediengesetz (TMG) für Online-Services
+ *    - Internationale Datenschutzbestimmungen
+ * 
+ * 2. Verarbeitungsgrundlagen (Art. 6 DSGVO):
+ *    - Einwilligung (Art. 6 Abs. 1 lit. a)
+ *    - Vertragserfüllung (Art. 6 Abs. 1 lit. b)
+ *    - Berechtigte Interessen (Art. 6 Abs. 1 lit. f)
+ *    - Gesetzliche Verpflichtungen (Art. 6 Abs. 1 lit. c)
+ * 
+ * 3. Betroffenenrechte (Art. 12-22 DSGVO):
+ *    - Auskunftsrecht (Art. 15)
+ *    - Berichtigungsrecht (Art. 16)
+ *    - Löschungsrecht / "Recht auf Vergessenwerden" (Art. 17)
+ *    - Einschränkung der Verarbeitung (Art. 18)
+ *    - Datenübertragbarkeit (Art. 20)
+ *    - Widerspruchsrecht (Art. 21)
+ * 
+ * DATENVERARBEITUNGS-KATEGORIEN:
+ * 
+ * 1. Website-Nutzung und Analytics:
+ *    - Automatisch erfasste Log-Daten (IP-Adresse, Browser, OS)
+ *    - Cookies und lokale Speicherung
+ *    - Google Analytics oder alternative Analytics-Tools
+ *    - Heatmap-Tools und User-Behavior Tracking
+ * 
+ * 2. Buchungs- und Kundendaten:
+ *    - Persönliche Identifikationsdaten (Name, Adresse, Telefon)
+ *    - Buchungsinformationen und Reisedaten
+ *    - Zahlungsinformationen (ohne Kreditkartendaten)
+ *    - Kommunikationshistorie und Support-Tickets
+ * 
+ * 3. Marketing und Kommunikation:
+ *    - Newsletter-Anmeldungen und E-Mail-Marketing
+ *    - Social Media Integration und Tracking
+ *    - Retargeting und personalisierte Werbung
+ *    - Customer Relationship Management (CRM)
+ * 
+ * 4. Technische Datenverarbeitung:
+ *    - Session-Management und Authentifizierung
+ *    - Backup und Disaster Recovery
+ *    - Sicherheitsmonitoring und Fraud-Detection
+ *    - Performance-Monitoring und Optimierung
+ * 
+ * TECHNISCHE IMPLEMENTIERUNG:
+ * 
+ * 1. SimpleLayout Integration:
+ *    - Strukturierte Darstellung mit klarer Hierarchie
+ *    - Responsive Design für alle Endgeräte
+ *    - Accessibility-konforme Umsetzung
+ *    - Druckfreundliche Formatierung
+ * 
+ * 2. Content-Struktur:
+ *    - Hierarchische Gliederung mit Abschnitts-Nummern
+ *    - Prose-Komponente für optimale Lesbarkeit
+ *    - Dark Mode Unterstützung
+ *    - Inhaltsverzeichnis mit Sprungmarken
+ * 
+ * 3. Legal-Updates Management:
+ *    - Versionierung der Datenschutzerklärung
+ *    - Änderungsprotokoll für Transparenz
+ *    - Automatische Benachrichtigung bei Updates
+ *    - Archivierung alter Versionen
+ * 
+ * INHALTLICHE STRUKTUR:
+ * 
+ * 1. Datenschutz auf einen Blick:
+ *    - Allgemeine Hinweise zur Datenverarbeitung
+ *    - Überblick über Datenerfassung und -verwendung
+ *    - Kontaktdaten des Datenschutzbeauftragten
+ *    - Kurze Erklärung der wichtigsten Rechte
+ * 
+ * 2. Allgemeine Hinweise und Pflichtinformationen:
+ *    - Datenschutz-Grundlagen und rechtliche Basis
+ *    - Hinweise zur verantwortlichen Stelle
+ *    - Widerruf von Einwilligungen
+ *    - Beschwerderecht bei Aufsichtsbehörden
+ * 
+ * 3. Datenerfassung auf der Website:
+ *    - Automatische Datensammlung (Server-Logs)
+ *    - Cookies und Web Storage
+ *    - Kontaktformulare und Newsletter
+ *    - Social Media Plugins
+ * 
+ * 4. Analytics und Werbung:
+ *    - Google Analytics / Alternative Tools
+ *    - Facebook Pixel und Social Media Tracking
+ *    - Retargeting und personalisierte Werbung
+ *    - Conversion-Tracking und Attribution
+ * 
+ * 5. Plugins und Tools:
+ *    - Google Maps und externe Kartendienste
+ *    - Payment-Provider (Stripe, PayPal)
+ *    - Live-Chat und Support-Tools
+ *    - CDN und Performance-Services
+ * 
+ * DATENSCHUTZ-MASSNAHMEN:
+ * 
+ * 1. Technische Sicherheit:
+ *    - SSL/TLS-Verschlüsselung für alle Datenübertragungen
+ *    - Sichere Datenspeicherung mit Verschlüsselung
+ *    - Regelmäßige Sicherheitsupdates und Patches
+ *    - Penetration Testing und Vulnerability Assessments
+ * 
+ * 2. Organisatorische Maßnahmen:
+ *    - Datenschutzbeauftragter und Compliance-Team
+ *    - Mitarbeiterschulungen zum Datenschutz
+ *    - Incident-Response-Verfahren
+ *    - Regelmäßige Datenschutz-Audits
+ * 
+ * 3. Privacy by Design:
+ *    - Datenminimierung bei der Systemarchitektur
+ *    - Pseudonymisierung und Anonymisierung
+ *    - Transparenz bei allen Datenverarbeitungen
+ *    - Benutzerfreundliche Einwilligungsmanagement
+ * 
+ * INTERNATIONALE COMPLIANCE:
+ * 
+ * 1. Drittland-Übermittlungen:
+ *    - Angemessenheitsbeschlüsse der EU-Kommission
+ *    - Standard-Vertragsklauseln (SCCs)
+ *    - Binding Corporate Rules (BCRs)
+ *    - Privacy Shield Nachfolge-Mechanismen
+ * 
+ * 2. Service-Provider Compliance:
+ *    - Auftragsverarbeitungsverträge (AVV/DPA)
+ *    - Due Diligence bei allen Dienstleistern
+ *    - Regelmäßige Compliance-Überprüfungen
+ *    - Incident-Reporting und Breach-Notification
+ * 
+ * BETROFFENENRECHTE-MANAGEMENT:
+ * 
+ * 1. Anfragen-Workflow:
+ *    ```
+ *    Betroffenenanfrage eingehend
+ *    ↓
+ *    Identitätsprüfung (binnen 1 Monat)
+ *    ↓
+ *    Datensammlung aus allen Systemen
+ *    ↓
+ *    Antwort an Betroffenen (max. 1 Monat)
+ *    ↓
+ *    Dokumentation und Archivierung
+ *    ```
+ * 
+ * 2. Automatisierte Prozesse:
+ *    - Self-Service Portal für Standard-Anfragen
+ *    - Automatische Datenextraktion für Auskunftsersuchen
+ *    - Workflow-Management für komplexe Fälle
+ *    - Tracking und Reporting für Compliance
+ * 
+ * COOKIE-MANAGEMENT:
+ * 
+ * 1. Cookie-Kategorien:
+ *    - Technisch notwendige Cookies (immer aktiv)
+ *    - Performance und Analytics Cookies
+ *    - Marketing und Targeting Cookies
+ *    - Social Media Integration Cookies
+ * 
+ * 2. Consent-Management:
+ *    - Granulare Einwilligungsmöglichkeiten
+ *    - Easy Opt-out Mechanismen
+ *    - Cookie-Banner mit klaren Optionen
+ *    - Persistent Consent Storage
+ * 
+ * DATENAUFBEWAHRUNG:
+ * 
+ * 1. Löschfristen:
+ *    - Buchungsdaten: 10 Jahre (Steuerrecht)
+ *    - Marketing-Daten: 3 Jahre nach letzter Interaktion
+ *    - Log-Daten: 7 Tage (technisch notwendig)
+ *    - Support-Tickets: 2 Jahre nach Schließung
+ * 
+ * 2. Automatische Löschung:
+ *    - Cron-Jobs für regelmäßige Bereinigung
+ *    - Soft-Delete mit Wiederherstellungsoptionen
+ *    - Secure-Delete für sensible Daten
+ *    - Audit-Trails für alle Löschvorgänge
+ * 
+ * EINSATZGEBIETE:
+ * - Rechtliche Compliance und Transparenz
+ * - Vertrauensbildung bei Kunden
+ * - Risikominimierung bei Datenschutzverstößen
+ * - Grundlage für internationale Geschäftstätigkeit
+ * - Template für Datenschutz-Schulungen
+ * 
+ * ABHÄNGIGKEITEN:
+ * - Container für Layout-Konsistenz
+ * - SimpleLayout für strukturierte Darstellung
+ * - Prose-Styling für optimale Lesbarkeit
+ * - Legal-Update Management System
+ */
+
 import { Container } from '@/components/Container'
 import { SimpleLayout } from '@/components/SimpleLayout'
 

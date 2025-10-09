@@ -1,3 +1,166 @@
+/**
+ * login.jsx - Login-Seite
+ * ========================
+ * 
+ * HAUPTFUNKTION:
+ * Dedizierte Login-Seite für die Benutzeranmeldung auf der WWISCA Camper-Plattform.
+ * Bietet eine streamlined Anmeldung mit vorgefüllten Testdaten für Entwicklung und Demo.
+ * 
+ * SEITEN-FEATURES:
+ * 
+ * 1. Streamlined Login-Form:
+ *    - E-Mail und Passwort Eingabefelder
+ *    - Vorgefüllte Testbenutzer-Daten für Demo-Zwecke
+ *    - Loading-States während Authentifizierung
+ *    - Error-Handling mit benutzerfreundlichen Meldungen
+ * 
+ * 2. Entwickler-freundliche Testdaten:
+ *    - Vorkonfigurierte Test-E-Mail: kunde@example.com
+ *    - Test-Passwort: password123
+ *    - Schneller Zugang für Entwicklung und QA
+ *    - Einfache Anpassung für verschiedene Test-Szenarien
+ * 
+ * 3. Sichere Authentifizierung:
+ *    - API-Integration mit /api/auth/login Endpoint
+ *    - JWT-Token Management
+ *    - Sichere Session-Handhabung
+ *    - Automatische Weiterleitung nach erfolgreicher Anmeldung
+ * 
+ * 4. Benutzerfreundliche UX:
+ *    - Responsive Design für alle Gerätegrößen
+ *    - Klare Error-Messages für fehlgeschlagene Logins
+ *    - Loading-Indikatoren für visuelles Feedback
+ *    - Router-Integration für nahtlose Navigation
+ * 
+ * TECHNISCHE IMPLEMENTIERUNG:
+ * 
+ * 1. Form State Management:
+ *    - useState für Formular-Daten (email, password)
+ *    - Loading-State für Submit-Button Deaktivierung
+ *    - Error-State für Fehlermeldungen-Anzeige
+ *    - Controlled Inputs für React-konforme Formulare
+ * 
+ * 2. API Integration:
+ *    - Fetch-basierte HTTP-Requests zu Backend
+ *    - JSON Content-Type für sichere Datenübertragung
+ *    - Response-Handling für Success/Error Szenarien
+ *    - Token-Speicherung nach erfolgreicher Authentifizierung
+ * 
+ * 3. Router Integration:
+ *    - useRouter für programmatische Navigation
+ *    - Redirect nach erfolgreicher Anmeldung
+ *    - Return-URL Support für Deep-Links
+ *    - History-Management für Back-Button Support
+ * 
+ * AUTHENTICATION WORKFLOW:
+ * 
+ * 1. Form Submission:
+ *    - User gibt E-Mail und Passwort ein
+ *    - Form-Validation vor API-Call
+ *    - Loading-State aktiviert
+ *    - Submit-Button wird deaktiviert
+ * 
+ * 2. Backend Authentication:
+ *    - POST-Request an /api/auth/login
+ *    - Server validiert Credentials
+ *    - JWT-Token wird generiert
+ *    - User-Daten werden zurückgegeben
+ * 
+ * 3. Success Handling:
+ *    - Token wird im LocalStorage/Cookie gespeichert
+ *    - User-State wird global aktualisiert
+ *    - Weiterleitung zur gewünschten Seite
+ *    - Session wird aktiviert
+ * 
+ * 4. Error Handling:
+ *    - Fehlermeldung wird angezeigt
+ *    - Form bleibt editierbar
+ *    - Loading-State wird deaktiviert
+ *    - User kann Eingaben korrigieren
+ * 
+ * SICHERHEITSFEATURES:
+ * 
+ * 1. Input Validation:
+ *    - E-Mail Format-Validierung
+ *    - Passwort-Länge Überprüfung
+ *    - XSS-Schutz durch Input-Sanitization
+ *    - CSRF-Token für State-Changing Requests
+ * 
+ * 2. Authentication Security:
+ *    - HTTPS-only für Credential-Übertragung
+ *    - Secure HTTP-Only Cookies für Tokens
+ *    - Rate-Limiting für Login-Versuche
+ *    - Account-Lockout nach fehlgeschlagenen Versuchen
+ * 
+ * 3. Session Management:
+ *    - JWT mit kurzer Lebensdauer
+ *    - Refresh-Token für Session-Verlängerung
+ *    - Automatic Logout bei Token-Ablauf
+ *    - Secure Token Storage (HttpOnly Cookies)
+ * 
+ * ENTWICKLUNGS-UNTERSTÜTZUNG:
+ * 
+ * 1. Test-Credentials:
+ *    ```javascript
+ *    const defaultTestUser = {
+ *      email: 'kunde@example.com',
+ *      password: 'password123'
+ *    };
+ *    ```
+ * 
+ * 2. Environment-spezifische Konfiguration:
+ *    - Development: Vorgefüllte Testdaten
+ *    - Staging: Test-User Accounts
+ *    - Production: Sichere Authentifizierung ohne Defaults
+ * 
+ * 3. Debug-Features:
+ *    - Console-Logging für Entwicklung
+ *    - Network-Request Monitoring
+ *    - Error-Stack Traces für Debugging
+ * 
+ * RESPONSIVE DESIGN:
+ * - Mobile-First Form-Layout
+ * - Touch-optimierte Input-Felder
+ * - Adaptive Button-Größen
+ * - Keyboard-freundliche Navigation
+ * 
+ * ACCESSIBILITY:
+ * - Semantic HTML für Screen-Reader
+ * - ARIA-Labels für Form-Felder
+ * - Focus-Management zwischen Eingaben
+ * - High-Contrast Mode Support
+ * 
+ * ERROR SCENARIOS:
+ * 
+ * 1. Network Errors:
+ *    - Connection Timeout Handling
+ *    - Offline-Detection und Meldung
+ *    - Retry-Mechanismen für fehlgeschlagene Requests
+ * 
+ * 2. Authentication Errors:
+ *    - Ungültige Credentials
+ *    - Account nicht gefunden
+ *    - Account gesperrt/deaktiviert
+ *    - Server-Fehler (500, 503)
+ * 
+ * 3. Client-Side Errors:
+ *    - JavaScript-Fehler Handling
+ *    - Form-Validation Errors
+ *    - Browser-Kompatibilitätsprobleme
+ * 
+ * EINSATZGEBIETE:
+ * - Entwicklung und Testing mit vorgefüllten Credentials
+ * - Demo-Umgebungen für Stakeholder-Präsentationen
+ * - QA-Testing mit standardisierten Test-Accounts
+ * - User Acceptance Testing (UAT)
+ * 
+ * ABHÄNGIGKEITEN:
+ * - Next.js Router für Navigation
+ * - Container für Layout-Konsistenz
+ * - React useState/useEffect für State-Management
+ * - Fetch API für Backend-Kommunikation
+ */
+
 import { useState } from 'react';
 import Head from 'next/head';
 import { Container } from '@/components/Container';

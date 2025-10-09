@@ -1,3 +1,171 @@
+/**
+ * terms.jsx - Allgemeine Geschäftsbedingungen
+ * ============================================
+ * 
+ * HAUPTFUNKTION:
+ * Rechtliche AGB-Seite der WWISCA Camper-Plattform mit vollständigen Geschäftsbedingungen
+ * für die Wohnmobil-Vermietung und alle damit verbundenen Dienstleistungen.
+ * 
+ * RECHTLICHE STRUKTUR:
+ * 
+ * 1. Geltungsbereich und Vertragspartner:
+ *    - Definition der Vertragsparteien (CamperShare GmbH vs. Mieter)
+ *    - Geltungsbereich für alle Vermietungsverträge
+ *    - Vorrang der AGB gegenüber abweichenden Bedingungen
+ *    - Schriftform-Erfordernis für Änderungen
+ * 
+ * 2. Vertragsschluss und Buchungsprozess:
+ *    - Online-Buchungsprozess und rechtliche Bindung
+ *    - Angebot und Annahme im E-Commerce
+ *    - Bestätigungsverfahren und Vertragsbestätigung
+ *    - Widerrufsrecht und Verbraucherschutz
+ * 
+ * 3. Mietbedingungen und Fahrzeugübergabe:
+ *    - Mietdauer, Verlängerungen und vorzeitige Rückgabe
+ *    - Übergabe- und Rücknahmeprotokoll
+ *    - Fahrzeugzustand und Ausstattung
+ *    - Kilometerbegrenzungen und Zusatzkosten
+ * 
+ * 4. Preise, Zahlungen und Stornierungen:
+ *    - Mietpreise, Nebenkosten und Kautionen
+ *    - Zahlungsmodalitäten und Fristen
+ *    - Stornierungsbedingungen und Gebühren
+ *    - Preisänderungen und Währungsrisiken
+ * 
+ * COMPLIANCE & RECHTSSICHERHEIT:
+ * 
+ * 1. DSGVO-Konformität:
+ *    - Datenschutzbestimmungen und Verarbeitungsgrundlagen
+ *    - Betroffenenrechte und Löschfristen
+ *    - Internationale Datentransfers
+ *    - Privacy-by-Design Integration
+ * 
+ * 2. Verbraucherschutz:
+ *    - EU-Verbraucherschutzrichtlinien
+ *    - Widerrufsrecht für Online-Verträge
+ *    - Transparente Preisgestaltung
+ *    - Beschwerdemechanismen
+ * 
+ * 3. Versicherung und Haftung:
+ *    - Versicherungsschutz und Selbstbeteiligung
+ *    - Haftungsausschlüsse und -beschränkungen
+ *    - Schadensmeldung und Abwicklung
+ *    - Internationale Versicherungsabdeckung
+ * 
+ * TECHNISCHE IMPLEMENTIERUNG:
+ * 
+ * 1. Responsive Layout:
+ *    - SimpleLayout für strukturierte Darstellung
+ *    - Mobile-optimierte Lesbarkeit
+ *    - Druckfreundliche Formatierung
+ *    - Accessibility-konforme Typografie
+ * 
+ * 2. Inhaltsstruktur:
+ *    - Hierarchische Gliederung mit Abschnitts-Nummern
+ *    - Prose-Komponente für optimale Lesbarkeit
+ *    - Dark Mode Unterstützung
+ *    - Semantische HTML-Struktur
+ * 
+ * 3. Navigation und Usability:
+ *    - Inhaltsverzeichnis mit Sprungmarken
+ *    - Suchfunktion für spezifische Klauseln
+ *    - Download-Option als PDF
+ *    - Druckfunktion für physische Kopien
+ * 
+ * RECHTLICHE ABSCHNITTE:
+ * 
+ * 1. Geltungsbereich (§1):
+ *    - Vertragsparteien und Anwendungsbereich
+ *    - Vorrang der AGB
+ *    - Änderungsvorbehalte
+ * 
+ * 2. Vertragsschluss (§2):
+ *    - Online-Buchungsprozess
+ *    - Angebot und Annahme
+ *    - Bestätigungsverfahren
+ * 
+ * 3. Leistungsumfang (§3):
+ *    - Fahrzeugausstattung
+ *    - Inkludierte Services
+ *    - Zusatzleistungen
+ * 
+ * 4. Preise und Zahlung (§4):
+ *    - Preisgestaltung
+ *    - Zahlungsfristen
+ *    - Kautionsregelungen
+ * 
+ * 5. Stornierung und Widerruf (§5):
+ *    - Stornierungsfristen
+ *    - Kostenerstattung
+ *    - Widerrufsrecht
+ * 
+ * 6. Übergabe und Rückgabe (§6):
+ *    - Übergabeprotokoll
+ *    - Fahrzeugprüfung
+ *    - Rückgabekonditionen
+ * 
+ * 7. Nutzungsbedingungen (§7):
+ *    - Erlaubte Nutzung
+ *    - Verbotene Aktivitäten
+ *    - Fahrerberechtigung
+ * 
+ * 8. Versicherung und Haftung (§8):
+ *    - Versicherungsschutz
+ *    - Selbstbeteiligung
+ *    - Haftungsausschlüsse
+ * 
+ * 9. Datenschutz (§9):
+ *    - Datenverarbeitung
+ *    - Betroffenenrechte
+ *    - Speicherdauer
+ * 
+ * 10. Schlussbestimmungen (§10):
+ *     - Rechtswahl
+ *     - Gerichtsstand
+ *     - Salvatorische Klausel
+ * 
+ * SEO & ACCESSIBILITY:
+ * 
+ * 1. Suchmaschinenoptimierung:
+ *    - Strukturierte Überschriften-Hierarchie
+ *    - Meta-Tags für rechtliche Inhalte
+ *    - Schema.org Markup für Geschäftsbedingungen
+ *    - Internal Linking zu verwandten Seiten (Datenschutz, Impressum)
+ * 
+ * 2. Barrierefreiheit:
+ *    - Screen-Reader optimierte Struktur
+ *    - Logische Tab-Reihenfolge
+ *    - Kontrastreiche Typografie
+ *    - Alternative Textformate verfügbar
+ * 
+ * VERSIONIERUNG & UPDATES:
+ * 
+ * 1. Änderungsmanagement:
+ *    - Versionsnummer und Gültigkeitsdatum
+ *    - Änderungsprotokoll für Transparenz
+ *    - Benachrichtigung bei wesentlichen Änderungen
+ *    - Archivierung alter Versionen
+ * 
+ * 2. Rechtliche Updates:
+ *    - Regelmäßige Rechtsberatung
+ *    - Anpassung an neue Gesetzgebung
+ *    - Jurisdiktiions-spezifische Varianten
+ *    - Automatische User-Benachrichtigung
+ * 
+ * EINSATZGEBIETE:
+ * - Rechtliche Grundlage für alle Vermietungsverträge
+ * - Compliance-Dokumentation für Behörden
+ * - Transparenz für Kunden vor Vertragsabschluss
+ * - Rechtssicherheit bei Streitfällen
+ * - Standardisierung von Geschäftsprozessen
+ * 
+ * ABHÄNGIGKEITEN:
+ * - Container für Layout-Konsistenz
+ * - SimpleLayout für strukturierte Darstellung
+ * - Prose-Styling für optimale Lesbarkeit
+ * - Dark Mode Support für Benutzerkomfort
+ */
+
 import { Container } from '@/components/Container'
 import { SimpleLayout } from '@/components/SimpleLayout'
 

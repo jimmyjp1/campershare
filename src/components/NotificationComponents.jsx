@@ -1,3 +1,72 @@
+/**
+ * NotificationComponents.jsx
+ * ========================
+ * 
+ * HAUPTFUNKTION:
+ * React-Komponenten für ein umfassendes Benachrichtigungssystem der Camper-Vermietungsplattform.
+ * Verwaltet die Anzeige, Interaktion und Kategorisierung verschiedener Benachrichtigungstypen.
+ * 
+ * HAUPTKOMPONENTEN:
+ * 
+ * 1. NotificationBadge - Zeigt Anzahl ungelesener Benachrichtigungen
+ *    - Rote Badge mit Zahlenkreis für Benachrichtigungsanzahl
+ *    - Unterstützt Anzahlen über 99 mit "99+" Anzeige
+ *    - Responsive Styling mit TailwindCSS
+ * 
+ * 2. NotificationItem - Einzelne Benachrichtigung mit Details
+ *    - Typ-spezifische Icons (Buchung bestätigt, Zahlung erfolgreich, Erinnerungen)
+ *    - Erweiterbarer Inhalt für lange Nachrichten
+ *    - Interaktive Buttons für Lesen/Löschen/Klicken
+ *    - Prioritäts-basierte Farbcodierung
+ * 
+ * 3. NotificationDropdown - Dropdown-Menü für Benachrichtigungen
+ *    - Klickbares Badge mit Dropdown-Funktionalität
+ *    - Scrollbare Liste aller Benachrichtigungen
+ *    - "Alle als gelesen markieren" Funktionalität
+ *    - Automatisches Schließen bei außerhalb klicken
+ * 
+ * 4. NotificationToast - Popup-Benachrichtigungen
+ *    - Temporäre Anzeige für neue Benachrichtigungen
+ *    - Auto-dismiss nach konfigurierbarer Zeit
+ *    - Slide-in/out Animationen
+ *    - Stapelbare Toasts für mehrere Benachrichtigungen
+ * 
+ * 5. NotificationCenter - Vollständige Benachrichtigungsverwaltung
+ *    - Zentrale Steuerung aller Benachrichtigungskomponenten
+ *    - Filter- und Sortierfunktionen
+ *    - Massenoperationen (alle löschen, alle als gelesen markieren)
+ *    - Responsive Layout für mobile und Desktop
+ * 
+ * BENACHRICHTIGUNGSTYPEN:
+ * - BOOKING_CONFIRMED: Buchungsbestätigungen
+ * - PAYMENT_SUCCESSFUL: Erfolgreiche Zahlungen
+ * - REMINDER_PICKUP: Abholungserinnerungen
+ * - REMINDER_RETURN: Rückgabeerinnerungen
+ * - PROMOTION: Werbeaktionen und Angebote
+ * - SYSTEM: Systembenachrichtigungen
+ * 
+ * FUNKTIONALITÄTEN:
+ * - Real-time Benachrichtigungsanzeige
+ * - Persistente Speicherung mit LocalStorage
+ * - Prioritäts-basierte Sortierung
+ * - Batch-Operationen für Massenverwaltung
+ * - Responsive Design für alle Geräte
+ * - Barrierefreie Bedienung mit Keyboard-Navigation
+ * - Animierte Übergänge und Microinteractions
+ * 
+ * VERWENDUNG:
+ * - Integration in Header-Komponente für globale Benachrichtigungen
+ * - Service-Worker Integration für Push-Benachrichtigungen
+ * - Event-basierte Aktualisierung bei neuen Buchungen/Zahlungen
+ * - Personalisierte Benachrichtigungseinstellungen pro Benutzer
+ * 
+ * ABHÄNGIGKEITEN:
+ * - notificationService: Backend-Integration für Benachrichtigungsdaten
+ * - React Hooks: useState, useEffect, useRef für Zustandsverwaltung
+ * - TailwindCSS: Styling und responsive Design
+ * - SVG Icons: Typ-spezifische Benachrichtigungsicons
+ */
+
 import React, { useState, useEffect, useRef } from 'react';
 import { useNotifications, NOTIFICATION_TYPES, NOTIFICATION_PRIORITY } from '../services/notificationService';
 

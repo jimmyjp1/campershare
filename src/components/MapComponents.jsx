@@ -1,38 +1,104 @@
+/**
+ * =============================================================================
+ * MAP KOMPONENTEN SYSTEM
+ * =============================================================================
+ * 
+ * Interaktive Karten-Komponenten für Standort-Services, Routenplanung
+ * und geografische Features der WWISCA Camper-Rental Plattform.
+ * 
+ * HAUPTKOMPONENTEN:
+ * - PickupLocationMap: Interaktive Karte für Abholstationen
+ * - RouteMap: Routenplanung zwischen Standorten  
+ * - AttractionsMap: POI und Sehenswürdigkeiten
+ * - LocationSearch: Ortssuche mit Autocomplete
+ * - DirectionsPanel: Turn-by-Turn Navigation
+ * 
+ * GOOGLE MAPS INTEGRATION:
+ * - Google Maps API v3 mit Custom Styling
+ * - Places API für Ortssuche und Autocomplete
+ * - Directions API für Routenberechnung
+ * - Geolocation API für GPS-Position
+ * - Street View Integration für Standort-Previews
+ * 
+ * FEATURES:
+ * - Real-time Marker Updates mit Custom Icons
+ * - Interactive Info Windows mit Rich Content
+ * - Multi-waypoint Route Planning
+ * - Distance und Duration Calculations
+ * - Mobile-optimierte Touch Controls
+ * - Offline-Fallback für schlechte Verbindungen
+ * 
+ * PICKUP LOCATION FEATURES:
+ * - Alle WWISCA Abholstationen als Marker
+ * - Detaillierte Standort-Informationen (Adresse, Öffnungszeiten, Telefon)
+ * - One-Click Location Selection
+ * - Responsive Info Windows mit Actions
+ * - GPS-basierte Entfernungsanzeige
+ * 
+ * PERFORMANCE OPTIMIERUNGEN:
+ * - Lazy Loading der Google Maps API
+ * - Marker Clustering für große Datasets
+ * - Debounced Search für Places API
+ * - Caching von Directions Requests
+ * 
+ * VERWENDUNG:
+ * <PickupLocationMap 
+ *   selectedLocation={currentLocation}
+ *   onLocationSelect={handleLocationSelect}
+ * />
+ */
+
 // Interactive map components for pickup locations, route planning, and attractions
 import React, { useState, useEffect, useRef } from 'react';
 import { useGoogleMap, useMapMarkers, useDirections, usePlacesSearch, useGeolocation } from '../services/mapIntegrationService';
 import { Button } from './Button';
 import { PICKUP_LOCATIONS } from '../services/camperVehicleDataService';
 
-// Main interactive map component for pickup locations
+/**
+ * PICKUP LOCATION MAP KOMPONENTE
+ * Interaktive Karte zur Auswahl von Camper-Abholstationen
+ * @param {Object} selectedLocation - Aktuell ausgewählte Location
+ * @param {function} onLocationSelect - Callback bei Location-Auswahl
+ * @param {string} height - Map Container Höhe (default: "400px")
+ */
 export function PickupLocationMap({ selectedLocation, onLocationSelect, height = "400px" }) {
+  // Eindeutige Map-ID für Multiple Maps auf einer Seite
   const mapId = `pickup-map-${Math.random().toString(36).substr(2, 9)}`;
+  
+  // Google Maps Hook mit Initial Configuration
   const { map, isLoaded, error } = useGoogleMap(mapId, {
     zoom: 10,
-    center: selectedLocation ? selectedLocation.coordinates : { lat: 30.2672, lng: -97.7431 }
+    center: selectedLocation ? selectedLocation.coordinates : { lat: 30.2672, lng: -97.7431 } // Default: Austin, TX
   });
 
-  // Create markers for all pickup locations
+  // Marker-Konfiguration für alle Pickup Locations
   const markers = PICKUP_LOCATIONS.map(location => ({
     position: location.coordinates,
     title: location.name,
     type: 'pickup',
+    // Rich HTML Content für Info Windows
     content: `
       <div class="p-3 min-w-[200px]">
         <h3 class="font-semibold text-lg mb-2">${location.name}</h3>
         <p class="text-sm text-gray-600 mb-2">${location.address}</p>
+        
+        <!-- Öffnungszeiten mit Clock Icon -->
         <div class="flex items-center text-sm text-gray-500 mb-2">
           <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
           </svg>
           ${location.hours}
         </div>
+        
+        <!-- Telefonnummer mit Phone Icon -->
         <div class="flex items-center text-sm text-gray-500 mb-3">
           <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
           </svg>
           ${location.phone}
         </div>
+        
+        <!-- Location Selection Button -->
         <button 
           onclick="window.selectPickupLocation('${location.id}')"
           class="w-full bg-blue-600 text-white px-3 py-2 rounded hover:bg-blue-700 transition-colors"

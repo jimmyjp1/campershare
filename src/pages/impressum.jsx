@@ -1,3 +1,184 @@
+/**
+ * impressum.jsx - Impressum-Seite
+ * ================================
+ * 
+ * HAUPTFUNKTION:
+ * Rechtlich vorgeschriebene Impressum-Seite der WWISCA Camper-Plattform gemäß deutschem Telemediengesetz (TMG).
+ * Erfüllt alle gesetzlichen Anforderungen für kommerzielle Websites in Deutschland.
+ * 
+ * RECHTLICHE ANFORDERUNGEN:
+ * 
+ * 1. TMG-Konformität (§ 5 TMG):
+ *    - Vollständige Firmenanschrift und Kontaktdaten
+ *    - Geschäftsführer und Vertretungsberechtigte
+ *    - Handelsregister-Eintragung und Amtsgericht
+ *    - Umsatzsteuer-Identifikationsnummer (USt-IdNr.)
+ * 
+ * 2. Pflichtangaben für GmbH:
+ *    - Firmenname: CamperShare GmbH
+ *    - Registergericht und Handelsregisternummer
+ *    - Geschäftsführer-Namen und Befugnisse
+ *    - Stammkapital und Gesellschafterstruktur
+ * 
+ * 3. Kontaktinformationen:
+ *    - Ladungsfähige Anschrift (keine Postfach-Adresse)
+ *    - Telefonnummer für schnelle Kontaktaufnahme
+ *    - E-Mail-Adresse für elektronische Kommunikation
+ *    - Fax-Nummer (optional, aber empfohlen)
+ * 
+ * 4. Aufsichtsbehörden und Genehmigungen:
+ *    - Zuständige Gewerbeaufsicht
+ *    - Branchenspezifische Genehmigungen (Fahrzeugvermietung)
+ *    - Versicherungsaufsicht für Versicherungsvermittlung
+ *    - EU-weite Dienstleistungsrichtlinien-Compliance
+ * 
+ * BRANCHENSPEZIFISCHE ANGABEN:
+ * 
+ * 1. Fahrzeugvermietung:
+ *    - Gewerbeanmeldung für Fahrzeugvermietung
+ *    - Haftpflichtversicherung und Deckungssummen
+ *    - Kaution- und Sicherheitsleistungen
+ *    - Internationale Vermietungsgenehmigungen
+ * 
+ * 2. Online-Plattform:
+ *    - E-Commerce-Lizenz und Digital Services Act (DSA)
+ *    - Plattform-Verantwortlichkeit nach NetzDG
+ *    - Verbraucherschutz im Online-Handel
+ *    - Alternative Streitbeilegung (OS-Plattform)
+ * 
+ * 3. Versicherungsvermittlung:
+ *    - IHK-Registrierung als Versicherungsmakler
+ *    - Berufshaftpflichtversicherung
+ *    - Vermögensschadenhaftpflicht
+ *    - BaFin-Registrierung (falls erforderlich)
+ * 
+ * TECHNISCHE IMPLEMENTIERUNG:
+ * 
+ * 1. SimpleLayout Integration:
+ *    - Strukturierte Darstellung mit klarer Hierarchie
+ *    - Responsive Design für alle Endgeräte
+ *    - Druckfreundliche Formatierung
+ *    - Accessibility-konforme Umsetzung
+ * 
+ * 2. SEO und Auffindbarkeit:
+ *    - Meta-Tags für Suchmaschinen-Indexierung
+ *    - Strukturierte Daten für lokale Suchergebnisse
+ *    - Internal Linking zu Datenschutz und AGB
+ *    - Canonical URL für eindeutige Zuordnung
+ * 
+ * 3. Prose-Styling:
+ *    - Optimale Lesbarkeit mit Prose-Komponente
+ *    - Dark Mode Unterstützung
+ *    - Konsistente Typografie
+ *    - Strukturierte Informationshierarchie
+ * 
+ * INHALTLICHE STRUKTUR:
+ * 
+ * 1. Angaben gemäß § 5 TMG:
+ *    ```
+ *    CamperShare GmbH
+ *    Musterstraße 123
+ *    12345 Berlin
+ *    Deutschland
+ *    ```
+ * 
+ * 2. Vertreten durch:
+ *    - Geschäftsführer: Max Mustermann, Maria Musterfrau
+ *    - Prokuristen und Bevollmächtigte
+ *    - Vertretungsberechtigungen und Beschränkungen
+ * 
+ * 3. Kontakt:
+ *    ```
+ *    Telefon: +49 (0) 30 12345-0
+ *    Telefax: +49 (0) 30 12345-99
+ *    E-Mail: info@wwisca.com
+ *    Website: https://www.wwisca.com
+ *    ```
+ * 
+ * 4. Registereintrag:
+ *    ```
+ *    Eintragung im Handelsregister
+ *    Registergericht: Amtsgericht Berlin-Charlottenburg
+ *    Registernummer: HRB 12345 B
+ *    ```
+ * 
+ * 5. Umsatzsteuer-ID:
+ *    ```
+ *    Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz:
+ *    DE123456789
+ *    ```
+ * 
+ * COMPLIANCE & RECHTSSICHERHEIT:
+ * 
+ * 1. Aktualitätspflicht:
+ *    - Regelmäßige Überprüfung aller Angaben
+ *    - Sofortige Aktualisierung bei Änderungen
+ *    - Versionierung für Nachverfolgbarkeit
+ *    - Archivierung alter Versionen
+ * 
+ * 2. Erreichbarkeit:
+ *    - Impressum von jeder Seite aus maximal 2 Klicks erreichbar
+ *    - Prominente Verlinkung im Footer
+ *    - Mobile-optimierte Darstellung
+ *    - Barrierefreier Zugang
+ * 
+ * 3. Vollständigkeit:
+ *    - Alle TMG-Pflichtangaben enthalten
+ *    - Branchenspezifische Ergänzungen
+ *    - EU-DSGVO konforme Datenverarbeitung
+ *    - Internationale Geschäftstätigkeit berücksichtigt
+ * 
+ * ZUSÄTZLICHE ANGABEN:
+ * 
+ * 1. Aufsichtsbehörde:
+ *    ```
+ *    Zuständige Aufsichtsbehörde:
+ *    Gewerbeaufsichtsamt Berlin
+ *    Darwinstraße 6
+ *    10589 Berlin
+ *    ```
+ * 
+ * 2. Berufsbezeichnung:
+ *    - Fahrzeugvermieter (Deutschland)
+ *    - Online-Plattformbetreiber
+ *    - Versicherungsmakler (IHK Berlin)
+ * 
+ * 3. Streitschlichtung:
+ *    ```
+ *    Verbraucherstreitbeilegung/Universalschlichtungsstelle:
+ *    Wir sind nicht verpflichtet und bereit zur Teilnahme an 
+ *    Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle.
+ *    
+ *    Online-Streitbeilegung (OS):
+ *    https://ec.europa.eu/consumers/odr/
+ *    ```
+ * 
+ * RESPONSIVE DESIGN:
+ * - Mobile-First Layout für alle Gerätegrößen
+ * - Touch-optimierte Links und Buttons
+ * - Lesbare Schriftgrößen auf kleinen Bildschirmen
+ * - Druckoptimierte Darstellung
+ * 
+ * ACCESSIBILITY:
+ * - Semantic HTML für Screen-Reader
+ * - Logische Überschriften-Hierarchie
+ * - Hohe Kontraste für bessere Lesbarkeit
+ * - Keyboard-Navigation möglich
+ * 
+ * EINSATZGEBIETE:
+ * - Gesetzlich vorgeschriebene Anbieterkennzeichnung
+ * - Transparenz gegenüber Kunden und Behörden
+ * - Rechtssicherheit bei geschäftlichen Aktivitäten
+ * - Compliance-Nachweis für Geschäftspartner
+ * - Vertrauensbildung durch Transparenz
+ * 
+ * ABHÄNGIGKEITEN:
+ * - Container für Layout-Konsistenz
+ * - SimpleLayout für strukturierte Darstellung
+ * - Prose-Styling für optimale Lesbarkeit
+ * - Dark Mode Support für Benutzerkomfort
+ */
+
 import { Container } from '@/components/Container'
 import { SimpleLayout } from '@/components/SimpleLayout'
 

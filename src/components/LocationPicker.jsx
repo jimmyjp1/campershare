@@ -1,3 +1,136 @@
+/**
+ * LocationPicker.jsx
+ * ==================
+ * 
+ * HAUPTFUNKTION:
+ * Intelligente Standortauswahl-Komponente mit automatischer Erkennung und benutzerfreundlicher Oberfläche.
+ * Kombiniert GPS-Standorterkennung, nahegelegene Abholpunkte und Standortverlauf für optimale Benutzererfahrung.
+ * 
+ * HAUPT-FEATURES:
+ * 
+ * 1. SmartLocationPicker - Hauptkomponente:
+ *    - Automatische GPS-Standorterkennung
+ *    - Anzeige nahegelegener Abholpunkte
+ *    - Integration von Standortverlauf
+ *    - Responsive Design für mobile und Desktop
+ * 
+ * 2. Intelligente Standortdienste:
+ *    - useSmartLocation Hook für GPS und Nearby-Locations
+ *    - useLocationHistory für häufig genutzte Standorte
+ *    - Permission-Management für Geolocation API
+ *    - Automatische Fehlerbehandlung und Fallbacks
+ * 
+ * 3. Benutzerfreundliche Oberfläche:
+ *    - Visual Feedback mit Heroicons
+ *    - Loading-States während Standorterkennung
+ *    - Erfolgs- und Fehlermeldungen
+ *    - Erweiterbarer Optionsbereich
+ * 
+ * TECHNISCHE INTEGRATION:
+ * 
+ * 1. Smart Location Service:
+ *    - userLocation: Aktuelle GPS-Position des Benutzers
+ *    - nearbyLocations: Array von nahegelegenen Abholpunkten
+ *    - isDetecting: Loading-State für GPS-Abfrage
+ *    - error: Fehlermeldungen bei Standortproblemen
+ *    - hasPermission: Browser Geolocation Permission Status
+ * 
+ * 2. Location History Service:
+ *    - Speicherung häufig genutzter Standorte
+ *    - LocalStorage basierte Persistierung
+ *    - Automatische Vorschläge basierend auf Verlauf
+ *    - Smart Ranking nach Häufigkeit und Aktualität
+ * 
+ * 3. Zustandsverwaltung:
+ *    - showAllOptions: Toggle für erweiterte Optionen
+ *    - selectedLocation: Aktuell ausgewählter Standort
+ *    - isMounted: SSR-sichere Hydration-Kontrolle
+ * 
+ * PROPS INTERFACE:
+ * 
+ * @param {function} onLocationSelect - Callback für Standortauswahl
+ *   - Erhält Location-Objekt mit selectionType und Timestamp
+ *   - Ermöglicht Integration in Buchungsformulare
+ * 
+ * @param {boolean} showNearbyLocations - Zeige nahegelegene Standorte
+ *   - Standard: true
+ *   - Kann deaktiviert werden für vereinfachte UI
+ * 
+ * @param {string} className - CSS-Klassen für Container
+ *   - Standard: "" (leerer String)
+ *   - TailwindCSS Styling-Anpassungen
+ * 
+ * LOCATION DATA STRUKTUR:
+ * 
+ * ```javascript
+ * {
+ *   lat: 52.5200,           // Latitude Koordinate
+ *   lng: 13.4050,           // Longitude Koordinate
+ *   address: "Berlin...",   // Formatierte Adresse
+ *   city: "Berlin",         // Stadt
+ *   country: "Germany",     // Land
+ *   selectionType: "gps",   // "gps", "nearby", "manual", "history"
+ *   selectedAt: "2024-...", // ISO Timestamp
+ *   accuracy: 10            // GPS Genauigkeit in Metern
+ * }
+ * ```
+ * 
+ * VERWENDUNG:
+ * 
+ * Basis-Integration:
+ * <SmartLocationPicker onLocationSelect={handleLocationSelect} />
+ * 
+ * Mit erweiterten Optionen:
+ * <SmartLocationPicker 
+ *   onLocationSelect={(location) => {
+ *     setPickupLocation(location);
+ *     calculateDistanceToDestination(location);
+ *   }}
+ *   showNearbyLocations={true}
+ *   className="mb-6 p-4 bg-white rounded-lg shadow"
+ * />
+ * 
+ * In Buchungsformularen:
+ * <SmartLocationPicker 
+ *   onLocationSelect={(location) => {
+ *     updateBookingForm({ pickupLocation: location });
+ *     findAvailableCampers(location);
+ *   }}
+ * />
+ * 
+ * BENUTZER-WORKFLOW:
+ * 
+ * 1. Automatische Standorterkennung beim Laden
+ * 2. Anzeige von GPS-Position (mit Permission)
+ * 3. Liste nahegelegener Abholpunkte
+ * 4. Standortverlauf für wiederkehrende Nutzer
+ * 5. Manuelle Standorteingabe als Fallback
+ * 6. Bestätigung und Weiterleitung an Parent-Component
+ * 
+ * RESPONSIVE DESIGN:
+ * - Mobile-First Ansatz mit Touch-optimierten Buttons
+ * - Adaptive Layouts für verschiedene Bildschirmgrößen
+ * - Performante Rendering für große Location-Listen
+ * - Lazy Loading für Nearby-Locations
+ * 
+ * ACCESSIBILITY:
+ * - Tastatur-Navigation für alle Interaktionen
+ * - Screen-Reader optimierte Labels und Beschreibungen
+ * - ARIA-Live Regions für dynamische Inhalte
+ * - Hohe Kontraste und klare Fokus-Indikatoren
+ * 
+ * PERFORMANCE:
+ * - Debounced GPS-Abfragen zur Batteriesparung
+ * - Memoized Nearby-Location Calculations
+ * - Lazy Rendering großer Location-Listen
+ * - Optimierte Re-Rendering durch React.memo
+ * 
+ * ABHÄNGIGKEITEN:
+ * - locationService: Smart Location und History Hooks
+ * - @heroicons/react: UI Icons für visuelles Feedback
+ * - React Hooks: useState, useEffect für Zustandsverwaltung
+ */
+
 // Smart Location Components für automatische Standorterkennung
 import React, { useState, useEffect } from 'react'
 import { useSmartLocation, useLocationHistory } from '../services/locationService'
