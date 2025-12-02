@@ -1,17 +1,8 @@
-# 🚐 CamperShare - Premium Camper Van Rental Platform
+# 🚐 CamperShare - PrivatProjekt 
 
-> **Ein vollständiges, produktionsreifes Camper-Vermietungsportal mit modernem Tech-Stack**
 
-CamperShare ist eine umfassende Wohnmobil-Vermietungsplattform, die mit Next.js, PostgreSQL und Docker entwickelt wurde. Das System bietet eine komplette Lösung von der Fahrzeugsuche bis zur Buchungsabwicklung.
-
-## 🌟 Highlights
-
-- **🎨 Moderne UI/UX:** Glassmorphism-Design mit Dark Mode
-- **🌍 Mehrsprachig:** Deutsch/Englisch mit automatischem Fallback
-- **� Responsiv:** Optimiert für alle Geräte (Mobile-First)
-- **🔒 Sicher:** DSGVO-konform mit Cookie-Management
-- **⚡ Performant:** Redis-Caching und optimierte Datenbankabfragen
-- **📊 Analytics:** Vollständiges Admin-Dashboard mit Statistiken
+CamperShare ist eine umfassende Wohnmobil-Vermietungsplattform, die mit Next.js, PostgreSQL und Docker entwickelt wurde. 
+Das System bietet eine komplette Lösung von der Fahrzeugsuche bis zur Buchungsabwicklung.
 
 ## �🚀 Schnellstart
 
@@ -141,10 +132,6 @@ Password: !#CamperShair
 SMTP: smtp-mail.outlook.com:587
 ```
 
-### Alternative Provider
-- Gmail-Backup konfiguriert
-- Yahoo-Backup konfiguriert
-
 ## 💳 Stripe-Payment
 
 ### Test-Credentials
@@ -252,22 +239,11 @@ docker-compose logs app
 docker-compose logs db
 ```
 
-## 📞 Support & Kontakt
-
-Bei Fragen oder Problemen:
-1. Issues im GitHub-Repository erstellen
-2. Docker-Logs prüfen
-3. Container-Status überprüfen: `docker-compose ps`
-
 ## 🔒 Sicherheitshinweise
 
 - Alle Passwörter sind für Entwicklung/Test
 - Vor Produktion alle Credentials ändern
 - Stripe ist im Test-Modus konfiguriert
 - Email-Accounts sind bereits eingerichtet
-
----
-
-**Projekt bereit für sofortige Nutzung!** 🎉
 
 Einfach `docker-compose up -d` ausführen und unter http://localhost:3000 starten.
