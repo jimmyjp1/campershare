@@ -1,4 +1,4 @@
-# 🚐 CamperShare - PrivatProjekt 
+# CamperShare - PrivatProjekt 
 
 
 CamperShare ist eine umfassende Wohnmobil-Vermietungsplattform, die mit Next.js, PostgreSQL und Docker entwickelt wurde. 
@@ -39,7 +39,7 @@ Nach dem Start sind folgende Services verfügbar:
 3. **Admin-Zugang:** Registriere einen Account und setze Admin-Rechte in der DB
 4. **Analytics:** Besuche `/analytics` für Statistiken
 
-## 📁 Projektstruktur
+## Projektstruktur
 
 ```
 campershare/
