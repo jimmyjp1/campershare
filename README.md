@@ -43,19 +43,19 @@ Nach dem Start sind folgende Services verfügbar:
 
 ```
 campershare/
-├── 🐳 docker-compose.yml          # Container-Orchestrierung
-├── 📦 package.json                # NPM-Abhängigkeiten
-├── ⚙️ next.config.mjs             # Next.js Konfiguration
-├── 🎨 tailwind.config.js          # Styling-Framework
+├──  docker-compose.yml          # Container-Orchestrierung
+├──  package.json                # NPM-Abhängigkeiten
+├──  next.config.mjs             # Next.js Konfiguration
+├──  tailwind.config.js          # Styling-Framework
 ├── 
-├── 📂 src/
-│   ├── 📱 components/             # React-Komponenten
+├──  src/
+│   ├──  components/             # React-Komponenten
 │   │   ├── Header.jsx             # Navigation & Logo
 │   │   ├── Footer.jsx             # Footer-Informationen
 │   │   ├── CookieComponents.jsx   # DSGVO Cookie-Banner
 │   │   └── ...                    # Weitere UI-Komponenten
 │   │
-│   ├── 📄 pages/                  # Next.js Seiten
+│   ├──  pages/                  # Next.js Seiten
 │   │   ├── index.jsx              # Startseite
 │   │   ├── about.jsx              # Über Uns (mit Video)
 │   │   ├── campers/               # Fahrzeug-Katalog
@@ -63,30 +63,29 @@ campershare/
 │   │   ├── analytics.jsx          # Statistiken (mehrsprachig)
 │   │   └── api/                   # Backend API-Routes
 │   │
-│   ├── 🔧 services/               # Business Logic
+│   ├──  services/               # Business Logic
 │   │   ├── multilanguageService.js    # Übersetzungssystem
 │   │   ├── bookingService.js          # Buchungslogik
 │   │   ├── userAuthenticationService.js # Benutzer-Management
 │   │   └── ...                        # Weitere Services
 │   │
-│   └── 🗃️ lib/                   # Utilities & Helpers
+│   └──  lib/                   # Utilities & Helpers
 │       ├── databaseConnection.js  # PostgreSQL-Verbindung
 │       ├── automaticEmailSender.js # E-Mail-System
 │       └── ...                    # Weitere Hilfsfunktionen
 │
-├── 🗄️ database/                  # SQL-Schemas & Daten
+├──  database/                  # SQL-Schemas & Daten
 │   ├── init/                     # Auto-Import bei Start
 │   │   ├── 01-schema.sql         # Tabellenstrukturen
 │   │   └── 02-sample-data.sql    # Test-/Demo-Daten
 │   └── ...                       # Zusätzliche SQL-Dateien
 │
-└── 📁 public/                    # Statische Assets
+└──  public/                    # Statische Assets
     ├── images/                   # Logos, Team-Fotos, Camper-Bilder
     ├── videos/                   # Hintergrund- & Marketing-Videos
     └── ...                       # Icons, Manifest, etc.
-```
 
-## 🛠️ Technologie-Stack
+##  Technologie-Stack
 
 ### Frontend
 - **Next.js 12.x:** React-Framework mit SSR/SSG
@@ -105,7 +104,7 @@ campershare/
 - **Alpine Linux:** Leichtgewichtige Container-Images
 - **nginx:** Reverse Proxy (Production)
 
-## 🗃️ Datenbank-Zugang
+## Datenbank-Zugang
 
 ### PostgreSQL-Verbindung
 ```
@@ -123,7 +122,7 @@ Email: admin@campershare.com
 Password: admin123
 ```
 
-## 📧 Email-Konfiguration
+## Email-Konfiguration
 
 ### Outlook SMTP (Primär)
 ```
@@ -132,7 +131,7 @@ Password: !#CamperShair
 SMTP: smtp-mail.outlook.com:587
 ```
 
-## 💳 Stripe-Payment
+## Stripe-Payment
 
 ### Test-Credentials
 ```
@@ -147,7 +146,7 @@ Mastercard: 5555 5555 5555 4444
 CVV: 123, Ablauf: 12/34
 ```
 
-## 🛠️ Entwicklung
+## Entwicklung
 
 ### Lokale Entwicklung
 ```bash
@@ -165,7 +164,7 @@ docker-compose -f docker-compose.yml -f docker-compose.override.yml up -d
 docker-compose logs -f app
 ```
 
-## 📁 Projektstruktur
+## Projektstruktur
 
 ```
 main/
@@ -180,7 +179,7 @@ main/
 └── docker-compose.yml     # Container-Konfiguration
 ```
 
-## 🚚 Camper-Fahrzeuge
+## Camper-Fahrzeuge
 
 Das System enthält 19 vollständig konfigurierte Camper mit:
 - Kompletten technischen Spezifikationen
@@ -189,7 +188,7 @@ Das System enthält 19 vollständig konfigurierte Camper mit:
 - Preiskalkulationen
 - Verfügbarkeitskalendern
 
-## 🌍 Standorte & Reisezeit
+## Standorte & Reisezeit
 
 ### Verfügbare Abholstandorte
 - München (Hauptstandort)
@@ -203,7 +202,7 @@ Das System enthält 19 vollständig konfigurierte Camper mit:
 
 Reisezeiten werden automatisch basierend auf der Entfernung zwischen Städten berechnet.
 
-## 👨‍💼 Admin-Bereich
+## Admin-Bereich
 
 ### Zugang
 ```
@@ -219,7 +218,7 @@ Password: admin123
 - Email-Logs
 - System-Status
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
 ### Container neu starten
 ```bash
@@ -239,7 +238,7 @@ docker-compose logs app
 docker-compose logs db
 ```
 
-## 🔒 Sicherheitshinweise
+## Sicherheitshinweise
 
 - Alle Passwörter sind für Entwicklung/Test
 - Vor Produktion alle Credentials ändern
