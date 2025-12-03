@@ -1,6 +1,6 @@
 # Credentials & Configuration
 
-## 🔐 Alle Zugangsdaten für Projektpartner
+## Alle Zugangsdaten für Projektpartner
 
 ### Admin-Login
 ```
@@ -35,9 +35,9 @@ TLS: enabled
 
 ### Stripe Payment (Test-Modus)
 ```
-Publishable Key: pk_test_51QDPnhDhFBdKJl7XgJCfJPRmXh9j5YPCxXrBSKPZeqDDcCdyNdtYKkI3nPWzKE2sBkX6DqhZvP1LnkRAyKR3GBH000qwNSLBzm
-Secret Key: sk_test_51QDPnhDhFBdKJl7XgkYKON20J7J7YzYdcwR8GdLHxrxCYTQhgqZcKWj1N2cYzQKNZhRBgwQcGZFfHl5YJJxdN2T700vYGRYjGL
-Webhook Secret: whsec_[wird automatisch generiert]
+Publishable Key: pk****************************************************************************************************
+Secret Key: sk*********************************************************************************************************
+Webhook Secret: whsec_**************************
 ```
 
 ### Test-Kreditkarten
@@ -79,23 +79,3 @@ Bookings: /api/bookings
 Payments: /api/payments
 Email: /api/email
 Admin: /api/admin
-```
-
-## ⚠️ Sicherheitshinweise
-
-1. **Alle Credentials sind für Entwicklung/Test**
-2. **Für Produktion alle Passwörter ändern**
-3. **Stripe ist im Test-Modus - keine echten Zahlungen**
-4. **Email-Accounts sind bereits funktional**
-
-## 🔄 Status aller Services
-
-✅ **Datenbank:** 19 Fahrzeuge vollständig konfiguriert
-✅ **Email-System:** Getestet und funktional
-✅ **Payment:** Stripe Test-Modus aktiv
-✅ **Admin-Panel:** Vollständig funktionsfähig
-✅ **Frontend:** Responsive Design mit allen Features
-
----
-
-**Alle Systeme betriebsbereit!** 🎉
