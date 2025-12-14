@@ -127,7 +127,7 @@ Password: admin123
 ### Outlook SMTP (Primär)
 ```
 Account: camper-shair@outlook.com
-Password: !#CamperShair
+Password: ***********
 SMTP: smtp-mail.outlook.com:587
 ```
 
@@ -135,8 +135,8 @@ SMTP: smtp-mail.outlook.com:587
 
 ### Test-Credentials
 ```
-Publishable Key: pk_test_51QDPnhDhFBdKJl7XgJCfJPRmXh9j5YPCxXrBSKPZeqDDcCdyNdtYKkI3nPWzKE2sBkX6DqhZvP1LnkRAyKR3GBH000qwNSLBzm
-Secret Key: sk_test_51QDPnhDhFBdKJl7XgkYKON20J7J7YzYdcwR8GdLHxrxCYTQhgqZcKWj1N2cYzQKNZhRBgwQcGZFfHl5YJJxdN2T700vYGRYjGL
+Publishable Key: pk_test_************************************************
+Secret Key: sk_test_*************************************
 ```
 
 ### Test-Kreditkarten
