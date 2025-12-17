@@ -3,6 +3,7 @@
 
 CamperShare ist eine umfassende Wohnmobil-Vermietungsplattform, die mit Next.js, PostgreSQL und Docker entwickelt wurde. 
 Das System bietet eine komplette Lösung von der Fahrzeugsuche bis zur Buchungsabwicklung.
+![HomeScreen](https://github.com/user-attachments/assets/894c0784-e450-4a17-9216-746ec557d9fb)
 
 ## Schnellstart
 
