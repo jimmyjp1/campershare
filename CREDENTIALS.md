@@ -27,7 +27,7 @@ Password: admin123
 ### Email-System (Outlook SMTP)
 ```
 Account: camper-shair@outlook.com
-Password: !#CamperShair
+Password: *****
 SMTP Server: smtp-mail.outlook.com
 Port: 587
 TLS: enabled
@@ -56,11 +56,7 @@ PLZ: beliebig
 ```
 Gmail Backup:
 Account: campershare.backup@gmail.com
-App-Password: [konfiguriert]
-
-Yahoo Backup:  
-Account: campershare.yahoo@yahoo.com
-Password: [konfiguriert]
+App-Password: ******
 ```
 
 ### Docker Container
